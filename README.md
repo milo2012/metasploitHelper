@@ -76,4 +76,14 @@ Below are the list of ports found in Metasploit modules (7 Jan 2015)
 1220
 1241
 1311
+1434
+1521
+1530
+1533
+1581
+1582
+1604
+1720
+1723
+1755
 ```
