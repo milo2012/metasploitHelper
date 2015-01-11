@@ -97,4 +97,8 @@ Below are the list of ports found in Metasploit modules (7 Jan 2015)
 2100
 2103
 2207
+2362
+2380
+2381
+2525
 ```
