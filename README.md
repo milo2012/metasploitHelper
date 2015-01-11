@@ -1,5 +1,7 @@
 # metasploitHelper
 metasploitHelper (Work in Progress)  
+
+The reason for this script is that I want to be be able to take a NMAP xml file as input, automatically search for a Metasploit module and launches the Metasploit module against it.  
   
 ![alt tag](https://raw.githubusercontent.com/milo2012/metasploitHelper/master/screenshot1.png)  
 
@@ -86,4 +88,13 @@ Below are the list of ports found in Metasploit modules (7 Jan 2015)
 1720
 1723
 1755
+1811
+1900
+2000
+2001
+2049
+2067
+2100
+2103
+2207
 ```
