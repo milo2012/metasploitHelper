@@ -9,5 +9,5 @@ Below is a sample screenshot of the application
 Features to be added
 - The script will take a Nmap XML file as input.
 - For HTTP/HTTPs related exploits, the script will extract all TARGETURI from the metasploit modules and attempts to try to see if the URIs are present on the HTTP/HTTPs server
-- For other ports that match the ones in Metasploit, the Metasploit modules will be launched against the target (blind hacking).
+- For other ports that match the ones in Metasploit, the Metasploit modules will be launched against the target without fingerprint the actual service running on the target server (blind hacking).
 
