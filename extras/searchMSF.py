@@ -124,8 +124,10 @@ def lookupURI(showModules=False):
 			print x
 	else:
 		for x in pathList:
+			x[1] = x[1].replace(path,".")
 			print x[0]+","+x[1]
 		for x in defaultPathList:	
+			x[1] = x[1].replace(path,".")
 			print x[0]+","+x[1]
 
 def find_between( s, first, last ):
