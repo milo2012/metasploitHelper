@@ -4,7 +4,10 @@ metasploitHelper (Work in Progress)
 The reason for this script is that I want to be be able to take a NMAP xml file as input, automatically search for a Metasploit module and launches the Metasploit module against it.    
 
 ```
-searchMSF.py	Search Metasploit folder for modules matching port number  
+extras\searchMSF.py    Search Metasploit modules folder             
+                -       matching port number
+                -       all TARGETURI paths
+                -       all TARGETURI paths with matching module number
 parseNmap.py	Uses a nmap .nmap file as input and search Metasploit folder for modules matching port numbers
 ```   
   
