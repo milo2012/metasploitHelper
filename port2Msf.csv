@@ -1,5 +1,3 @@
-This tool parses Nmap XML file and checks for matching ports/exploits in Metasploit
-The tool will print out if there any additional parameters that needs to be supplied to the Metasploit module.
 0,/pentest/metasploit-framework/modules/exploits/windows/dcerpc/ms07_029_msdns_zonename.rb,[]
 0,/pentest/metasploit-framework/modules/auxiliary/admin/ms/ms08_059_his2006.rb,[]
 1,/pentest/metasploit-framework/modules/exploits/windows/firewall/blackice_pam_icq.rb,[]
