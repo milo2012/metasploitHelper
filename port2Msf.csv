@@ -1,3 +1,5 @@
+This tool parses Nmap XML file and checks for matching ports/exploits in Metasploit
+The tool will print out if there any additional parameters that needs to be supplied to the Metasploit module.
 0,/pentest/metasploit-framework/modules/exploits/windows/dcerpc/ms07_029_msdns_zonename.rb,[]
 0,/pentest/metasploit-framework/modules/auxiliary/admin/ms/ms08_059_his2006.rb,[]
 1,/pentest/metasploit-framework/modules/exploits/windows/firewall/blackice_pam_icq.rb,[]
@@ -280,7 +282,7 @@
 443,/pentest/metasploit-framework/modules/exploits/linux/http/cfme_manageiq_evm_upload_exec.rb,[]
 443,/pentest/metasploit-framework/modules/exploits/unix/webapp/tuleap_unserialize_exec.rb,[]
 443,/pentest/metasploit-framework/modules/exploits/unix/webapp/citrix_access_gateway_exec.rb,[]
-443,/pentest/metasploit-framework/modules/auxiliary/admin/cisco/cisco_secure_acs_bypass.rb,[USERNAME,PASSWORD]
+443,/pentest/metasploit-framework/modules/auxiliary/admin/cisco/cisco_secure_acs_bypass.rb,[USERNAME|PASSWORD]
 443,/pentest/metasploit-framework/modules/auxiliary/admin/oracle/osb_execqr.rb,[]
 443,/pentest/metasploit-framework/modules/auxiliary/admin/oracle/osb_execqr3.rb,[]
 443,/pentest/metasploit-framework/modules/auxiliary/admin/oracle/osb_execqr2.rb,[]
@@ -347,8 +349,8 @@
 50000,/pentest/metasploit-framework/modules/auxiliary/admin/sap/sap_configservlet_exec_noauth.rb,[]
 50000,/pentest/metasploit-framework/modules/auxiliary/scanner/sap/sap_ctc_verb_tampering_user_mgmt.rb,[]
 50001,/pentest/metasploit-framework/modules/auxiliary/gather/konica_minolta_pwd_extract.rb,[]
-50013,/pentest/metasploit-framework/modules/exploits/multi/sap/sap_mgmt_con_osexec_payload.rb,[USERNAME,PASSWORD]
-50013,/pentest/metasploit-framework/modules/auxiliary/admin/sap/sap_mgmt_con_osexec.rb,[USERNAME,PASSWORD]
+50013,/pentest/metasploit-framework/modules/exploits/multi/sap/sap_mgmt_con_osexec_payload.rb,[USERNAME|PASSWORD]
+50013,/pentest/metasploit-framework/modules/auxiliary/admin/sap/sap_mgmt_con_osexec.rb,[USERNAME|PASSWORD]
 50013,/pentest/metasploit-framework/modules/auxiliary/scanner/sap/sap_mgmt_con_extractusers.rb,[]
 50013,/pentest/metasploit-framework/modules/auxiliary/scanner/sap/sap_mgmt_con_startprofile.rb,[]
 50013,/pentest/metasploit-framework/modules/auxiliary/scanner/sap/sap_mgmt_con_instanceproperties.rb,[]
