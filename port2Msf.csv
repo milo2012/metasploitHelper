@@ -14,8 +14,6 @@
 21,/pentest/metasploit-framework/modules/exploits/unix/ftp/vsftpd_234_backdoor.rb
 21,/pentest/metasploit-framework/modules/auxiliary/admin/cisco/vpn_3000_ftp_bypass.rb
 21,/pentest/metasploit-framework/modules/auxiliary/admin/scada/modicon_password_recovery.rb
-21,/pentest/metasploit-framework/modules/auxiliary/dos/windows/ftp/solarftp_user.rb
-21,/pentest/metasploit-framework/modules/auxiliary/dos/windows/ftp/iis75_ftpd_iac_bof.rb
 21,/pentest/metasploit-framework/modules/auxiliary/scanner/ftp/titanftp_xcrc_traversal.rb
 21,/pentest/metasploit-framework/modules/auxiliary/scanner/ftp/anonymous.rb
 21,/pentest/metasploit-framework/modules/auxiliary/scanner/ftp/ftp_version.rb
@@ -32,7 +30,6 @@
 22,/pentest/metasploit-framework/modules/exploits/unix/ssh/tectia_passwd_changereq.rb
 22,/pentest/metasploit-framework/modules/exploits/unix/ssh/array_vxag_vapv_privkey_privesc.rb
 22,/pentest/metasploit-framework/modules/exploits/apple_ios/ssh/cydia_default_ssh.rb
-22,/pentest/metasploit-framework/modules/auxiliary/dos/windows/ssh/sysax_sshd_kexchange.rb
 22,/pentest/metasploit-framework/modules/auxiliary/scanner/ssh/ssh_login.rb
 22,/pentest/metasploit-framework/modules/auxiliary/scanner/ssh/ssh_enumusers.rb
 22,/pentest/metasploit-framework/modules/auxiliary/scanner/ssh/ssh_version.rb
@@ -58,7 +55,6 @@
 25,/pentest/metasploit-framework/modules/auxiliary/scanner/smtp/smtp_enum.rb
 42,/pentest/metasploit-framework/modules/exploits/windows/wins/ms04_045_wins.rb
 49,/pentest/metasploit-framework/modules/exploits/freebsd/tacacs/xtacacsd_report.rb
-53,/pentest/metasploit-framework/modules/auxiliary/dos/windows/nat/nat_helper.rb
 53,/pentest/metasploit-framework/modules/auxiliary/scanner/dns/dns_amp.rb
 69,/pentest/metasploit-framework/modules/exploits/windows/tftp/opentftp_error_code.rb
 69,/pentest/metasploit-framework/modules/exploits/windows/tftp/futuresoft_transfermode.rb
@@ -70,9 +66,6 @@
 69,/pentest/metasploit-framework/modules/exploits/windows/tftp/threectftpsvc_long_mode.rb
 69,/pentest/metasploit-framework/modules/exploits/windows/tftp/dlink_long_filename.rb
 69,/pentest/metasploit-framework/modules/auxiliary/admin/tftp/tftp_transfer_util.rb
-69,/pentest/metasploit-framework/modules/auxiliary/dos/scada/d20_tftp_overflow.rb
-69,/pentest/metasploit-framework/modules/auxiliary/dos/windows/tftp/pt360_write.rb
-69,/pentest/metasploit-framework/modules/auxiliary/dos/windows/tftp/solarwinds.rb
 69,/pentest/metasploit-framework/modules/auxiliary/scanner/tftp/tftpbrute.rb
 69,/pentest/metasploit-framework/modules/auxiliary/scanner/tftp/netdecision_tftp.rb
 69,/pentest/metasploit-framework/modules/auxiliary/scanner/tftp/ipswitch_whatsupgold_tftp.rb
@@ -108,14 +101,6 @@
 80,/pentest/metasploit-framework/modules/auxiliary/admin/http/mutiny_frontend_read_delete.rb
 80,/pentest/metasploit-framework/modules/auxiliary/admin/http/linksys_wrt54gl_exec.rb
 80,/pentest/metasploit-framework/modules/auxiliary/admin/http/dlink_dir_300_600_exec_noauth.rb
-80,/pentest/metasploit-framework/modules/auxiliary/dos/cisco/ios_http_percentpercent.rb
-80,/pentest/metasploit-framework/modules/auxiliary/dos/windows/http/ms10_065_ii6_asp_dos.rb
-80,/pentest/metasploit-framework/modules/auxiliary/dos/http/rails_action_view.rb
-80,/pentest/metasploit-framework/modules/auxiliary/dos/http/nodejs_pipelining.rb
-80,/pentest/metasploit-framework/modules/auxiliary/dos/http/apache_mod_isapi.rb
-80,/pentest/metasploit-framework/modules/auxiliary/dos/http/apache_range_dos.rb
-80,/pentest/metasploit-framework/modules/auxiliary/dos/http/3com_superstack_switch.rb
-80,/pentest/metasploit-framework/modules/auxiliary/dos/tcp/synflood.rb
 80,/pentest/metasploit-framework/modules/auxiliary/scanner/http/buffalo_login.rb
 80,/pentest/metasploit-framework/modules/auxiliary/scanner/http/mybook_live_login.rb
 80,/pentest/metasploit-framework/modules/auxiliary/scanner/http/s40_traversal.rb
@@ -139,7 +124,6 @@
 135,/pentest/metasploit-framework/modules/auxiliary/scanner/dcerpc/endpoint_mapper.rb
 137,/pentest/metasploit-framework/modules/auxiliary/scanner/netbios/nbname_probe.rb
 137,/pentest/metasploit-framework/modules/auxiliary/scanner/netbios/nbname.rb
-138,/pentest/metasploit-framework/modules/auxiliary/dos/windows/smb/ms11_019_electbowser.rb
 139,/pentest/metasploit-framework/modules/exploits/multi/samba/nttrans.rb
 139,/pentest/metasploit-framework/modules/exploits/multi/samba/usermap_script.rb
 139,/pentest/metasploit-framework/modules/exploits/multi/ids/snort_dce_rpc.rb
@@ -192,8 +176,6 @@
 443,/pentest/metasploit-framework/modules/auxiliary/admin/vmware/poweron_vm.rb
 443,/pentest/metasploit-framework/modules/auxiliary/admin/vmware/poweroff_vm.rb
 443,/pentest/metasploit-framework/modules/auxiliary/admin/vmware/tag_vm.rb
-443,/pentest/metasploit-framework/modules/auxiliary/dos/ssl/openssl_aesni.rb
-443,/pentest/metasploit-framework/modules/auxiliary/dos/http/sonicwall_ssl_format.rb
 443,/pentest/metasploit-framework/modules/auxiliary/scanner/ssl/openssl_ccs.rb
 443,/pentest/metasploit-framework/modules/auxiliary/scanner/ssl/openssl_heartbleed.rb
 443,/pentest/metasploit-framework/modules/auxiliary/scanner/http/cisco_nac_manager_traversal.rb
@@ -226,9 +208,6 @@
 443,/pentest/metasploit-framework/modules/auxiliary/gather/ibm_sametime_room_brute.rb
 444,/pentest/metasploit-framework/modules/exploits/linux/http/zen_load_balancer_exec.rb
 445,/pentest/metasploit-framework/modules/exploits/windows/smb/ms09_050_smb2_negotiate_func_index.rb
-445,/pentest/metasploit-framework/modules/auxiliary/dos/windows/smb/ms10_054_queryfs_pool_overflow.rb
-445,/pentest/metasploit-framework/modules/auxiliary/dos/windows/smb/vista_negotiate_stop.rb
-445,/pentest/metasploit-framework/modules/auxiliary/dos/windows/smb/ms09_050_smb2_negotiate_pidhigh.rb
 445,/pentest/metasploit-framework/modules/auxiliary/scanner/smb/smb2.rb
 445,/pentest/metasploit-framework/modules/auxiliary/gather/windows_deployment_services_shares.rb
 446,/pentest/metasploit-framework/modules/exploits/linux/http/openfiler_networkcard_exec.rb
@@ -241,7 +220,6 @@
 513,/pentest/metasploit-framework/modules/auxiliary/scanner/rservices/rlogin_login.rb
 514,/pentest/metasploit-framework/modules/exploits/windows/misc/windows_rsh.rb
 514,/pentest/metasploit-framework/modules/exploits/windows/misc/enterasys_netsight_syslog_bof.rb
-514,/pentest/metasploit-framework/modules/auxiliary/dos/syslog/rsyslog_long_tag.rb
 514,/pentest/metasploit-framework/modules/auxiliary/scanner/rservices/rsh_login.rb
 515,/pentest/metasploit-framework/modules/exploits/hpux/lpd/cleanup_exec.rb
 515,/pentest/metasploit-framework/modules/exploits/irix/lpd/tagprinter_exec.rb
@@ -250,7 +228,6 @@
 515,/pentest/metasploit-framework/modules/exploits/windows/lpd/hummingbird_exceed.rb
 515,/pentest/metasploit-framework/modules/exploits/linux/misc/lprng_format_string.rb
 515,/pentest/metasploit-framework/modules/exploits/solaris/lpd/sendmail_exec.rb
-515,/pentest/metasploit-framework/modules/auxiliary/dos/solaris/lpd/cascade_delete.rb
 523,/pentest/metasploit-framework/modules/auxiliary/scanner/db2/discovery.rb
 524,/pentest/metasploit-framework/modules/exploits/linux/misc/novell_edirectory_ncp_bof.rb
 548,/pentest/metasploit-framework/modules/exploits/osx/afp/loginext.rb
@@ -292,7 +269,6 @@
 1211,/pentest/metasploit-framework/modules/exploits/windows/scada/codesys_gateway_server_traversal.rb
 1220,/pentest/metasploit-framework/modules/exploits/unix/webapp/qtss_parse_xml_exec.rb
 1241,/pentest/metasploit-framework/modules/auxiliary/scanner/nessus/nessus_ntp_login.rb
-1311,/pentest/metasploit-framework/modules/auxiliary/dos/http/dell_openmanage_post.rb
 1434,/pentest/metasploit-framework/modules/exploits/windows/mssql/ms02_039_slammer.rb
 1521,/pentest/metasploit-framework/modules/exploits/windows/oracle/tns_auth_sesskey.rb
 1521,/pentest/metasploit-framework/modules/exploits/windows/oracle/tns_service_name.rb
@@ -303,7 +279,6 @@
 1521,/pentest/metasploit-framework/modules/auxiliary/scanner/oracle/tnspoison_checker.rb
 1521,/pentest/metasploit-framework/modules/auxiliary/scanner/oracle/sid_brute.rb
 1521,/pentest/metasploit-framework/modules/auxiliary/scanner/oracle/sid_enum.rb
-1530,/pentest/metasploit-framework/modules/auxiliary/dos/hp/data_protector_rds.rb
 1533,/pentest/metasploit-framework/modules/exploits/windows/lotus/domino_sametime_stmux.rb
 1581,/pentest/metasploit-framework/modules/exploits/windows/http/ibm_tsm_cad_header.rb
 1582,/pentest/metasploit-framework/modules/exploits/windows/misc/ibm_tsm_rca_dicugetidentify.rb
@@ -312,7 +287,6 @@
 1604,/pentest/metasploit-framework/modules/auxiliary/gather/citrix_published_applications.rb
 1720,/pentest/metasploit-framework/modules/auxiliary/scanner/h323/h323_version.rb
 1723,/pentest/metasploit-framework/modules/exploits/linux/pptp/poptop_negative_read.rb
-1723,/pentest/metasploit-framework/modules/auxiliary/dos/pptp/ms02_063_pptp_dos.rb
 1755,/pentest/metasploit-framework/modules/exploits/windows/mmsp/ms10_025_wmss_connect_funnel.rb
 1811,/pentest/metasploit-framework/modules/exploits/windows/misc/hp_imc_uam.rb
 1900,/pentest/metasploit-framework/modules/exploits/multi/upnp/libupnp_ssdp_overflow.rb
@@ -322,15 +296,12 @@
 1900,/pentest/metasploit-framework/modules/exploits/windows/brightstor/lgserver_multi.rb
 1900,/pentest/metasploit-framework/modules/exploits/windows/brightstor/lgserver_rxrlogin.rb
 1900,/pentest/metasploit-framework/modules/exploits/linux/upnp/dlink_upnp_msearch_exec.rb
-1900,/pentest/metasploit-framework/modules/auxiliary/dos/upnp/miniupnpd_dos.rb
 1900,/pentest/metasploit-framework/modules/auxiliary/scanner/upnp/ssdp_msearch.rb
 1900,/pentest/metasploit-framework/modules/auxiliary/scanner/upnp/ssdp_amp.rb
 2000,/pentest/metasploit-framework/modules/exploits/windows/brightstor/hsmserver.rb
 2000,/pentest/metasploit-framework/modules/exploits/windows/misc/shixxnote_font.rb
 2001,/pentest/metasploit-framework/modules/exploits/windows/scada/sunway_force_control_netdbsrv.rb
-2001,/pentest/metasploit-framework/modules/auxiliary/dos/http/monkey_headers.rb
 2049,/pentest/metasploit-framework/modules/exploits/windows/nfs/xlink_nfsd.rb
-2049,/pentest/metasploit-framework/modules/auxiliary/dos/freebsd/nfsd/nfsd_mount.rb
 2067,/pentest/metasploit-framework/modules/auxiliary/scanner/dlsw/dlsw_leak_capture.rb
 2100,/pentest/metasploit-framework/modules/exploits/windows/ftp/oracle9i_xdb_ftp_pass.rb
 2100,/pentest/metasploit-framework/modules/exploits/windows/ftp/oracle9i_xdb_ftp_unlock.rb
@@ -352,7 +323,6 @@
 3000,/pentest/metasploit-framework/modules/auxiliary/scanner/emc/alphastor_devicemanager.rb
 3037,/pentest/metasploit-framework/modules/exploits/windows/novell/file_reporter_fsfui_upload.rb
 3037,/pentest/metasploit-framework/modules/auxiliary/admin/http/novell_file_reporter_filedelete.rb
-3037,/pentest/metasploit-framework/modules/auxiliary/dos/http/novell_file_reporter_heap_bof.rb
 3037,/pentest/metasploit-framework/modules/auxiliary/scanner/http/novell_file_reporter_srs_fileaccess.rb
 3037,/pentest/metasploit-framework/modules/auxiliary/scanner/http/novell_file_reporter_fsfui_fileaccess.rb
 3050,/pentest/metasploit-framework/modules/exploits/windows/misc/fb_isc_attach_database.rb
@@ -377,7 +347,6 @@
 3306,/pentest/metasploit-framework/modules/exploits/linux/mysql/mysql_yassl_getname.rb
 3306,/pentest/metasploit-framework/modules/exploits/linux/mysql/mysql_yassl_hello.rb
 3306,/pentest/metasploit-framework/modules/auxiliary/scanner/mysql/mysql_version.rb
-3389,/pentest/metasploit-framework/modules/auxiliary/dos/windows/rdp/ms12_020_maxchannelids.rb
 3460,/pentest/metasploit-framework/modules/exploits/windows/misc/poisonivy_bof.rb
 3500,/pentest/metasploit-framework/modules/auxiliary/admin/emc/alphastor_librarymanager_exec.rb
 3500,/pentest/metasploit-framework/modules/auxiliary/scanner/emc/alphastor_librarymanager.rb
@@ -391,7 +360,6 @@
 3817,/pentest/metasploit-framework/modules/exploits/windows/misc/hp_dataprotector_dtbclslogin.rb
 4000,/pentest/metasploit-framework/modules/exploits/windows/http/altn_securitygateway.rb
 4322,/pentest/metasploit-framework/modules/exploits/windows/scada/indusoft_webstudio_exec.rb
-4433,/pentest/metasploit-framework/modules/auxiliary/dos/ssl/dtls_fragment_overflow.rb
 4444,/pentest/metasploit-framework/modules/auxiliary/scanner/http/sockso_traversal.rb
 4659,/pentest/metasploit-framework/modules/exploits/windows/misc/avidphoneticindexer.rb
 4672,/pentest/metasploit-framework/modules/auxiliary/scanner/kademlia/server_info.rb
@@ -405,7 +373,6 @@
 5051,/pentest/metasploit-framework/modules/exploits/windows/misc/hp_ovtrace.rb
 5060,/pentest/metasploit-framework/modules/exploits/windows/sip/sipxezphone_cseq.rb
 5060,/pentest/metasploit-framework/modules/exploits/windows/sip/sipxphone_cseq.rb
-5060,/pentest/metasploit-framework/modules/auxiliary/dos/misc/ibm_sametime_webplayer_dos.rb
 5060,/pentest/metasploit-framework/modules/auxiliary/scanner/sip/enumerator.rb
 5060,/pentest/metasploit-framework/modules/auxiliary/scanner/sip/options_tcp.rb
 5060,/pentest/metasploit-framework/modules/auxiliary/scanner/sip/enumerator_tcp.rb
@@ -418,10 +385,7 @@
 5168,/pentest/metasploit-framework/modules/exploits/windows/antivirus/trendmicro_serverprotect.rb
 5168,/pentest/metasploit-framework/modules/auxiliary/admin/serverprotect/file.rb
 5227,/pentest/metasploit-framework/modules/auxiliary/gather/hp_enum_perfd.rb
-5247,/pentest/metasploit-framework/modules/auxiliary/dos/wireshark/capwap.rb
 5250,/pentest/metasploit-framework/modules/exploits/windows/http/ca_igateway_debug.rb
-5355,/pentest/metasploit-framework/modules/auxiliary/dos/windows/llmnr/ms11_030_dnsapi.rb
-5400,/pentest/metasploit-framework/modules/auxiliary/dos/windows/appian/appian_bpm.rb
 5405,/pentest/metasploit-framework/modules/exploits/linux/misc/netsupport_manager_agent.rb
 5432,/pentest/metasploit-framework/modules/auxiliary/scanner/postgres/postgres_dbname_flag_injection.rb
 5466,/pentest/metasploit-framework/modules/exploits/windows/ftp/wing_ftp_admin_exec.rb
@@ -506,7 +470,6 @@
 7778,/pentest/metasploit-framework/modules/exploits/linux/http/kloxo_sqli.rb
 7787,/pentest/metasploit-framework/modules/exploits/windows/games/ut2004_secure.rb
 7787,/pentest/metasploit-framework/modules/exploits/linux/games/ut2004_secure.rb
-7902,/pentest/metasploit-framework/modules/auxiliary/dos/misc/dopewars.rb
 8000,/pentest/metasploit-framework/modules/exploits/multi/http/splunk_upload_app_exec.rb
 8000,/pentest/metasploit-framework/modules/exploits/multi/http/splunk_mappy_exec.rb
 8000,/pentest/metasploit-framework/modules/exploits/multi/misc/java_jdwp_debugger.rb
@@ -519,8 +482,6 @@
 8000,/pentest/metasploit-framework/modules/exploits/windows/http/ezserver_http.rb
 8000,/pentest/metasploit-framework/modules/exploits/unix/misc/qnx_qconn_exec.rb
 8000,/pentest/metasploit-framework/modules/auxiliary/admin/http/hp_web_jetadmin_exec.rb
-8000,/pentest/metasploit-framework/modules/auxiliary/dos/http/apache_tomcat_transfer_encoding.rb
-8000,/pentest/metasploit-framework/modules/auxiliary/dos/sap/sap_soap_rfc_eps_delete_file.rb
 8000,/pentest/metasploit-framework/modules/auxiliary/scanner/http/splunk_web_login.rb
 8000,/pentest/metasploit-framework/modules/auxiliary/scanner/http/sybase_easerver_traversal.rb
 8000,/pentest/metasploit-framework/modules/auxiliary/scanner/http/barracuda_directory_traversal.rb
@@ -591,7 +552,6 @@
 8080,/pentest/metasploit-framework/modules/auxiliary/admin/http/jboss_deploymentfilerepository.rb
 8080,/pentest/metasploit-framework/modules/auxiliary/admin/http/tomcat_utf8_traversal.rb
 8080,/pentest/metasploit-framework/modules/auxiliary/admin/http/jboss_seam_exec.rb
-8080,/pentest/metasploit-framework/modules/auxiliary/dos/http/apache_commons_fileupload_dos.rb
 8080,/pentest/metasploit-framework/modules/auxiliary/scanner/oracle/xdb_sid_brute.rb
 8080,/pentest/metasploit-framework/modules/auxiliary/scanner/oracle/xdb_sid.rb
 8080,/pentest/metasploit-framework/modules/auxiliary/scanner/http/open_proxy.rb
@@ -683,7 +643,6 @@
 10616,/pentest/metasploit-framework/modules/exploits/windows/misc/eiqnetworks_esa.rb
 10628,/pentest/metasploit-framework/modules/exploits/windows/misc/eiqnetworks_esa_topology.rb
 11000,/pentest/metasploit-framework/modules/exploits/windows/misc/bomberclone_overflow.rb
-11211,/pentest/metasploit-framework/modules/auxiliary/dos/misc/memcached.rb
 11211,/pentest/metasploit-framework/modules/auxiliary/gather/memcached_extractor.rb
 11234,/pentest/metasploit-framework/modules/exploits/windows/scada/scadapro_cmdexe.rb
 12174,/pentest/metasploit-framework/modules/exploits/windows/antivirus/ams_xfr.rb
@@ -693,7 +652,6 @@
 12345,/pentest/metasploit-framework/modules/auxiliary/scanner/udp_scanner_template.rb
 12397,/pentest/metasploit-framework/modules/exploits/windows/scada/igss_exec_17.rb
 12401,/pentest/metasploit-framework/modules/exploits/windows/scada/igss9_igssdataserver_listall.rb
-12401,/pentest/metasploit-framework/modules/auxiliary/dos/scada/igss9_dataserver.rb
 13364,/pentest/metasploit-framework/modules/auxiliary/scanner/misc/rosewill_rxs3211_passwords.rb
 13500,/pentest/metasploit-framework/modules/exploits/windows/lpd/wincomlpd_admin.rb
 16102,/pentest/metasploit-framework/modules/exploits/windows/misc/bcaaa_bof.rb
@@ -716,7 +674,6 @@
 27000,/pentest/metasploit-framework/modules/exploits/windows/license/flexnet_lmgrd_bof.rb
 27017,/pentest/metasploit-framework/modules/exploits/linux/misc/mongod_native_helper.rb
 27017,/pentest/metasploit-framework/modules/auxiliary/scanner/mongodb/mongodb_login.rb
-27888,/pentest/metasploit-framework/modules/auxiliary/dos/windows/games/kaillera.rb
 27960,/pentest/metasploit-framework/modules/auxiliary/scanner/quake/server_info.rb
 28784,/pentest/metasploit-framework/modules/auxiliary/scanner/scada/koyo_login.rb
 30000,/pentest/metasploit-framework/modules/exploits/windows/misc/solidworks_workgroup_pdmwservice_file_write.rb
@@ -741,7 +698,6 @@
 46823,/pentest/metasploit-framework/modules/exploits/windows/scada/winlog_runtime.rb
 46824,/pentest/metasploit-framework/modules/exploits/windows/scada/winlog_runtime_2.rb
 46824,/pentest/metasploit-framework/modules/auxiliary/scanner/scada/sielco_winlog_fileaccess.rb
-48899,/pentest/metasploit-framework/modules/auxiliary/dos/scada/beckhoff_twincat.rb
 49152,/pentest/metasploit-framework/modules/exploits/linux/http/dlink_upnp_exec_noauth.rb
 49152,/pentest/metasploit-framework/modules/auxiliary/scanner/http/smt_ipmi_49152_exposure.rb
 50000,/pentest/metasploit-framework/modules/exploits/windows/http/sap_configservlet_exec_noauth.rb
@@ -761,7 +717,6 @@
 50013,/pentest/metasploit-framework/modules/auxiliary/scanner/sap/sap_mgmt_con_getprocesslist.rb
 50013,/pentest/metasploit-framework/modules/auxiliary/scanner/sap/sap_mgmt_con_getaccesspoints.rb
 50013,/pentest/metasploit-framework/modules/auxiliary/scanner/sap/sap_mgmt_con_getenv.rb
-52302,/pentest/metasploit-framework/modules/auxiliary/dos/scada/yokogawa_logsvr.rb
 55553,/pentest/metasploit-framework/modules/auxiliary/scanner/msf/msf_rpc_login.rb
 57772,/pentest/metasploit-framework/modules/exploits/windows/http/intersystems_cache.rb
 62514,/pentest/metasploit-framework/modules/exploits/windows/vpn/safenet_ike_11.rb
