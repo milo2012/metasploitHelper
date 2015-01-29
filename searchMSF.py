@@ -11,7 +11,106 @@ def allPort():
 	while count<65535:
 		lookupPort(str(count),enableCsv=True)
 		count+=1
-		
+
+def getAllModules():		
+	portNo=0
+	fileList=[]
+	fullCmd = 'grep -ir "Opt::RPORT" '+path
+	results =  RunCommand(fullCmd)
+	portList=[]
+	lookupList=[]
+	exploitList=[]
+	resultsList = results.split("\n")
+	for result in resultsList:
+		result1 = result.split(".rb:")[1].strip()
+		exploitModule = result.split(".rb:")[0].strip()+".rb"
+		portNo = find_between(result1,"RPORT(",")")
+		portNo = portNo.replace("'","")
+		portNo = portNo.replace('"','')
+		if not any(c.isalpha() for c in portNo):
+			#lookupList.append([exploitModule,portNo])
+			if portNo not in portList:
+				portList.append(portNo)
+			if "fuzzer" not in exploitModule and "auxiliary/dos" not in exploitModule:
+				exploitList.append([portNo,exploitModule])
+
+	return exploitList	
+
+def readModule(portNoFilename,enableCsv=True):
+	results = ""
+	portNo=portNoFilename[0]		
+	filename=portNoFilename[1]
+
+	if "fuzzer" not in filename:
+		if enableCsv!=True:
+			print filename
+		with open(filename) as f:
+			lines = f.read().splitlines()
+		startFound=False
+		optionList=[]
+		found=False
+		tempStrList=[]
+		finalList=[]
+		for line in lines:
+			if "register_options" in line:
+				startFound=True
+			if "end" in line:
+				startFound=False
+				#found=True
+			if startFound==True:
+				optionList.append(line)
+
+		paramList=[]
+		#For Metasploit modules options that are multiline
+		tempStr1=""
+		for z in optionList:
+			if ".new" in z:
+				tempStr1=tempStr1.replace("  "," ")
+				if ".new" in tempStr1.lower() and "true" in tempStr1.lower():
+					parameterList = tempStr1.partition('[')[-1].rpartition(']')[0]
+					parNameTemp = ((tempStr1.split(",")[0]).partition("'")[-1].rpartition("'")[0]).strip()
+					presetValue = (parameterList.split(",")[-1]).strip()
+					presetValue = presetValue.replace("'","")
+					presetValue = presetValue.replace('"','')
+					if len(presetValue)<1:
+						if parNameTemp not in paramList:
+							paramList.append(parNameTemp)
+				tempStr1=z
+			else:
+				tempStr1+=z
+			
+		result1=""
+		for y in finalList:
+			#Check if preset value is set for required variables
+			parameterList = y.partition('[')[-1].rpartition(']')[0]
+			parNameTemp = ((y.split(",")[0]).partition("'")[-1].rpartition("'")[0]).strip()
+			presetValue = (parameterList.split(",")[-1]).strip()
+			presetValue = presetValue.replace("'","")
+			presetValue = presetValue.replace('"','')
+			if len(presetValue)<1:
+				if parNameTemp not in paramList:
+					paramList.append(parNameTemp)
+
+		#Display required parameters
+		if enableCsv==False:
+			if len(paramList)>0:
+				for x in paramList:
+					print x
+		else:
+			if len(paramList)>0:
+				tmpStr2="["
+				for x in paramList:
+					tmpStr2+=x
+					tmpStr2+=","
+				tmpStr2=tmpStr2[:-1]
+				tmpStr2+="]"
+				results = [str(portNo),filename,tmpStr2]
+				return results
+			else:
+				results = [str(portNo),filename,[]]
+				return results
+
+
 def lookupPort(matchPort,enableCsv=False):
 	if enableCsv==False:
 		print "\n- Modules Matching Port: "+str(matchPort)
@@ -51,26 +150,9 @@ def lookupPort(matchPort,enableCsv=False):
 			for line in lines:
 				if "register_options" in line:
 					startFound=True
-				if "self.class)" in line and found==False:
-					found1=False
-					for y in optionList:
-						if found1==True:
-							y = y.strip()
-							if "#" not in y:
-								tempStrList.append(y)
-						if ".new" in y:
-							if found1==True:
-								tempStrList=[]
-								found1=False
-							if "[" in y and "]" in y:
-								y = y.strip()
-								if "true" in y.lower() and "rhost" not in y.lower():
-									finalList.append(y)
-							else:
-								y = y.strip()
-								if "#" not in y:
-									tempStrList.append(y)
-									found1=True
+				if "end" in line:
+				#if "end" in line and found==False:
+				#if "self.class)" in line and found==False:
 					startFound=False
 					found=True
 				if startFound==True:
@@ -183,6 +265,7 @@ if __name__ == '__main__':
     	parser.add_argument('-uriModules', action='store_true', help='[shows targetURI and modules from metasploit modules]')
     	parser.add_argument('-params', action='store_true', help='[list parameters required by metasploit module if any]')
     	parser.add_argument('-port', dest='portNo',  action='store', help='[Port Number]')
+    	#parser.add_argument('-all', action='store_true', help='[show all metasploit modules along with port number]')
     	parser.add_argument('-all', action='store_true', help='[show all metasploit modules along with port number]')
 
     	if len(sys.argv)==1:
@@ -191,10 +274,20 @@ if __name__ == '__main__':
 	options = parser.parse_args()
 	showModules=False
 	
+	if options.all:
+		fileList = getAllModules()
+		resultList=[]
+		for file1 in fileList:
+			results =readModule(file1)
+			resultList.append(results)
+		resultList = sorted(resultList, key=lambda x: x[0])
+		for x in resultList:
+			print x[0]+","+x[1]+","+str(x[2])
+		sys.exit()
 	if options.params:
 		enableParams=True
-	if options.all:
-		allPort()
+	#if options.all:
+	#	allPort()
 	if options.uri:
 		lookupURI(showModules=False)
 	if options.uriModules:
