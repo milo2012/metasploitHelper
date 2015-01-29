@@ -1,5 +1,3 @@
-This tool parses Nmap XML file and checks for matching ports/exploits in Metasploit
-The tool will print out if there any additional parameters that needs to be supplied to the Metasploit module.
 1,/pentest/metasploit-framework/modules/exploits/windows/firewall/blackice_pam_icq.rb
 19,/pentest/metasploit-framework/modules/auxiliary/scanner/chargen/chargen_probe.rb
 21,/pentest/metasploit-framework/modules/exploits/multi/ftp/pureftpd_bash_env_exec.rb
