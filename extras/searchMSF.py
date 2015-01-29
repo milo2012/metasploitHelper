@@ -4,6 +4,7 @@ import argparse
 import sys
 
 path = "/pentest/metasploit-framework/modules"
+enableParams=False
 
 def allPort():
 	count=1
@@ -63,6 +64,7 @@ def lookupAllPorts(matchPort):
 							else:
 								y = y.strip()
 								if "#" not in y:
+									print "here1: "+y
 									tempStrList.append(y)
 									found1=True
 					startFound=False
@@ -90,9 +92,9 @@ def lookupAllPorts(matchPort):
 					if result=='""' or result=="''":
 						tempStr1+= parNameTemp
 						tempStr1+= ","
-			#if len(tempStr1)>0:
-			#	if tempStr1[-1]==",":
-			#		print "- Variables required for module: "+tempStr1[0:(len(tempStr1)-1)]
+			if len(tempStr1)>0:
+				if tempStr1[-1]=="," and enableParams==True:
+					print "- Variables required for module: "+tempStr1[0:(len(tempStr1)-1)]
 		
 def lookupPort(matchPort):
 	print "\n- Modules Matching Port: "+str(matchPort)
@@ -135,6 +137,7 @@ def lookupPort(matchPort):
 				if "self.class)" in line and found==False:
 					found1=False
 					for y in optionList:
+						#print "- "+y
 						if found1==True:
 							y = y.strip()
 							if "#" not in y:
@@ -145,18 +148,54 @@ def lookupPort(matchPort):
 								found1=False
 							if "[" in y and "]" in y:
 								y = y.strip()
-								finalList.append(y)
+								if "true" in y.lower() and "rhost" not in y.lower():
+									finalList.append(y)
 							else:
 								y = y.strip()
 								if "#" not in y:
+									#print "here2: "+y
 									tempStrList.append(y)
 									found1=True
 					startFound=False
 					found=True
 				if startFound==True:
 					optionList.append(line)
+
+			paramList=[]
+			#For Metasploit modules options that are multiline
+			tempStr1=""
+			for z in optionList:
+				if ".new" in z:
+					tempStr1=tempStr1.replace("  "," ")
+					if ".new" in tempStr1.lower() and "true" in tempStr1.lower():
+						parameterList = tempStr1.partition('[')[-1].rpartition(']')[0]
+						parNameTemp = ((tempStr1.split(",")[0]).partition("'")[-1].rpartition("'")[0]).strip()
+						presetValue = (parameterList.split(",")[-1]).strip()
+						presetValue = presetValue.replace("'","")
+						presetValue = presetValue.replace('"','')
+						if len(presetValue)<1:
+							if parNameTemp not in paramList:
+								paramList.append(parNameTemp)
+					tempStr1=z
+				else:
+					tempStr1+=z
+			
 			result1=""
-			for y in tempStrList:
+			for y in finalList:
+				#Check if preset value is set for required variables
+				parameterList = y.partition('[')[-1].rpartition(']')[0]
+				parNameTemp = ((y.split(",")[0]).partition("'")[-1].rpartition("'")[0]).strip()
+				presetValue = (parameterList.split(",")[-1]).strip()
+				presetValue = presetValue.replace("'","")
+				presetValue = presetValue.replace('"','')
+				if len(presetValue)<1:
+					if parNameTemp not in paramList:
+						paramList.append(parNameTemp)
+			if len(paramList)>0:
+				for x in paramList:
+					print x
+			'''
+			#for y in tempStrList:
 				try:	
 					m = re.search('"(.+?)"',y)
 					temp1 = str(m.group(1)).replace(",","")
@@ -176,9 +215,10 @@ def lookupPort(matchPort):
 					if result=='""' or result=="''":
 						tempStr1+= parNameTemp
 						tempStr1+= ","
-			if len(tempStr1)>0:
+			if len(tempStr1)>0 and enableParams==True:
 				if tempStr1[-1]==",":
 					print "- Variables required for module: "+tempStr1[0:(len(tempStr1)-1)]
+			'''
 def lookupURI(showModules=False):
 	path = "/pentest/metasploit-framework/modules"
 	#fullCmd = 'grep -ir "Opt::RPORT" '+path
@@ -239,6 +279,7 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
     	parser.add_argument('-uri', action='store_true', help='[shows targetURI from metasploit modules]')
     	parser.add_argument('-uriModules', action='store_true', help='[shows targetURI and modules from metasploit modules]')
+    	parser.add_argument('-params', action='store_true', help='[list parameters required by metasploit module if any]')
     	parser.add_argument('-port', dest='portNo',  action='store', help='[Port Number]')
     	parser.add_argument('-all', action='store_true', help='[show all metasploit modules along with port number]')
 
@@ -248,6 +289,8 @@ if __name__ == '__main__':
 	options = parser.parse_args()
 	showModules=False
 	
+	if options.params:
+		enableParams=True
 	if options.all:
 		allPort()
 	if options.uri:
