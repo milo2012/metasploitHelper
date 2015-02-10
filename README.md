@@ -8,7 +8,8 @@ extras\searchMSF.py    Search Metasploit modules folder
                 -       matching port number
                 -       all TARGETURI paths
                 -       all TARGETURI paths with matching module number
-metasploitHelper.py	Uses a nmap .nmap file as input and search Metasploit folder for modules matching port numbers
+metasploitHelper.py	Uses a nmap .nmap file as input and metasploit modules (web/ports) 
+			and generate a metasploit resource script.
 ```   
   
 metasploitHelper.py  
