@@ -11,7 +11,7 @@ extras\searchMSF.py    Search Metasploit modules folder
                 -       all TARGETURI paths with matching module number
 ```   
   
-metasploitHelper.py  
+**metasploitHelper.py**  
 ![alt tag](https://raw.githubusercontent.com/milo2012/metasploitHelper/master/screenshot3.png)  
 
 Sample Commands:  
@@ -26,7 +26,7 @@ List only metasploit module matching the port number
 - python metasploitHelper.py -i nmap.xml -findPort  
 
   
-searchMSF.py  
+**searchMSF.py**    
 To generate an updated version of port2Msf.csv, use the below command  
 - python searchMSF.py -all  
   
