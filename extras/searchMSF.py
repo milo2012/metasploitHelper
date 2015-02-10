@@ -3,7 +3,7 @@ import re
 import argparse
 import sys
 
-path = "/pentest/metasploit-framework/modules"
+path = "/pentest/metasploit-framework/modules/"
 enableParams=False
 
 def allPort():
@@ -21,6 +21,7 @@ def lookupAllPorts(matchPort):
 	for result in resultsList:
 		result1 = result.split(".rb:")[1].strip()
 		exploitModule = result.split(".rb:")[0].strip()+".rb"
+	
 		portNo = find_between(result1,"RPORT(",")")
 		if not any(c.isalpha() for c in portNo):
 			if len(matchPort)>0:
@@ -35,7 +36,11 @@ def lookupAllPorts(matchPort):
 		lines=[]
 		filename = x[0]
 		if "fuzzer" not in filename:
-			print matchPort+","+filename
+			moduleName = filename.replace(path,"")
+			moduleName = moduleName.replace(".rb","")
+
+			print matchPort+","+moduleName
+			#print matchPort+","+filename
 			#print filename+"\t"+x[1]
 			with open(filename) as f:
 				lines = f.read().splitlines()
@@ -64,7 +69,7 @@ def lookupAllPorts(matchPort):
 							else:
 								y = y.strip()
 								if "#" not in y:
-									print "here1: "+y
+									#print "here1: "+y
 									tempStrList.append(y)
 									found1=True
 					startFound=False
@@ -220,7 +225,6 @@ def lookupPort(matchPort):
 					print "- Variables required for module: "+tempStr1[0:(len(tempStr1)-1)]
 			'''
 def lookupURI(showModules=False):
-	path = "/pentest/metasploit-framework/modules"
 	#fullCmd = 'grep -ir "Opt::RPORT" '+path
 	fullCmd = 'grep -ir "OptString.new(\'TARGETURI\'" '+path
 	results =  RunCommand(fullCmd)
