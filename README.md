@@ -12,8 +12,18 @@ extras\searchMSF.py    Search Metasploit modules folder
 ```   
   
 metasploitHelper.py  
-![alt tag](https://raw.githubusercontent.com/milo2012/metasploitHelper/master/screenshot3.png)    
+![alt tag](https://raw.githubusercontent.com/milo2012/metasploitHelper/master/screenshot3.png)  
+
+Sample Commands:  
+- Test HTTP/HTTPs services to see if any URI listed in default-path.csv exists and list the relevant metasploit module.
+- List the metasploit module matching the port number  
+python metasploitHelper.py -i nmap.xml  
   
+- List only matching URI metasploit modules  
+python metasploitHelper.py -i nmap.xml -findweb  
+  
+- List only metasploit module matching the port number   
+python metasploitHelper.py -i nmap.xml -findPort  
 
   
 Below are the list of ports found in Metasploit modules (7 Jan 2015)
