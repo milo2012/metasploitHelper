@@ -31,7 +31,7 @@ To generate an updated version of port2Msf.csv, use the below command
 - python searchMSF.py -all  
     
 **uriList.txt**    
-This file contains the list of URIs gathered from Metasploit modules  
+- This file contains the list of URIs gathered from Metasploit modules  
   
 Below are the list of ports found in Metasploit modules (7 Jan 2015)
 ```
