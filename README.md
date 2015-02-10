@@ -33,6 +33,9 @@ To generate an updated version of port2Msf.csv, use the below command
 **uriList.txt**    
 - This file contains the list of URIs gathered from Metasploit modules  
   
+**port2Msf.csv**      
+- This file contains the ports to metasploit module mapping (along with any additional variables that are required to be supplied)  
+    
 Below are the list of ports found in Metasploit modules (7 Jan 2015)
 ```
 1
