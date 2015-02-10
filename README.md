@@ -11,7 +11,7 @@ extras\searchMSF.py    Search Metasploit modules folder
 metasploitHelper.py	Uses a nmap .nmap file as input and search Metasploit folder for modules matching port numbers
 ```   
   
-metasploitHelper.py
+metasploitHelper.py  
 ![alt tag](https://raw.githubusercontent.com/milo2012/metasploitHelper/master/screenshot3.png)    
   
 searchMsf.py    
