@@ -16,6 +16,10 @@ extras\searchMSF.py    Search Metasploit modules folder
 **metasploitHelper.py**  
 ![alt tag](https://raw.githubusercontent.com/milo2012/metasploitHelper/master/screenshot3.png)  
 
+Requirements:  
+pip install python-libnmap  
+pip install requests --upgrade  
+    
 Sample Commands:  
 Test HTTP/HTTPs services to see if any URI listed in default-path.csv exists and list the relevant metasploit module.  
 List the metasploit module matching the port number    
