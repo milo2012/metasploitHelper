@@ -223,6 +223,7 @@ if __name__== '__main__':
     parser= argparse.ArgumentParser()
     parser.add_argument('-i', dest='nmapFile', action='store', help='[use Nmap .xml file]')
     parser.add_argument('-o', dest='msfrc', action='store', help='[metasploit resource script]')
+    parser.add_argument('-nocache', action='store_true', help='[search Metasploit folder instead of using default-path.csv and port2Msf.csv]')
     parser.add_argument('-findWeb', action='store_true', help='[find only HTTP/HTTPs exploits]')
     parser.add_argument('-findPort', action='store_true', help='[find only port-based matched exploits]')
 
