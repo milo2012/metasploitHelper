@@ -7,11 +7,12 @@ path = "/pentest/metasploit-framework/modules/"
 enableParams=False
 
 def allPort():
-	count=1
-	while count<65535:
-		lookupAllPorts(str(count))
-		count+=1
-def lookupAllPorts(matchPort):
+	lookupAllPorts()
+	#count=1
+	#while count<65535:
+	#	lookupAllPorts()
+	#	count+=1
+def lookupAllPorts():
 	fullCmd = 'grep -ir "Opt::RPORT" '+path
 	results =  RunCommand(fullCmd)
 	portList=[]
@@ -20,34 +21,33 @@ def lookupAllPorts(matchPort):
 	resultsList = results.split("\n")
 	for result in resultsList:
 		result1 = result.split(".rb:")[1].strip()
-		exploitModule = result.split(".rb:")[0].strip()
+		exploitModule = result.split(".rb:")[0].strip()+".rb"
 		portNo = find_between(result1,"RPORT(",")")
+		portNo = portNo.replace("'","")
 		if not any(c.isalpha() for c in portNo):
-			if len(matchPort)>0:
-				if portNo==matchPort:
-					lookupList.append([exploitModule,portNo])
-			if portNo not in portList:
-				portList.append(portNo)
+			#if len(str(matchPort))>0:
+			#	if portNo==matchPort:
+			#		lookupList.append([exploitModule,portNo])
+			#if portNo not in portList:
+			#	portList.append(portNo)
 			if "fuzzer" not in exploitModule and "auxiliary/dos" not in exploitModule:
-				exploitList.append([exploitModule,portNo])
+				exploitList.append([exploitModule,str(portNo)])
 
-	for x in lookupList:
+	#for x in lookupList:
+	for x in exploitList:
 		lines=[]
 		filename = x[0]
+		matchPort = x[1]
 		if "fuzzer" not in filename:
 			moduleName = filename.replace(path,"")
-			moduleName = moduleName.replace(".rb","")
 
-			print matchPort+","+moduleName
-			#print matchPort+","+filename
-			#print filename+"\t"+x[1]
+			tempStrList=[]
+			finalList=[]
 			with open(filename) as f:
 				lines = f.read().splitlines()
 			startFound=False
 			optionList=[]
 			found=False
-			tempStrList=[]
-			finalList=[]
 			for line in lines:
 				if "register_options" in line:
 					startFound=True
@@ -86,6 +86,7 @@ def lookupAllPorts(matchPort):
 					result1 += y
 					continue
 			if len(str(result1))>0:
+				result1 = result1.replace(" ","")
 				finalList.append(result1)
 			tempStr1=""
 			for g in finalList:
@@ -96,10 +97,17 @@ def lookupAllPorts(matchPort):
 					if result=='""' or result=="''":
 						tempStr1+= parNameTemp
 						tempStr1+= ","
+			moduleName = moduleName.replace(".rb","")
 			if len(tempStr1)>0:
-				if tempStr1[-1]=="," and enableParams==True:
-					print "- Variables required for module: "+tempStr1[0:(len(tempStr1)-1)]
-		
+				if tempStr1[-1]==",":
+				#if tempStr1[-1]=="," and enableParams==True:
+					print matchPort+","+moduleName+",["+tempStr1[0:(len(tempStr1)-1)]+"]"
+					#print "here: "+tempStr1
+					#print "- Variables required for module: "+tempStr1[0:(len(tempStr1)-1)]
+				else:
+					print matchPort+","+moduleName+",["+tempStr1[0:(len(tempStr1)-1)]+"]"
+			else:
+				print matchPort+","+moduleName+",[]"
 def lookupPort(matchPort):
 	fullCmd = 'grep -ir "Opt::RPORT" '+path
 	results =  RunCommand(fullCmd)
