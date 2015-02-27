@@ -4,7 +4,6 @@ import argparse
 import sys
 
 path = "/pentest/metasploit-framework/modules/"
-enableParams=False
 
 def allPort():
 	lookupAllPorts()
@@ -100,10 +99,7 @@ def lookupAllPorts():
 			moduleName = moduleName.replace(".rb","")
 			if len(tempStr1)>0:
 				if tempStr1[-1]==",":
-				#if tempStr1[-1]=="," and enableParams==True:
 					print matchPort+","+moduleName+",["+tempStr1[0:(len(tempStr1)-1)]+"]"
-					#print "here: "+tempStr1
-					#print "- Variables required for module: "+tempStr1[0:(len(tempStr1)-1)]
 				else:
 					print matchPort+","+moduleName+",["+tempStr1[0:(len(tempStr1)-1)]+"]"
 			else:
@@ -262,8 +258,11 @@ def lookupURI(showModules=False):
 					if result1 not in pathList:		
 						pathList.append([result1,exploitModule])
 	if showModules==False:
+		f = open('uriList.txt','w')
 		for x in uriList:
 			print x
+			f.write(x+"\n")
+		f.close()
 	else:
 		f = open('default-path.csv','w')
 		for x in pathList:
