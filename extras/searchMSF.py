@@ -20,8 +20,7 @@ def lookupAllPorts(matchPort):
 	resultsList = results.split("\n")
 	for result in resultsList:
 		result1 = result.split(".rb:")[1].strip()
-		exploitModule = result.split(".rb:")[0].strip()+".rb"
-	
+		exploitModule = result.split(".rb:")[0].strip()
 		portNo = find_between(result1,"RPORT(",")")
 		if not any(c.isalpha() for c in portNo):
 			if len(matchPort)>0:
@@ -102,8 +101,6 @@ def lookupAllPorts(matchPort):
 					print "- Variables required for module: "+tempStr1[0:(len(tempStr1)-1)]
 		
 def lookupPort(matchPort):
-	print "\n- Modules Matching Port: "+str(matchPort)
-
 	fullCmd = 'grep -ir "Opt::RPORT" '+path
 	results =  RunCommand(fullCmd)
 	portList=[]
@@ -225,7 +222,6 @@ def lookupPort(matchPort):
 					print "- Variables required for module: "+tempStr1[0:(len(tempStr1)-1)]
 			'''
 def lookupURI(showModules=False):
-	#fullCmd = 'grep -ir "Opt::RPORT" '+path
 	fullCmd = 'grep -ir "OptString.new(\'TARGETURI\'" '+path
 	results =  RunCommand(fullCmd)
 	exploitList=[]
@@ -235,7 +231,9 @@ def lookupURI(showModules=False):
 	resultsList = results.split("\n")
 	for result in resultsList:
 		result1 = result.split(".rb:")[1].strip()
-		exploitModule = result.split(".rb:")[0].strip()+".rb"
+		exploitModule = result.split(".rb:")[0].strip()
+		exploitModule = exploitModule.replace(path,"")
+	
 		portNo = find_between(result1,"[","]")
 		if "fuzzer" not in exploitModule and "auxiliary/dos" not in exploitModule:
 			exploitList.append([exploitModule,portNo])
@@ -244,7 +242,10 @@ def lookupURI(showModules=False):
 			result1 = result1.replace('"',"")
 			result1 = result1.strip()
 			if "/" in result1:
+				exploitModule = exploitModule.replace(".rb","")
 				if result1!="/":
+					if not result1.endswith("/"):
+						result1 = result1+"/"
 					if result1 not in uriList:
 						uriList.append(result1)
 				if result1=="/":
@@ -256,12 +257,16 @@ def lookupURI(showModules=False):
 		for x in uriList:
 			print x
 	else:
+		f = open('default-path.csv','w')
 		for x in pathList:
 			x[1] = x[1].replace(path,".")
 			print x[0]+","+x[1]
+			f.write( x[0]+","+x[1]+"\n")
 		for x in defaultPathList:	
 			x[1] = x[1].replace(path,".")
 			print x[0]+","+x[1]
+			f.write( x[0]+","+x[1]+"\n")
+		f.close()
 
 def find_between( s, first, last ):
     try:
@@ -278,8 +283,8 @@ def RunCommand(fullCmd):
         return "Error executing command %s" %(fullCmd)
 
 if __name__ == '__main__':
-	print "This tool parses Nmap XML file and checks for matching ports/exploits in Metasploit"
-	print "The tool will print out if there any additional parameters that needs to be supplied to the Metasploit module."
+	#print "This tool parses Nmap XML file and checks for matching ports/exploits in Metasploit"
+	#print "The tool will print out if there any additional parameters that needs to be supplied to the Metasploit module."
 	parser = argparse.ArgumentParser()
     	parser.add_argument('-uri', action='store_true', help='[shows targetURI from metasploit modules]')
     	parser.add_argument('-uriModules', action='store_true', help='[shows targetURI and modules from metasploit modules]')
