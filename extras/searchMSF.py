@@ -14,6 +14,7 @@ def allPort():
 def lookupAllPorts():
 	fullCmd = 'grep -ir "Opt::RPORT" '+path
 	results =  RunCommand(fullCmd)
+	writeList=[]
 	portList=[]
 	lookupList=[]
 	exploitList=[]
@@ -24,15 +25,8 @@ def lookupAllPorts():
 		portNo = find_between(result1,"RPORT(",")")
 		portNo = portNo.replace("'","")
 		if not any(c.isalpha() for c in portNo):
-			#if len(str(matchPort))>0:
-			#	if portNo==matchPort:
-			#		lookupList.append([exploitModule,portNo])
-			#if portNo not in portList:
-			#	portList.append(portNo)
 			if "fuzzer" not in exploitModule and "auxiliary/dos" not in exploitModule:
 				exploitList.append([exploitModule,str(portNo)])
-
-	#for x in lookupList:
 	for x in exploitList:
 		lines=[]
 		filename = x[0]
@@ -99,11 +93,20 @@ def lookupAllPorts():
 			moduleName = moduleName.replace(".rb","")
 			if len(tempStr1)>0:
 				if tempStr1[-1]==",":
-					print matchPort+","+moduleName+",["+tempStr1[0:(len(tempStr1)-1)]+"]"
+					results = matchPort+","+moduleName+",["+tempStr1[0:(len(tempStr1)-1)]+"]"
+					writeList.append(results)
 				else:
-					print matchPort+","+moduleName+",["+tempStr1[0:(len(tempStr1)-1)]+"]"
+					results = matchPort+","+moduleName+",["+tempStr1[0:(len(tempStr1)-1)]+"]"
+					writeList.append(results)
 			else:
-				print matchPort+","+moduleName+",[]"
+				results = matchPort+","+moduleName+",[]"
+				writeList.append(results)
+	f = open('port2Msf.csv','w')
+	for x in writeList:
+		print x
+		f.write(x+"\n")
+	f.close()
+
 def lookupPort(matchPort):
 	fullCmd = 'grep -ir "Opt::RPORT" '+path
 	results =  RunCommand(fullCmd)
@@ -257,23 +260,21 @@ def lookupURI(showModules=False):
 				else:
 					if result1 not in pathList:		
 						pathList.append([result1,exploitModule])
-	if showModules==False:
-		f = open('uriList.txt','w')
-		for x in uriList:
-			print x
-			f.write(x+"\n")
-		f.close()
-	else:
-		f = open('default-path.csv','w')
-		for x in pathList:
-			x[1] = x[1].replace(path,".")
-			print x[0]+","+x[1]
-			f.write( x[0]+","+x[1]+"\n")
-		for x in defaultPathList:	
-			x[1] = x[1].replace(path,".")
-			print x[0]+","+x[1]
-			f.write( x[0]+","+x[1]+"\n")
-		f.close()
+	f = open('uriList.txt','w')
+	for x in uriList:
+		f.write(x+"\n")
+	f.close()
+	
+	f = open('default-path.csv','w')
+	for x in pathList:
+		x[1] = x[1].replace(path,".")
+		print x[0]+","+x[1]
+		f.write( x[0]+","+x[1]+"\n")
+	for x in defaultPathList:	
+		x[1] = x[1].replace(path,".")
+		print x[0]+","+x[1]
+		f.write( x[0]+","+x[1]+"\n")
+	f.close()
 
 def find_between( s, first, last ):
     try:
@@ -294,7 +295,6 @@ if __name__ == '__main__':
 	#print "The tool will print out if there any additional parameters that needs to be supplied to the Metasploit module."
 	parser = argparse.ArgumentParser()
     	parser.add_argument('-uri', action='store_true', help='[shows targetURI from metasploit modules]')
-    	parser.add_argument('-uriModules', action='store_true', help='[shows targetURI and modules from metasploit modules]')
     	parser.add_argument('-params', action='store_true', help='[list parameters required by metasploit module if any]')
     	parser.add_argument('-port', dest='portNo',  action='store', help='[Port Number]')
     	parser.add_argument('-all', action='store_true', help='[show all metasploit modules along with port number]')
@@ -310,8 +310,6 @@ if __name__ == '__main__':
 	if options.all:
 		allPort()
 	if options.uri:
-		lookupURI(showModules=False)
-	if options.uriModules:
 		lookupURI(showModules=True)
 	if options.portNo:
 		lookupPort(options.portNo)
