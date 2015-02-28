@@ -37,19 +37,10 @@ List only metasploit modules matching target URI in HTTP/HTTPs servers
 - python metasploitHelper.py -i nmap.xml -findweb  
   
 List only metasploit modules matching the port number   
-- python metasploitHelper.py -i nmap.xml -findPort  
-
-  
-**searchMSF.py**    
-To generate an updated version of port2Msf.csv, use the below command  
-- python searchMSF.py -all  
+- python metasploitHelper.py -i nmap.xml -findPort   
     
-**uriList.txt**    
-- This file contains the list of URIs gathered from Metasploit modules  
-  
-**port2Msf.csv**      
-- This file contains the ports to metasploit module mapping (along with any additional variables that are required to be supplied)  
-  
-**default-path.csv**      
-- This file contains the uri to metasploit module mapping   
+**Description of Files**  
+- uriList.txt - This file contains the list of URIs gathered from Metasploit modules  
+- port2Msf.csv - This file contains the ports to metasploit module mapping (along with any additional variables that are required to be supplied)  
+- default-path.csv - This file contains the uri to metasploit module mapping   
           
