@@ -1,5 +1,5 @@
 # metasploitHelper
-metasploitHelper (Work in Progress)  
+**Introduction**
 
 The reason for this script is that I want to be be able to take a NMAP xml file as input, automatically search for a Metasploit module and launches the Metasploit module against it.    
 The script checks for metasploit modules matching the port number listed in the nmap XML file.  
@@ -15,7 +15,20 @@ Denial of service (DoS) modules in Metasploit are excluded.
 **Requirements:**  
 pip install python-libnmap  
 pip install requests --upgrade  
-    
+
+**Usage**  
+usage: metasploitHelper.py [-h] [-i NMAPFILE] [-o MSFRC] [-nocache] [-findWeb]
+                           [-findPort]  
+optional arguments:  
+  -h, --help   show this help message and exit  
+  -i NMAPFILE  [use Nmap .xml file]  
+  -o MSFRC     [metasploit resource script]  
+  -nocache     [search Metasploit folder instead of using default-path.csv and  
+               port2Msf.csv (default=off]  
+  -findWeb     [find only HTTP/HTTPs exploits (default=on)]  
+  -findPort    [find only port-based matched exploits (default=on)]  
+  
+     
 **Sample Usage Examples:**    
 Generate a metasploit resource script containing the list of exploits matching the port number and HTTP/HTTPs URI path.
 - python metasploitHelper.py -i nmap.xml  
