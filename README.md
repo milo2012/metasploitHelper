@@ -9,9 +9,12 @@ The script then generates a metasploit resource script for the matching modules 
 Denial of service (DoS) modules in Metasploit are excluded.
   
 **Requirements:**  
-pip install python-libnmap  
-pip install requests --upgrade  
-
+```
+- Python 2.7
+- pip install python-libnmap  
+- pip install requests --upgrade  
+```  
+  
 **Usage**  
 ```
 usage: metasploitHelper.py [-h] [-i NMAPFILE] [-o MSFRC] [-nocache] [-findWeb]
