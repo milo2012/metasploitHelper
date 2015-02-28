@@ -8,10 +8,6 @@ The script then generates a metasploit resource script for the matching modules 
   
 Denial of service (DoS) modules in Metasploit are excluded.
   
-    
-**metasploitHelper.py**  
-![alt tag](https://raw.githubusercontent.com/milo2012/metasploitHelper/master/screenshot3.png)  
-
 **Requirements:**  
 pip install python-libnmap  
 pip install requests --upgrade  
