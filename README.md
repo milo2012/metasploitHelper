@@ -17,14 +17,14 @@ metasploitHelper.py    Uses a nmap .nmap file as input and metasploit modules (w
 pip install python-libnmap  
 pip install requests --upgrade  
     
-**Sample Commands:**    
+**Sample Usage Examples:**    
 Generate a metasploit resource script containing the list of exploits matching the port number and HTTP/HTTPs URI path.
 - python metasploitHelper.py -i nmap.xml  
   
-List only matching URI metasploit modules  
+List only metasploit modules matching target URI in HTTP/HTTPs servers
 - python metasploitHelper.py -i nmap.xml -findweb  
   
-List only metasploit module matching the port number   
+List only metasploit modules matching the port number   
 - python metasploitHelper.py -i nmap.xml -findPort  
 
   
