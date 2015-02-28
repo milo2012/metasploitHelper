@@ -7,11 +7,8 @@ The script also test URIs listed in urlList.txt against the web services and lis
 The script then generates a metasploit resource script for the matching modules so that you can run the metasploit modules easily against the target hosts via the command "msfconsole -r msfRun.rc"  
   
 Denial of service (DoS) modules in Metasploit are excluded.
-
-```
-metasploitHelper.py    Uses a nmap .nmap file as input and metasploit modules (web/ports) and generate a metasploit resource script.
-```   
   
+    
 **metasploitHelper.py**  
 ![alt tag](https://raw.githubusercontent.com/milo2012/metasploitHelper/master/screenshot3.png)  
 
