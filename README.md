@@ -17,6 +17,7 @@ pip install python-libnmap
 pip install requests --upgrade  
 
 **Usage**  
+```
 usage: metasploitHelper.py [-h] [-i NMAPFILE] [-o MSFRC] [-nocache] [-findWeb]
                            [-findPort]  
 optional arguments:  
@@ -27,7 +28,7 @@ optional arguments:
                port2Msf.csv (default=off]  
   -findWeb     [find only HTTP/HTTPs exploits (default=on)]  
   -findPort    [find only port-based matched exploits (default=on)]  
-  
+```  
      
 **Sample Usage Examples:**    
 Generate a metasploit resource script containing the list of exploits matching the port number and HTTP/HTTPs URI path.
