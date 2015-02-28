@@ -346,7 +346,8 @@ def testURI(scheme,hostNo,portNo):
 			status = i[1][0]
 			url = i[1][1]
 			uriPath = i[1][2]
-			if status==302 or status==200 or status==401:
+			if status==200:
+			#if status==302 or status==200 or status==401:
 				tempList.append([status,url,uriPath])
 	for x in tempList:
 		uriPath = x[2]
@@ -368,7 +369,6 @@ def testURI(scheme,hostNo,portNo):
 					paramList = paramNames.split("+")
 					for y in paramList:
 						contentList.append('set '+y)
-
 				contentList.append('exploit')
 def parseNmap(filename):
 	ipList=[]
@@ -381,38 +381,22 @@ def parseNmap(filename):
 
 	with open (filename, 'rt') as file:
 		tree=ElementTree.parse(file)
-	for node_2 in tree.iter('state'):
-		state =   node_2.attrib.get('state')
-		stateList.append(state)
-	for node_2 in tree.iter('port'):
-		port =   node_2.attrib.get('portid')
-		portList.append(port)
-	for node_2 in tree.iter('address'):
-		ip_add =   node_2.attrib.get('addr')
-		ipList.append(ip_add)
-	for node_2 in tree.iter('service'):
-		service =   node_2.attrib.get('name')
-		serviceList.append(service)
-	rep = NmapParser.parse_fromfile(filename) 
+	rep = NmapParser.parse_fromfile(filename)
 	for _host in rep.hosts:
-		host = ', '.join(_host.hostnames)
 		ip = (_host.address)
-
-	counter=0
-	while counter<len(stateList):
-		if stateList[counter]=="open":
-			if serviceList[counter]=="http":
-				httpList.append([ipList[counter],portList[counter]])
-			elif serviceList[counter]=="https":
-				httpsList.append([ipList[counter],portList[counter]])
-			else:
-				portsList.append([ipList[counter],portList[counter]])
-		counter+=1
-
+		for services in _host.services:
+			if services.state=="open":
+				if services.service=="http":
+					httpList.append([str(ip),str(services.port)])
+				elif services.service=="https":
+					httpsList.append([str(ip),str(services.port)])
+				else:
+					portsList.append([str(ip),str(services.port)])
 	if findWeb==True:
 		if len(httpList)>0:
 			for x in httpList:
 				url = "http://"+x[0]+":"+x[1]
+				print "\nTesting: "+url
 				scheme = "http"
 				hostNo = x[0]
 				portNo = x[1]
@@ -421,6 +405,7 @@ def parseNmap(filename):
 		if len(httpsList)>0:
 			for x in httpsList:
 				url = "https://"+x[0]+":"+x[1]
+				print "\nTesting: "+url
 				scheme = "https"
 				hostNo = x[0]
 				portNo = x[1]
@@ -429,6 +414,7 @@ def parseNmap(filename):
 		if len(portsList)>0:
 			for x in portsList:
 				lookupPort(x[0],x[1])
+
 if __name__== '__main__':
     parser= argparse.ArgumentParser()
     parser.add_argument('-i', dest='nmapFile', action='store', help='[use Nmap .xml file]')
@@ -462,7 +448,6 @@ if __name__== '__main__':
     readDatabase()
     if options.nmapFile:
 	parseNmap(options.nmapFile)
-
 
     if outputFile==None:
 	outputFile="runMsf.rc"
