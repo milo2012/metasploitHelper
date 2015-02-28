@@ -80,17 +80,86 @@ def find_between( s, first, last ):
 
 def getHEAD(scheme,hostNo,uri,portNo):
 	url = scheme+"://"+hostNo+":"+portNo+uri
-	print url
 	try:
 		resp = requests.head(url,verify=False, timeout=3)
-		print resp.status_code
+		if resp.status_code==200:
+			print "Found: %-70s %-10s" % (url,resp.status_code)
 		return (resp.status_code,url,uri)
-		#(resp.status_code, resp.text, resp.headers)
 	except requests.exceptions.Timeout:
 		pass
 	except Exception as e:
 		print e
 		pass
+
+def extractParam(uri,filename):
+	with open(filename) as f:
+		lines = f.read().splitlines()
+	moduleName = filename.replace(path,"")
+	startFound=False
+	pathList=[]
+	tempStrList=[]
+	finalList=[]
+	optionList=[]
+	found=False
+	for line in lines:
+		if "register_options" in line:
+			startFound=True
+		if "self.class)" in line and found==False:
+			found1=False
+			for y in optionList:
+				if found1==True:
+					y = y.strip()
+					if "#" not in y:
+						tempStrList.append(y)
+				if ".new" in y:
+					if found1==True:
+						tempStrList=[]
+						found1=False
+					if "[" in y and "]" in y:
+						y = y.strip()
+						finalList.append(y)
+					else:
+						y = y.strip()
+						if "#" not in y:
+							tempStrList.append(y)
+							found1=True
+			startFound=False
+			found=True
+		if startFound==True:
+			optionList.append(line)
+	result1=""
+	for y in tempStrList:
+		try:	
+			m = re.search('"(.+?)"',y)
+			temp1 = str(m.group(1)).replace(",","")
+			y = y.replace(m.group(1),temp1)
+			result1 += y
+		except AttributeError:
+			result1 += y
+			continue
+	if len(str(result1))>0:
+		result1 = result1.replace(" ","")
+		finalList.append(result1)
+	tempStr1=""
+	for g in finalList:
+		if "false" not in g.lower() and "rhost" not in g.lower():
+			parameterList = g.partition('[')[-1].rpartition(']')[0]
+			parNameTemp =( g.split(",")[0]).partition("'")[-1].rpartition("'")[0]
+			result = (parameterList.split(",")[-1]).strip()
+			if result=='""' or result=="''":
+				tempStr1+= parNameTemp
+				tempStr1+= "+"
+	moduleName = moduleName.replace(".rb","")
+	if len(tempStr1)>0:
+		if tempStr1[-1]==",":
+			results = uri+","+moduleName+",["+tempStr1[0:(len(tempStr1)-1)]+"]"
+			return results
+		else:
+			results = uri+","+moduleName+",["+tempStr1[0:(len(tempStr1)-1)]+"]"
+			return results
+	else:
+		results = uri+","+moduleName+",[]"
+		return results
 
 def lookupAllPorts():
 	fullCmd = 'grep -ir "Opt::RPORT" '+path
@@ -189,6 +258,7 @@ def lookupAllPorts():
 def lookupURI(showModules=False):
 	fullCmd = 'grep -ir "OptString.new(\'TARGETURI\'" '+path
 	results =  RunCommand(fullCmd)
+
 	exploitList=[]
 	pathList=[]
 	uriList=[]
@@ -208,16 +278,14 @@ def lookupURI(showModules=False):
 			result1 = result1.strip()
 			if "/" in result1:
 				exploitModule = exploitModule.replace(".rb","")
+				filename = path+exploitModule+".rb"
+				uri = result1
+				results = extractParam(uri,filename)
+				pathList.append(results)
+
 				if result1!="/":
-					#if not result1.endswith("/"):
-					#	result1 = result1+"/"
 					if result1 not in uriList:
 						uriList.append(result1)
-				if result1=="/":
-					defaultPathList.append([result1,exploitModule])
-				else:
-					if result1 not in pathList:		
-						pathList.append([result1,exploitModule])
 	f = open('uriList.txt','w')
 	for x in uriList:
 		f.write(x+"\n")
@@ -225,11 +293,7 @@ def lookupURI(showModules=False):
 	
 	f = open('default-path.csv','w')
 	for x in pathList:
-		x[1] = x[1].replace(path,".")
-		f.write( x[0]+","+x[1]+"\n")
-	for x in defaultPathList:	
-		x[1] = x[1].replace(path,".")
-		f.write( x[0]+","+x[1]+"\n")
+		f.write(x+"\n")
 	f.close()
 
 def readDatabase():
@@ -242,8 +306,9 @@ def readDatabase():
 				x1 = x.split(",")
 				uri = x1[0]
 				msfModule = x1[1]
+				paramNames = x1[2]
 				uriList.append(uri)
-				uriMatch.append([uri,msfModule])
+				uriMatch.append([uri,msfModule,paramNames])
 	fname="port2Msf.csv"
 	with open(fname) as f:
 		tempList = f.readlines()
@@ -257,7 +322,6 @@ def readDatabase():
 				portMatch.append([portNo,msfModule])
 def lookupPort(hostNo,portNo):
 	for y in portMatch:	
-		#print y[0]+"\t"+portNo
 		if y[0]==portNo:
 			contentList.append("use "+y[1])
 			contentList.append("set RHOST "+hostNo)
@@ -266,41 +330,46 @@ def lookupPort(hostNo,portNo):
 			contentList.append("exploit\n")
 
 def testURI(scheme,hostNo,portNo):
+	print "- Brute Forcing URLs..."
 	jobs = []
 	jobid=0
 	for x in uriList:
 		x = x.strip()
 		if len(x)>0 and x!="/":
 			uri = x
-			#print "here2: "+scheme+"://"+hostNo+":"+portNo+uri
 			jobs.append((jobid,scheme,hostNo,uri,portNo))
 			jobid = jobid+1
 	resultsList = execute1(jobs,numProcesses)
 	tempList=[]
 	for i in resultsList:
-		print i
 		if i[1]!=None:
 			status = i[1][0]
 			url = i[1][1]
 			uriPath = i[1][2]
 			if status==302 or status==200 or status==401:
 				tempList.append([status,url,uriPath])
-	if len(tempList)<3:
-		for x in tempList:
-			uriPath = x[2]
-			for x1 in uriMatch:
-				uri=x1[0]
-				msfModule=x1[1]
-				if uri==uriPath:
-					#print uriPath
-					#print msfModule
-					print x[1]
-					o = urlparse(x[1])
-					contentList.append('use '+msfModule)
-					contentList.append('set RHOST '+(o.netloc).split(":")[0])
-					contentList.append('set RHOSTS '+(o.netloc).split(":")[0])
-					contentList.append('set RPORT '+(o.netloc).split(":")[1])
-					contentList.append('exploit')
+	for x in tempList:
+		uriPath = x[2]
+		for x1 in uriMatch:
+			uri=x1[0]		
+			msfModule=x1[1]
+			paramNames=x1[2]
+			paramList=[]
+			if uri==uriPath:
+				o = urlparse(x[1])
+				contentList.append('use '+msfModule)
+				contentList.append('set RHOST '+(o.netloc).split(":")[0])
+				contentList.append('set RHOSTS '+(o.netloc).split(":")[0])
+				contentList.append('set RPORT '+(o.netloc).split(":")[1])
+
+				if paramNames!="[]":
+					paramNames=paramNames.replace("[","")
+					paramNames=paramNames.replace("]","")
+					paramList = paramNames.split("+")
+					for y in paramList:
+						contentList.append('set '+y)
+
+				contentList.append('exploit')
 def parseNmap(filename):
 	ipList=[]
 	httpList=[]
@@ -347,7 +416,6 @@ def parseNmap(filename):
 				scheme = "http"
 				hostNo = x[0]
 				portNo = x[1]
-				print url
 				testURI(scheme,hostNo,portNo)
 	if findWeb==True:
 		if len(httpsList)>0:
@@ -356,7 +424,6 @@ def parseNmap(filename):
 				scheme = "https"
 				hostNo = x[0]
 				portNo = x[1]
-				print url
 				testURI(scheme,hostNo,portNo)
 	if findPort==True:
 		if len(portsList)>0:
@@ -393,17 +460,20 @@ if __name__== '__main__':
 
     outputFile = options.msfrc
     readDatabase()
-    parseNmap(options.nmapFile)
+    if options.nmapFile:
+	parseNmap(options.nmapFile)
 
 
     if outputFile==None:
 	outputFile="runMsf.rc"
 
-    if len(contentList)>0:
+    if len(contentList)>1:
 	contentList.append("exit -y")
 	f = open(outputFile, 'w')
 	for x in contentList:
 		f.write(x+"\n")
 	f.close()
-	print "Metasploit resource script: "+outputFile+" written."
+	print "\nMetasploit resource script: "+outputFile+" written."
+    else:
+	print "\n- No results found"
 	
