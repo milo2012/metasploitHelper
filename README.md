@@ -4,7 +4,7 @@ metasploitHelper (Work in Progress)
 The reason for this script is that I want to be be able to take a NMAP xml file as input, automatically search for a Metasploit module and launches the Metasploit module against it.    
 The script checks for metasploit modules matching the port number listed in the nmap XML file.  
 The script also test URIs listed in urlList.txt against the web services and list the matching metasploit modules.  
-The script then generates a metasploit resource script for the matching modules so that you can run the metasploit modules easily via the command "msfconsole -r msfRun.rc"  
+The script then generates a metasploit resource script for the matching modules so that you can run the metasploit modules easily against the target hosts via the command "msfconsole -r msfRun.rc"  
   
 Denial of service (DoS) modules in Metasploit are excluded.
 
