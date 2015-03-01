@@ -79,9 +79,12 @@ def find_between( s, first, last ):
         return ""
 
 def getHEAD(scheme,hostNo,uri,portNo):
+	headers = {
+    		'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115 Safari/537.36',
+	}
 	url = scheme+"://"+hostNo+":"+portNo+uri
 	try:
-		resp = requests.head(url,verify=False, timeout=3)
+		resp = requests.head(url,verify=False,timeout=3,headers=headers)
 		if resp.status_code==200:
 			print "Found: %-70s %-10s" % (url,resp.status_code)
 		return (resp.status_code,url,uri)
