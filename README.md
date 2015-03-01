@@ -2,7 +2,7 @@ metasploitHelper
 ================  
 ##Introduction
 
-- TLDR. Metasploit contains port-based modules as well as URI-based modules (web servers). This tool bridges Nmap XML file with Metasploit and generates a resource script that you can run against the "matched" modules.
+- TLDR. Metasploit contains port-based modules as well as URI-based modules (web servers). This tool bridges Nmap XML file with Metasploit and generates a resource script containing matching Metasploit modules. that you can run against the target servers.
 
 ##Longer Introduction
 - The script checks for metasploit modules matching the port number listed in the nmap XML file.  
