@@ -241,7 +241,7 @@ def lookupAllPorts():
 					result = (parameterList.split(",")[-1]).strip()
 					if result=='""' or result=="''":
 						tempStr1+= parNameTemp
-						tempStr1+= ","
+						tempStr1+= "+"
 			moduleName = moduleName.replace(".rb","")
 			if len(tempStr1)>0:
 				if tempStr1[-1]==",":
@@ -322,7 +322,7 @@ def readDatabase():
 				portNo = x1[0]
 				msfModule = x1[1]
 				addArg = x1[2]
-				portMatch.append([portNo,msfModule])
+				portMatch.append([portNo,msfModule,addArg])
 def lookupPort(hostNo,portNo):
 	for y in portMatch:	
 		if y[0]==portNo:
