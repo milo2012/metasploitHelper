@@ -20,11 +20,14 @@ uriMatch=[]
 numProcesses = 20
 outputFile = ""
 portMatch=[]
-contentList=[]
+auxContentList=[]
+expContentList=[]
+
 findWeb=True
 findPort=True
 
-contentList.append("spool runMsf.log")
+auxContentList.append("spool runMsfAux.log")
+expContentList.append("spool runMsfExploit.log")
 
 class Worker1(multiprocessing.Process):
 
@@ -329,17 +332,28 @@ def lookupPort(hostNo,portNo):
 		paramNames = y[2]
 		paramList=[]
 		if y[0]==portNo:
-			contentList.append("use "+y[1])
-			contentList.append("set RHOST "+hostNo)
-			contentList.append("set RHOSTS "+hostNo)
-			contentList.append("set RPORT "+portNo)
+			
+			if "auxiliary" in msfModule:
+				auxContentList.append("use "+y[1])
+				auxContentList.append("set RHOST "+hostNo)
+				auxContentList.append("set RHOSTS "+hostNo)
+				auxContentList.append("set RPORT "+portNo)
+			if "exploit" in msfModule:
+				expContentList.append("use "+y[1])
+				expContentList.append("set RHOST "+hostNo)
+				expContentList.append("set RHOSTS "+hostNo)
+				expContentList.append("set RPORT "+portNo)
 		if paramNames!="[]":
 			paramNames=paramNames.replace("[","")
 			paramNames=paramNames.replace("]","")
 			paramList = paramNames.split("+")
 			for y in paramList:
-				contentList.append('set '+y)
-		contentList.append('exploit\n')
+				if "auxiliary" in msfModule:
+					auxContentList.append('set '+y)
+				if "exploit" in msfModule:
+					expContentList.append('set '+y)
+		auxContentList.append('exploit\n')
+		expContentList.append('exploit\n')
 
 def testURI(scheme,hostNo,portNo):
 	print "- Brute Forcing URLs..."
@@ -370,18 +384,30 @@ def testURI(scheme,hostNo,portNo):
 			paramList=[]
 			if uri==uriPath:
 				o = urlparse(x[1])
-				contentList.append('use '+msfModule)
-				contentList.append('set RHOST '+(o.netloc).split(":")[0])
-				contentList.append('set RHOSTS '+(o.netloc).split(":")[0])
-				contentList.append('set RPORT '+(o.netloc).split(":")[1])
+				if "auxiliary" in msfModule:
+					auxContentList.append('use '+msfModule)
+					auxContentList.append('set RHOST '+(o.netloc).split(":")[0])
+					auxContentList.append('set RHOSTS '+(o.netloc).split(":")[0])
+					auxContentList.append('set RPORT '+(o.netloc).split(":")[1])
+				if "exploit" in msfModule:
+					expContentList.append('use '+msfModule)
+					expContentList.append('set RHOST '+(o.netloc).split(":")[0])
+					expContentList.append('set RHOSTS '+(o.netloc).split(":")[0])
+					expContentList.append('set RPORT '+(o.netloc).split(":")[1])
 
 				if paramNames!="[]":
 					paramNames=paramNames.replace("[","")
 					paramNames=paramNames.replace("]","")
 					paramList = paramNames.split("+")
 					for y in paramList:
-						contentList.append('set '+y)
-				contentList.append('exploit')
+						if "auxiliary" in msfModule:
+							auxContentList.append('set '+y)
+						if "exploit" in msfModule:
+							expContentList.append('set '+y)
+				if "auxiliary" in msfModule:
+					auxContentList.append('exploit')
+				if "exploit" in msfModule:
+					expContentList.append('exploit')
 def parseNmap(filename):
 	ipList=[]
 	httpList=[]
@@ -430,7 +456,7 @@ def parseNmap(filename):
 if __name__== '__main__':
     parser= argparse.ArgumentParser()
     parser.add_argument('-i', dest='nmapFile', action='store', help='[use Nmap .xml file]')
-    parser.add_argument('-o', dest='msfrc', action='store', help='[metasploit resource script]')
+    #parser.add_argument('-o', dest='msfrc', action='store', help='[metasploit resource script]')
     parser.add_argument('-nocache', action='store_true', help='[search Metasploit folder instead of using default-path.csv and port2Msf.csv (default=off]')
     parser.add_argument('-findWeb', action='store_true', help='[find only HTTP/HTTPs exploits (default=on)]')
     parser.add_argument('-findPort', action='store_true', help='[find only port-based matched exploits (default=on)]')
@@ -456,21 +482,28 @@ if __name__== '__main__':
 	findPort=True
 	findWeb=True
 
-    outputFile = options.msfrc
+    #outputFile = options.msfrc
     readDatabase()
     if options.nmapFile:
 	parseNmap(options.nmapFile)
 
-    if outputFile==None:
-	outputFile="runMsf.rc"
+    #if outputFile==None:
+    #	outputFile="runMsf.rc"
 
-    if len(contentList)>1:
-	contentList.append("exit -y")
-	f = open(outputFile, 'w')
-	for x in contentList:
+    if len(auxContentList)>1:	
+	auxContentList.append("exit -y")
+	f = open("runMsfAux.rc", 'w')
+	for x in auxContentList:
 		f.write(x+"\n")
 	f.close()
-	print "\nMetasploit resource script: "+outputFile+" written."
+	print "\nMetasploit resource script: runMsfAux.rc written."
+    if len(expContentList)>1:
+	expContentList.append("exit -y")
+	f = open("runMsfExp.rc", 'w')
+	for x in expContentList:
+		f.write(x+"\n")
+	f.close()
+	print "Metasploit resource script: runMsfExp.rc written."
     else:
 	print "\n- No results found"
 	
