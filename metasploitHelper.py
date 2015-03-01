@@ -325,12 +325,21 @@ def readDatabase():
 				portMatch.append([portNo,msfModule,addArg])
 def lookupPort(hostNo,portNo):
 	for y in portMatch:	
+		msfModule = y[1]
+		paramNames = y[2]
+		paramList=[]
 		if y[0]==portNo:
 			contentList.append("use "+y[1])
 			contentList.append("set RHOST "+hostNo)
 			contentList.append("set RHOSTS "+hostNo)
 			contentList.append("set RPORT "+portNo)
-			contentList.append("exploit\n")
+		if paramNames!="[]":
+			paramNames=paramNames.replace("[","")
+			paramNames=paramNames.replace("]","")
+			paramList = paramNames.split("+")
+			for y in paramList:
+				contentList.append('set '+y)
+		contentList.append('exploit\n')
 
 def testURI(scheme,hostNo,portNo):
 	print "- Brute Forcing URLs..."
