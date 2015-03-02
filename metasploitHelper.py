@@ -2,6 +2,7 @@
 
 #pip install python-libnmap
 
+from BeautifulSoup import BeautifulSoup
 from urlparse import urlparse
 from xml.etree import ElementTree
 from libnmap.parser import NmapParser
@@ -23,6 +24,7 @@ portMatch=[]
 auxContentList=[]
 expContentList=[]
 
+detectPageTitle=False
 findWeb=True
 findPort=True
 
@@ -107,7 +109,15 @@ def extractParam(uri,filename):
 	finalList=[]
 	optionList=[]
 	found=False
+	foundName=False
+	moduleTitle=""
 	for line in lines:
+		if "'Name'" in line:
+			if foundName==False:
+				line1 = line.split("=>")
+				if len(line1)>1:
+					moduleTitle=(line1[1])[2:-2]
+					moduleTitle=moduleTitle.replace(","," ")
 		if "register_options" in line:
 			startFound=True
 		if "self.class)" in line and found==False:
@@ -158,13 +168,13 @@ def extractParam(uri,filename):
 	moduleName = moduleName.replace(".rb","")
 	if len(tempStr1)>0:
 		if tempStr1[-1]==",":
-			results = uri+","+moduleName+",["+tempStr1[0:(len(tempStr1)-1)]+"]"
+			results = uri+","+moduleName+",["+tempStr1[0:(len(tempStr1)-1)]+"],"+moduleTitle
 			return results
 		else:
-			results = uri+","+moduleName+",["+tempStr1[0:(len(tempStr1)-1)]+"]"
+			results = uri+","+moduleName+",["+tempStr1[0:(len(tempStr1)-1)]+"],"+moduleTitle
 			return results
 	else:
-		results = uri+","+moduleName+",[]"
+		results = uri+","+moduleName+",[],"+moduleTitle
 		return results
 
 def lookupAllPorts():
@@ -313,8 +323,9 @@ def readDatabase():
 				uri = x1[0]
 				msfModule = x1[1]
 				paramNames = x1[2]
+				pageTitle = x1[3]
 				uriList.append(uri)
-				uriMatch.append([uri,msfModule,paramNames])
+				uriMatch.append([uri,msfModule,paramNames,pageTitle])
 	fname="port2Msf.csv"
 	with open(fname) as f:
 		tempList = f.readlines()
@@ -375,39 +386,112 @@ def testURI(scheme,hostNo,portNo):
 			if status==200:
 			#if status==302 or status==200 or status==401:
 				tempList.append([status,url,uriPath])
-	for x in tempList:
-		uriPath = x[2]
-		for x1 in uriMatch:
-			uri=x1[0]		
-			msfModule=x1[1]
-			paramNames=x1[2]
-			paramList=[]
-			if uri==uriPath:
-				o = urlparse(x[1])
-				if "auxiliary" in msfModule:
-					auxContentList.append('use '+msfModule)
-					auxContentList.append('set RHOST '+(o.netloc).split(":")[0])
-					auxContentList.append('set RHOSTS '+(o.netloc).split(":")[0])
-					auxContentList.append('set RPORT '+(o.netloc).split(":")[1])
-				if "exploit" in msfModule:
-					expContentList.append('use '+msfModule)
-					expContentList.append('set RHOST '+(o.netloc).split(":")[0])
-					expContentList.append('set RHOSTS '+(o.netloc).split(":")[0])
-					expContentList.append('set RPORT '+(o.netloc).split(":")[1])
+	#Check how many results return status code 200
+	#if detectPageTitle is True, try to guess based on title
+	if detectPageTitle==True:
+		#Get Page Title
+		origPageTitle=""
+		origPageTitleList=[]
+		url = tempList[0][1]
+		headers = {
+    			'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115 Safari/537.36',
+		}
+		try:
+			resp = requests.get(url,verify=False,timeout=3,headers=headers)
+			soup = BeautifulSoup(resp.content)
+			origPageTitle = soup.title.string
+			origPageTitleList=origPageTitle.split(" ")
+		except requests.exceptions.Timeout:
+			pass
+		except Exception as e:
+			print e
+			pass
+		foundModuleList=[]
+		for x in tempList:
+			o = urlparse(x[1])
+			uriPath = x[2]
+			found=False
+			while found==False:
+				for x1 in uriMatch:
+					uri=x1[0]		
+					msfModule=x1[1]
+					paramNames=x1[2]
+					pageTitle=x1[3]
+					pageTitleList=pageTitle.split(" ")
+					
+					for y in origPageTitleList:
+						if len(y)>2 and y.lower()!="login":
+							if y in pageTitleList:
+								found=True
+								if ([o.netloc,msfModule,paramNames]) not in foundModuleList:
+									foundModuleList.append([o.netloc,msfModule,paramNames])
+									#print o.netloc+"\t"+msfModule+"\t"+paramNames
+								#print msfModule
+		if len(foundModuleList)>0:
+			print "\nFound the below Metaqsploit modules based on URI and Page Title"
+			for z in foundModuleList:
+				print z[0]+"\t"+z[1]
+		for z in foundModuleList:
+			netloc = z[0]
+			msfModule = z[1]
+			paramNames = z[2]
+			if "auxiliary" in msfModule:
+				auxContentList.append('use '+msfModule)
+				auxContentList.append('set RHOST '+(netloc).split(":")[0])
+				auxContentList.append('set RHOSTS '+(netloc).split(":")[0])
+				auxContentList.append('set RPORT '+(netloc).split(":")[1])
+			if "exploit" in msfModule:
+				expContentList.append('use '+msfModule)
+				expContentList.append('set RHOST '+(netloc).split(":")[0])
+				expContentList.append('set RHOSTS '+(netloc).split(":")[0])
+				expContentList.append('set RPORT '+(netloc).split(":")[1])	
+			if paramNames!="[]":
+				paramNames=paramNames.replace("[","")
+				paramNames=paramNames.replace("]","")
+				paramList = paramNames.split("+")
+				for y in paramList:
+					if "auxiliary" in msfModule:
+						auxContentList.append('set '+y)
+					if "exploit" in msfModule:
+						expContentList.append('set '+y)
+			if "auxiliary" in msfModule:
+				auxContentList.append('exploit')
+			if "exploit" in msfModule:
+				expContentList.append('exploit')	
+	else:
+		for x in tempList:
+			uriPath = x[2]
+			for x1 in uriMatch:
+				uri=x1[0]		
+				msfModule=x1[1]
+				paramNames=x1[2]
+				paramList=[]
+				if uri==uriPath:
+					o = urlparse(x[1])
+					if "auxiliary" in msfModule:
+						auxContentList.append('use '+msfModule)
+						auxContentList.append('set RHOST '+(o.netloc).split(":")[0])
+						auxContentList.append('set RHOSTS '+(o.netloc).split(":")[0])
+						auxContentList.append('set RPORT '+(o.netloc).split(":")[1])
+					if "exploit" in msfModule:
+						expContentList.append('use '+msfModule)
+						expContentList.append('set RHOST '+(o.netloc).split(":")[0])
+						expContentList.append('set RHOSTS '+(o.netloc).split(":")[0])
+						expContentList.append('set RPORT '+(o.netloc).split(":")[1])		
 
-				if paramNames!="[]":
-					paramNames=paramNames.replace("[","")
-					paramNames=paramNames.replace("]","")
-					paramList = paramNames.split("+")
+					if paramNames!="[]":
+						paramNames=paramNames.replace("[","")
+						paramNames=paramNames.replace("]","")
+						paramList = paramNames.split("+")
 					for y in paramList:
-						if "auxiliary" in msfModule:
-							auxContentList.append('set '+y)
-						if "exploit" in msfModule:
-							expContentList.append('set '+y)
-				if "auxiliary" in msfModule:
-					auxContentList.append('exploit')
-				if "exploit" in msfModule:
-					expContentList.append('exploit')
+							if "auxiliary" in msfModule:
+								auxContentList.append('set '+y)
+							if "exploit" in msfModule:
+								expContentList.append('set '+y)
+					if "auxiliary" in msfModule:
+						auxContentList.append('exploit')
+					if "exploit" in msfModule:
+						expContentList.append('exploit')
 def parseNmap(filename):
 	ipList=[]
 	httpList=[]
@@ -460,13 +544,15 @@ if __name__== '__main__':
     parser.add_argument('-nocache', action='store_true', help='[search Metasploit folder instead of using default-path.csv and port2Msf.csv (default=off]')
     parser.add_argument('-findWeb', action='store_true', help='[find only HTTP/HTTPs exploits (default=on)]')
     parser.add_argument('-findPort', action='store_true', help='[find only port-based matched exploits (default=on)]')
+    parser.add_argument('-detect', action='store_true', help='[find Metasploit http module matched based on both URI and page title (default=off)]')
 
     if len(sys.argv)==1:
         parser.print_help()
         sys.exit(1)
 
     options= parser.parse_args()
-
+    if options.detect:
+	detectPageTitle=True
     if options.nocache:
 	lookupAllPorts()
 	lookupURI(showModules=False)
