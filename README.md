@@ -19,12 +19,11 @@ metasploitHelper
   
 ##Usage  
 ```
-usage: metasploitHelper.py [-h] [-i NMAPFILE] [-o MSFRC] [-nocache] [-findWeb]
+usage: metasploitHelper.py [-h] [-i NMAPFILE] [-nocache] [-findWeb]
                            [-findPort]  
 optional arguments:  
   -h, --help   show this help message and exit  
   -i NMAPFILE  [use Nmap .xml file]  
-  -o MSFRC     [metasploit resource script]  
   -nocache     [search Metasploit folder instead of using default-path.csv and  
                port2Msf.csv (default=off]  
   -findWeb     [find only HTTP/HTTPs exploits (default=on)]  
