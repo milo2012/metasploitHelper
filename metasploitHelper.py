@@ -576,6 +576,8 @@ if __name__== '__main__':
     #if outputFile==None:
     # outputFile="runMsf.rc"
 
+    if len(auxContentList)<1 and len(expContentList)<1:
+        print "\n- No results found"
     if len(auxContentList)>1: 
         auxContentList.append("exit -y")
         f = open("runMsfAux.rc", 'w')
@@ -590,6 +592,4 @@ if __name__== '__main__':
             f.write(x+"\n")
         f.close()
         print "Metasploit resource script: runMsfExp.rc written."
-    else:
-        print "\n- No results found"
  
