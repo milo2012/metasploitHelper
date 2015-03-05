@@ -23,11 +23,17 @@ outputFile = ""
 portMatch=[]
 auxContentList=[]
 expContentList=[]
+defaultAuxPathList=[]
+defaultExploitPathList=[]
+finalDefaultAuxList=[]
+finalDefaultExploitList=[]
 
 detectPageTitle=False
 findWeb=True
 findPort=True
 
+finalDefaultAuxList.append("spool runDefaultPathAux.log")
+finalDefaultExploitList.append("spool runDefaultPathExp.log")
 auxContentList.append("spool runMsfAux.log")
 expContentList.append("spool runMsfExploit.log")
 
@@ -326,6 +332,14 @@ def readDatabase():
     pageTitle = x1[3]
     uriList.append(uri)
     uriMatch.append([uri,msfModule,paramNames,pageTitle])
+  
+ for x in uriMatch:
+  if x[0]=="/":
+   if "auxiliary" in x[1]:
+    defaultAuxPathList.append(x[1])
+   else:
+    defaultExploitPathList.append(x[1])
+
  fname="port2Msf.csv"
  with open(fname) as f:
   tempList = f.readlines()
@@ -383,12 +397,29 @@ def testURI(scheme,hostNo,portNo):
    status = i[1][0]
    url = i[1][1]
    uriPath = i[1][2]
+   print "%-80s %15s" % (url,str(status))
    if status==200:
    #if status==302 or status==200 or status==401:
     tempList.append([status,url,uriPath])
  #Check how many results return status code 200
  #if detectPageTitle is True, try to guess based on title
- if detectPageTitle==True:
+
+ if len(defaultAuxPathList)>1:
+  for msfModule in defaultAuxPathList:
+   finalDefaultAuxList.append('use '+msfModule)
+   finalDefaultAuxList.append('set RHOST '+str(hostNo))
+   finalDefaultAuxList.append('set RHOSTS '+str(hostNo))
+   finalDefaultAuxList.append('set RPORT '+str(portNo))
+   finalDefaultAuxList.append('exploit')  
+ if len(defaultExploitPathList)>1:
+  for msfModule in defaultAuxPathList:
+   finalDefaultExploitList.append('use '+msfModule)
+   finalDefaultExploitList.append('set RHOST '+str(hostNo))
+   finalDefaultExploitList.append('set RHOSTS '+str(hostNo))
+   finalDefaultExploitList.append('set RPORT '+str(portNo))
+   finalDefaultExploitList.append('exploit')  
+
+ if detectPageTitle==True and len(tempList)>0:
   #Get Page Title
   origPageTitle=""
   origPageTitleList=[]
@@ -578,6 +609,21 @@ if __name__== '__main__':
 
     if len(auxContentList)<1 and len(expContentList)<1:
         print "\n- No results found"
+    if len(finalDefaultAuxList)>1: 
+        finalDefaultAuxList.append("exit -y")
+        f = open("runDefaultPathAux.rc", 'w')
+        for x in finalDefaultAuxList:
+            f.write(x+"\n")
+        f.close()
+        print "\nMetasploit resource script: runDefaultPathAux.rc written."
+    if len(finalDefaultExploitList)>1: 
+        finalDefaultExploitList.append("exit -y")
+        f = open("runDefaultPathExp.rc", 'w')
+        for x in finalDefaultExploitList:
+            f.write(x+"\n")
+        f.close()
+        print "\nMetasploit resource script: runDefaultPathExp.rc written."
+
     if len(auxContentList)>1: 
         auxContentList.append("exit -y")
         f = open("runMsfAux.rc", 'w')
