@@ -55,5 +55,7 @@ root@kali:/git/metasploitHelper# python metasploitHelper.py -i nmapt_target1.xml
 - Brute Forcing URLs...
 Found: http://149.174.110.102:80/SiteScope/                                    200      
 
+Metasploit resource script: runDefaultPathAux.rc written.
+Metasploit resource script: runDefaultPathExp.rc written.
 Metasploit resource script: runMsf.rc written.
 ```  
