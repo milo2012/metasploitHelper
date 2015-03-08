@@ -35,6 +35,7 @@
 /appRain-q-0.1.5,exploits/multi/http/apprain_upload_exec,[],appRain CMF Arbitrary PHP File Upload Vulnerability
 /polarbearcms,exploits/multi/http/polarcms_upload_exec,[],PolarBear CMS PHP File Upload Vulnerability
 /com_extplorer_2.1.0/,exploits/multi/http/extplorer_upload_exec,[],eXtplorer v2.1 Arbitrary File Upload Vulnerability
+/,exploits/multi/http/phpmoadmin_exec,[],PHPMoAdmin 1.1.2 Remote Code Execution
 /,exploits/multi/http/drupal_drupageddon,[],Drupal HTTP Parameter Key/Value SQL Injection
 /log1cms2.0/,exploits/multi/http/log1cms_ajax_create_folder,[],Log1 CMS writeInfo() PHP Code Injection
 /kordil_edms/,exploits/multi/http/kordil_edms_upload_exec,[],Kordil EDMS v2.2.60rc3 Unauthenticated Arbitrary File Upload Vulnerability
@@ -73,6 +74,7 @@
 /ws/control,exploits/windows/http/oracle_endeca_exec,[],Oracle Endeca Server Remote Command Execution
 /,exploits/windows/http/cyclope_ess_sqli,[],Cyclope Employee Surveillance Solution v6 SQL Injection
 /,exploits/windows/http/novell_mdm_lfi,[],Novell Zenworks Mobile Managment MDM.php Local File Inclusion Vulnerability
+/cgi-bin/function.php?argument=,exploits/windows/http/generic_http_dll_injection,[],Generic Web Application DLL Injection
 /vfolder.ghp,exploits/windows/http/efs_fmws_userid_bof,[],Easy File Management Web Server Stack Buffer Overflow
 /umbraco/,exploits/windows/http/umbraco_upload_aspx,[],Umbraco CMS Remote Command Execution
 /SiteScope/,exploits/windows/http/hp_sitescope_runomagentcommand,[],HP SiteScope Remote Code Execution
@@ -91,12 +93,14 @@
 /dolibarr/,exploits/linux/http/dolibarr_cmd_exec,[],Dolibarr ERP/CRM Post-Auth OS Command Injection
 /,exploits/linux/http/alienvault_sqli_exec,[],AlienVault OSSIM SQL Injection and Remote Code Execution
 /,exploits/linux/http/mutiny_frontend_upload,[],Mutiny 5 Arbitrary File Upload
+/,exploits/linux/http/symantec_web_gateway_restore,[],Symantec Web Gateway 5 restore.php Post Authentication Command Injection
 /zabbix,exploits/linux/http/zabbix_sqli,[],Zabbix 2.0.8 SQL Injection and Remote Code Execution
 /,exploits/linux/http/lifesize_uvc_ping_rce,[],LifeSize UVC Authenticated RCE via Ping
 /,exploits/linux/http/f5_icontrol_exec,[],F5 iControl Remote Root Command Execution
 /centreon,exploits/linux/http/centreon_sqli_exec,[],Centreon SQL and Command Injection
 /,exploits/linux/http/foreman_openstack_satellite_code_exec,[],Foreman (Red Hat OpenStack/Satellite) bookmarks/create Code Injection
 /spywall/pbcontrol.php,exploits/linux/http/symantec_web_gateway_pbcontrol,[],Symantec Web Gateway 5.0.2.18 pbcontrol.php Command Injection
+/,exploits/linux/http/seagate_nas_php_exec_noauth,[],Seagate Business NAS Unauthenticated Remote Command Execution
 /,exploits/linux/http/gitlist_exec,[],Gitlist Unauthenticated Remote Command Execution
 /,exploits/linux/http/cfme_manageiq_evm_upload_exec,[],Red Hat CloudForms Management Engine 5.1 agent/linuxpkgs Path Traversal
 /forums/,exploits/unix/webapp/invision_pboard_unserialize_exec,[],Invision IP.Board unserialize() PHP Code Execution
@@ -218,6 +222,7 @@
 /bvsmweb,auxiliary/voip/cisco_cucdm_call_forward,[],Viproy CUCDM IP Phone XML Services - Call Forwarding Tool
 /bvsmweb,auxiliary/voip/cisco_cucdm_speed_dials,[],Viproy CUCDM IP Phone XML Services - Speed Dial Attack Tool
 /,auxiliary/gather/f5_bigip_cookie_disclosure,[],F5 BigIP Backend Cookie Disclosure
+/,auxiliary/gather/solarwinds_orion_sqli,[],Solarwinds Orion AccountManagement.asmx GetAccounts Admin Creation
 /,auxiliary/gather/alienvault_newpolicyform_sqli,[],AlienVault Authenticated SQL Injection Arbitrary File Read
 /,auxiliary/gather/emc_cta_xxe,[],EMC CTA v10.0 Unauthenticated XXE Arbitrary File Read
 /,auxiliary/gather/ibm_sametime_version,[],IBM Lotus Sametime Version Enumeration
