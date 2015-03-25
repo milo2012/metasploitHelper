@@ -24,7 +24,9 @@ numProcesses = 20
 outputFile = ""
 portMatch=[]
 auxContentList=[]
+auxContentList1=[]
 expContentList=[]
+expContentList1=[]
 defaultAuxPathList=[]
 defaultExploitPathList=[]
 finalDefaultAuxList=[]
@@ -397,17 +399,27 @@ def lookupPort(hostNo,portNo):
     expContentList.append("set RHOST "+hostNo)
     expContentList.append("set RHOSTS "+hostNo)
     expContentList.append("set RPORT "+portNo)
-  #if ("exploit" in msfModule or "auxiliary" in msfModule) and paramNames!="[]":
-
    if paramNames!="[]":
     paramNames=paramNames.replace("[","")
     paramNames=paramNames.replace("]","")
     paramList = paramNames.split("+")
-    for y in paramList:
+    tmpParamStr1=""
+    for z in paramList:
      if "auxiliary" in msfModule:
-      auxContentList.append('set '+y)
+      tmpParamStr1+=z
+      tmpParamStr1+=","
+      auxContentList.append('set '+z)
+      tmpParamStr1=tmpParamStr1[0:-1]
+      auxContentList1.append([hostNo,portNo,msfModule,tmpParamStr1])
      if "exploit" in msfModule:
-      expContentList.append('set '+y)
+      tmpParamStr1+=z
+      tmpParamStr1+=","
+      expContentList.append('set '+z)
+      #here
+      tmpParamStr1=tmpParamStr1[0:-1]
+      tmpParamStr1=tmpParamStr1.replace("[","")
+      tmpParamStr1=tmpParamStr1.replace("]","")
+      expContentList1.append([hostNo,portNo,msfModule,tmpParamStr1])
    if len(auxContentList)>initLenCount1:
     auxContentList.append('exploit\n')
    if len(expContentList)>initLenCount2:
@@ -475,12 +487,19 @@ def testURI(scheme,hostNo,portNo):
    finalDefaultAuxList.append('set RHOSTS '+str(hostNo))
    finalDefaultAuxList.append('set RPORT '+str(portNo))
    finalDefaultAuxList.append('exploit')  
+
+   auxContentList1.append([hostNo,portNo,msfModule,""])
+
  if len(defaultExploitPathList)>1:
-  for msfModule in defaultAuxPathList:
+  for msfModule in defaultExploitPathList:
    finalDefaultExploitList.append('use '+msfModule)
    finalDefaultExploitList.append('set RHOST '+str(hostNo))
    finalDefaultExploitList.append('set RHOSTS '+str(hostNo))
    finalDefaultExploitList.append('set RPORT '+str(portNo))
+   
+   #here
+   expContentList1.append([hostNo,portNo,msfModule,"[]"])
+
    finalDefaultExploitList.append('exploit')  
 
  if detectPageTitle==True and len(tempList)>0:
@@ -544,14 +563,22 @@ def testURI(scheme,hostNo,portNo):
     paramNames=paramNames.replace("[","")
     paramNames=paramNames.replace("]","")
     paramList = paramNames.split("+")
-    for y in paramList:
+    tmpParamStr1=""
+    for z in paramList:
      if "auxiliary" in msfModule:
-      auxContentList.append('set '+y)
+      tmpParamStr1+=z
+      tmpParamStr1+=","
+      auxContentList.append('set '+z)
      if "exploit" in msfModule:
-      expContentList.append('set '+y)
+      tmpParamStr1+=z
+      tmpParamStr1+=","
+      expContentList.append('set '+z)
+      #here
    if "auxiliary" in msfModule:
+    auxContentList1.append([(netloc).split(":")[0],(netloc).split(":")[1],msfModule,tmpParamStr1])
     auxContentList.append('exploit')
    if "exploit" in msfModule:
+    expContentList1.append([(netloc).split(":")[0],(netloc).split(":")[1],msfModule,tmpParamStr1])
     expContentList.append('exploit') 
  else:
   for x in tempList:
@@ -573,19 +600,23 @@ def testURI(scheme,hostNo,portNo):
       expContentList.append('set RHOST '+(o.netloc).split(":")[0])
       expContentList.append('set RHOSTS '+(o.netloc).split(":")[0])
       expContentList.append('set RPORT '+(o.netloc).split(":")[1])  
-
+     #here
      if paramNames!="[]":
       paramNames=paramNames.replace("[","")
       paramNames=paramNames.replace("]","")
       paramList = paramNames.split("+")
+
      for y in paramList:
        if "auxiliary" in msfModule:
         auxContentList.append('set '+y)
        if "exploit" in msfModule:
         expContentList.append('set '+y)
+  
      if "auxiliary" in msfModule:
+      auxContentList1.append([(o.netloc).split(":")[0],(o.netloc).split(":")[1],msfModule,paramNames])
       auxContentList.append('exploit')
      if "exploit" in msfModule:
+      expContentList1.append([(o.netloc).split(":")[0],(o.netloc).split(":")[1],msfModule,paramNames])
       expContentList.append('exploit')
 def parseNmap(filename):
  ipList=[]
@@ -701,11 +732,31 @@ if __name__== '__main__':
         f.close()
         print "Metasploit resource script: runDefaultPathExp.rc written."
 
+    if len(auxContentList1)>0 and len(expContentList1)>0:
+        f1 = open("report.txt", 'w')
+
     if len(auxContentList)>1: 
         auxContentList.append("exit -y")
         f = open("runMsfAux.rc", 'w')
         for x in auxContentList:
             f.write(x+"\n")
+        numList1=[]
+	tmpList1=[]
+	tmpList2=[]
+	for x in auxContentList1:
+		if x[1] not in numList1:
+			numList1.append([x[0],x[1]])
+	for x in numList1:
+		if x[0]+":"+x[1] not in tmpList2:
+			tmpList2.append(x[0]+":"+x[1])
+			f1.write("\n\n"+x[0]+":"+x[1])
+			#print "\n"+x[0]+":"+x[1]
+		for y in auxContentList1:
+			if y[1]==x[1]:
+				if ([x[0]+":"+x[1],y[2]]) not in tmpList1:
+					tmpList1.append([x[0]+":"+x[1],y[2]])
+					f1.write("\n"+y[2])
+					#print y[2]
         f.close()
         print "Metasploit resource script: runMsfAux.rc written."
     if len(expContentList)>1:
@@ -713,6 +764,26 @@ if __name__== '__main__':
         f = open("runMsfExp.rc", 'w')
         for x in expContentList:
             f.write(x+"\n")
+        numList1=[]
+	tmpList1=[]
+	tmpList2=[]
+	for x in expContentList1:
+		if x[1] not in numList1:
+			numList1.append([x[0],x[1]])
+	for x in numList1:
+		if x[0]+":"+x[1] not in tmpList2:
+			tmpList2.append(x[0]+":"+x[1])
+			f1.write("\n\n"+x[0]+":"+x[1])
+			#print "\n"+x[0]+":"+x[1]
+		for y in expContentList1:
+			if y[1]==x[1]:
+				if ([x[0]+":"+x[1],y[2]]) not in tmpList1:
+					tmpList1.append([x[0]+":"+x[1],y[2]])
+					f1.write("\n"+y[2])
+					#print y[2]
+	
         f.close()
         print "Metasploit resource script: runMsfExp.rc written."
  
+    if len(auxContentList1)>0 and len(expContentList1)>0:
+        print "Report written to report.txt."
