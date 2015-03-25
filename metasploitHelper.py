@@ -6,6 +6,8 @@ from BeautifulSoup import BeautifulSoup
 from urlparse import urlparse
 from xml.etree import ElementTree
 from libnmap.parser import NmapParser
+import os
+import platform
 import re
 import argparse
 import sys
@@ -28,6 +30,7 @@ defaultExploitPathList=[]
 finalDefaultAuxList=[]
 finalDefaultExploitList=[]
 
+verbose=False
 detectPageTitle=False
 findWeb=True
 findPort=True
@@ -81,6 +84,22 @@ def RunCommand(fullCmd):
     except:
         return "Error executing command %s" %(fullCmd)
 
+def isUp(hostname):
+    giveFeedback = False
+    if platform.system() == "Windows":
+        response = os.system("ping "+hostname+" -n 1")
+    else:
+        response = os.system("ping -c 1 " + hostname)
+    isUpBool = False
+    if response == 0:
+        #if giveFeedback:
+        #    print hostname, 'is up!'
+        isUpBool = True
+    #else:
+        #if giveFeedback:
+        #    print hostname, 'is down!'
+    return isUpBool
+
 def find_between( s, first, last ):
     try:
         start = s.index( first ) + len( first )
@@ -96,8 +115,11 @@ def getHEAD(scheme,hostNo,uri,portNo):
  url = scheme+"://"+hostNo+":"+portNo+uri
  try:
   resp = requests.head(url,verify=False,timeout=3,headers=headers)
-  if resp.status_code==200:
+  if resp.status_code==200 or resp.status_code==401:
    print "Found: %-70s %-10s" % (url,resp.status_code)
+  else:
+   if verbose==True:
+    print "%-70s %-10s" % (url,resp.status_code)   
   return (resp.status_code,url,uri)
  except requests.exceptions.Timeout:
   pass
@@ -216,8 +238,10 @@ def lookupAllPorts():
    for line in lines:
     if "register_options" in line:
      startFound=True
-    if "self.class)" in line and found==False:
+    if "self.class" in line and found==False:
+    #if "self.class)" in line and found==False:
      found1=False
+     #startFound=False
      for y in optionList:
       if found1==True:
        y = y.strip()
@@ -227,19 +251,22 @@ def lookupAllPorts():
        if found1==True:
         tempStrList=[]
         found1=False
-       if "[" in y and "]" in y:
+       if "[" in y and "]" in y:        
         y = y.strip()
         finalList.append(y)
        else:
         y = y.strip()
+        #Parameters across multilines
         if "#" not in y:
          tempStrList.append(y)
          found1=True
+
      startFound=False
      found=True
     if startFound==True:
      optionList.append(line)
    result1=""
+   #Parameters across multilines
    for y in tempStrList:
     try: 
      m = re.search('"(.+?)"',y)
@@ -357,6 +384,8 @@ def lookupPort(hostNo,portNo):
   paramNames = y[2]
   paramList=[]
   if y[0]==portNo:
+   initLenCount1=len(auxContentList)
+   initLenCount2=len(expContentList)
    
    if "auxiliary" in msfModule:
     auxContentList.append("use "+y[1])
@@ -368,20 +397,55 @@ def lookupPort(hostNo,portNo):
     expContentList.append("set RHOST "+hostNo)
     expContentList.append("set RHOSTS "+hostNo)
     expContentList.append("set RPORT "+portNo)
-  if paramNames!="[]":
-   paramNames=paramNames.replace("[","")
-   paramNames=paramNames.replace("]","")
-   paramList = paramNames.split("+")
-   for y in paramList:
-    if "auxiliary" in msfModule:
-     auxContentList.append('set '+y)
-    if "exploit" in msfModule:
-     expContentList.append('set '+y)
-  auxContentList.append('exploit\n')
-  expContentList.append('exploit\n')
+  #if ("exploit" in msfModule or "auxiliary" in msfModule) and paramNames!="[]":
+
+   if paramNames!="[]":
+    paramNames=paramNames.replace("[","")
+    paramNames=paramNames.replace("]","")
+    paramList = paramNames.split("+")
+    for y in paramList:
+     if "auxiliary" in msfModule:
+      auxContentList.append('set '+y)
+     if "exploit" in msfModule:
+      expContentList.append('set '+y)
+   if len(auxContentList)>initLenCount1:
+    auxContentList.append('exploit\n')
+   if len(expContentList)>initLenCount2:
+    expContentList.append('exploit\n')
+
+def testFakeURI(scheme,hostNo,portNo):
+ print "\n- Initial Testing with Random URLs..."
+ tempUriList=[]
+ tempUriList.append("/12342")
+ tempUriList.append("/tomcats234")
+ tempUriList.append("/azsdc")
+ totalCount=0
+ jobs = []
+ jobid=0
+ for x in tempUriList:
+  x = x.strip()
+  if len(x)>0 and x!="/":
+   uri = x
+   jobs.append((jobid,scheme,hostNo,uri,portNo))
+   jobid = jobid+1
+ resultsList = execute1(jobs,numProcesses)
+ tempList=[]
+ for i in resultsList:
+  if i[1]!=None:
+   status = i[1][0]
+   url = i[1][1]
+   uriPath = i[1][2]
+   #print "%-70s %10s" % (url,str(status))
+   if status==200 or status==401:
+   #if status==302 or status==200 or status==401:
+    totalCount+=1
+ if totalCount==3:
+  return True
+ else: 
+  return False
 
 def testURI(scheme,hostNo,portNo):
- print "- Brute Forcing URLs..."
+ print "\n- Brute Forcing URLs..."
  jobs = []
  jobid=0
  for x in uriList:
@@ -396,9 +460,9 @@ def testURI(scheme,hostNo,portNo):
   if i[1]!=None:
    status = i[1][0]
    url = i[1][1]
-   uriPath = i[1][2]
-   print "%-80s %15s" % (url,str(status))
-   if status==200:
+   uriPath = i[1][2]   
+   #print "%-80s %15s" % (url,str(status))
+   if status==200 or status==401:
    #if status==302 or status==200 or status==401:
     tempList.append([status,url,uriPath])
  #Check how many results return status code 200
@@ -549,20 +613,30 @@ def parseNmap(filename):
   if len(httpList)>0:
    for x in httpList:
     url = "http://"+x[0]+":"+x[1]
-    print "\nTesting: "+url
+
+    #if isUp(x[0])==False:
+    # print "[!] The IP address is not pingable. Please verify if the host is up"
+    # sys.exit()
+    #print "\nTesting: "+url
     scheme = "http"
     hostNo = x[0]
     portNo = x[1]
-    testURI(scheme,hostNo,portNo)
+    if testFakeURI(scheme,hostNo,portNo)==False:
+     testURI(scheme,hostNo,portNo)
+    else:
+     print "- Web server return status code 200 for all URLs. Please use the -detect argument for advanced detection"
  if findWeb==True:
   if len(httpsList)>0:
    for x in httpsList:
     url = "https://"+x[0]+":"+x[1]
-    print "\nTesting: "+url
+    #print "\nTesting: "+url
     scheme = "https"
     hostNo = x[0]
     portNo = x[1]
-    testURI(scheme,hostNo,portNo)
+    if testFakeURI(scheme,hostNo,portNo)==False:
+     testURI(scheme,hostNo,portNo)
+    else:
+     print "- Web server return status code 200 for all URLs. Please use the -detect argument for advanced detection"
  if findPort==True:
   if len(portsList)>0:
    for x in portsList:
@@ -572,6 +646,7 @@ if __name__== '__main__':
     parser= argparse.ArgumentParser()
     parser.add_argument('-i', dest='nmapFile', action='store', help='[use Nmap .xml file]')
     #parser.add_argument('-o', dest='msfrc', action='store', help='[metasploit resource script]')
+    parser.add_argument('-v', action='store_true', help='[verbose (default=false)]')
     parser.add_argument('-nocache', action='store_true', help='[search Metasploit folder instead of using default-path.csv and port2Msf.csv (default=off]')
     parser.add_argument('-findWeb', action='store_true', help='[find only HTTP/HTTPs exploits (default=on)]')
     parser.add_argument('-findPort', action='store_true', help='[find only port-based matched exploits (default=on)]')
@@ -582,6 +657,8 @@ if __name__== '__main__':
         sys.exit(1)
 
     options= parser.parse_args()
+    if options.v:
+        verbose=True
     if options.detect:
         detectPageTitle=True
     if options.nocache:
@@ -622,7 +699,7 @@ if __name__== '__main__':
         for x in finalDefaultExploitList:
             f.write(x+"\n")
         f.close()
-        print "\nMetasploit resource script: runDefaultPathExp.rc written."
+        print "Metasploit resource script: runDefaultPathExp.rc written."
 
     if len(auxContentList)>1: 
         auxContentList.append("exit -y")
@@ -630,7 +707,7 @@ if __name__== '__main__':
         for x in auxContentList:
             f.write(x+"\n")
         f.close()
-        print "\nMetasploit resource script: runMsfAux.rc written."
+        print "Metasploit resource script: runMsfAux.rc written."
     if len(expContentList)>1:
         expContentList.append("exit -y")
         f = open("runMsfExp.rc", 'w')
