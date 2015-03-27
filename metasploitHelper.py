@@ -710,6 +710,7 @@ if __name__== '__main__':
     if options.nocache:
         lookupAllPorts()
         lookupURI(showModules=False)
+	print "Files generated - port2Msf.csv,default-path.csv and uriList.txt"
     if options.findWeb:
         findWeb=True
     else:
