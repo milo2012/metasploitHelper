@@ -20,6 +20,7 @@ requests.packages.urllib3.disable_warnings()
 
 uriList=[]
 uriMatch=[]
+enableRoot=False
 numProcesses = 20
 outputFile = ""
 portMatch=[]
@@ -135,7 +136,7 @@ def extractParam(uri,filename):
  moduleName = filename.replace(path,"")
  startFound=False
  pathList=[]
- tempStrList=[]
+ tempStrList=[];
  finalList=[]
  optionList=[]
  found=False
@@ -150,7 +151,8 @@ def extractParam(uri,filename):
      moduleTitle=moduleTitle.replace(","," ")
   if "register_options" in line:
    startFound=True
-  if "self.class)" in line and found==False:
+  if "self.class" in line and found==False:
+  #if "self.class)" in line and found==False:
    found1=False
    for y in optionList:
     if found1==True:
@@ -286,10 +288,17 @@ def lookupAllPorts():
     if "false" not in g.lower() and "rhost" not in g.lower():
      parameterList = g.partition('[')[-1].rpartition(']')[0]
      parNameTemp =( g.split(",")[0]).partition("'")[-1].rpartition("'")[0]
+     #here
+     #print parNameTemp
+     #tempStr1+=parNameTemp
+     #tempStr1+= "+"
      result = (parameterList.split(",")[-1]).strip()
+     #result = (parameterList.split(",")[-1]).strip()
      if result=='""' or result=="''":
       tempStr1+= parNameTemp
       tempStr1+= "+"
+     if len(result.split(" "))>5:
+      tempStr1 = parNameTemp+"+"
    moduleName = moduleName.replace(".rb","")
    if len(tempStr1)>0:
     if tempStr1[-1]==",":
@@ -415,7 +424,6 @@ def lookupPort(hostNo,portNo):
       tmpParamStr1+=z
       tmpParamStr1+=","
       expContentList.append('set '+z)
-      #here
       tmpParamStr1=tmpParamStr1[0:-1]
       tmpParamStr1=tmpParamStr1.replace("[","")
       tmpParamStr1=tmpParamStr1.replace("]","")
@@ -479,8 +487,8 @@ def testURI(scheme,hostNo,portNo):
     tempList.append([status,url,uriPath])
  #Check how many results return status code 200
  #if detectPageTitle is True, try to guess based on title
-
- if len(defaultAuxPathList)>1:
+ 
+ if enableRoot==True and len(defaultAuxPathList)>1:
   for msfModule in defaultAuxPathList:
    finalDefaultAuxList.append('use '+msfModule)
    finalDefaultAuxList.append('set RHOST '+str(hostNo))
@@ -490,14 +498,13 @@ def testURI(scheme,hostNo,portNo):
 
    auxContentList1.append([hostNo,portNo,msfModule,""])
 
- if len(defaultExploitPathList)>1:
+ if enableRoot==True and len(defaultExploitPathList)>1:
   for msfModule in defaultExploitPathList:
    finalDefaultExploitList.append('use '+msfModule)
    finalDefaultExploitList.append('set RHOST '+str(hostNo))
    finalDefaultExploitList.append('set RHOSTS '+str(hostNo))
    finalDefaultExploitList.append('set RPORT '+str(portNo))
    
-   #here
    expContentList1.append([hostNo,portNo,msfModule,"[]"])
 
    finalDefaultExploitList.append('exploit')  
@@ -573,7 +580,6 @@ def testURI(scheme,hostNo,portNo):
       tmpParamStr1+=z
       tmpParamStr1+=","
       expContentList.append('set '+z)
-      #here
    if "auxiliary" in msfModule:
     auxContentList1.append([(netloc).split(":")[0],(netloc).split(":")[1],msfModule,tmpParamStr1])
     auxContentList.append('exploit')
@@ -600,7 +606,6 @@ def testURI(scheme,hostNo,portNo):
       expContentList.append('set RHOST '+(o.netloc).split(":")[0])
       expContentList.append('set RHOSTS '+(o.netloc).split(":")[0])
       expContentList.append('set RPORT '+(o.netloc).split(":")[1])  
-     #here
      if paramNames!="[]":
       paramNames=paramNames.replace("[","")
       paramNames=paramNames.replace("]","")
@@ -682,12 +687,18 @@ if __name__== '__main__':
     parser.add_argument('-findWeb', action='store_true', help='[find only HTTP/HTTPs exploits (default=on)]')
     parser.add_argument('-findPort', action='store_true', help='[find only port-based matched exploits (default=on)]')
     parser.add_argument('-detect', action='store_true', help='[find Metasploit http module matched based on both URI and page title (default=off)]')
+    parser.add_argument('-enableRoot', action='store_true', help='[include Metasploit modules for root URI / (default=off)]')
 
     if len(sys.argv)==1:
         parser.print_help()
         sys.exit(1)
 
     options= parser.parse_args()
+    if not os.path.exists(path):
+	print "[!] Please check that the Metasploit framework modules path is properly defined in line 18 of this script"
+	sys.exit()
+    if options.enableRoot:
+	enableRoot=True
     if options.v:
         verbose=True
     if options.detect:
