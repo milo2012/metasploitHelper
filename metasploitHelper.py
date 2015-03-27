@@ -774,7 +774,7 @@ if __name__== '__main__':
 					f1.write("\n"+y[2])
 					#print y[2]
         f.close()
-        print "Metasploit resource script: runAux.rc written."
+        print "\nMetasploit resource script: runAux.rc written."
     if len(expContentList)>1:
         expContentList.append("exit -y")
         f = open("runExp.rc", 'w')
