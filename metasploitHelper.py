@@ -403,11 +403,13 @@ def lookupPort(hostNo,portNo):
     auxContentList.append("set RHOST "+hostNo)
     auxContentList.append("set RHOSTS "+hostNo)
     auxContentList.append("set RPORT "+portNo)
+    auxContentList1.append([hostNo,portNo,msfModule])
    if "exploit" in msfModule:
     expContentList.append("use "+y[1])
     expContentList.append("set RHOST "+hostNo)
     expContentList.append("set RHOSTS "+hostNo)
     expContentList.append("set RPORT "+portNo)
+    expContentList1.append([hostNo,portNo,msfModule])
    if paramNames!="[]":
     paramNames=paramNames.replace("[","")
     paramNames=paramNames.replace("]","")
@@ -419,7 +421,9 @@ def lookupPort(hostNo,portNo):
       tmpParamStr1+=","
       auxContentList.append('set '+z)
       tmpParamStr1=tmpParamStr1[0:-1]
-      auxContentList1.append([hostNo,portNo,msfModule,tmpParamStr1])
+
+    tmpParamStr1=""
+    for z in paramList:
      if "exploit" in msfModule:
       tmpParamStr1+=z
       tmpParamStr1+=","
@@ -427,7 +431,7 @@ def lookupPort(hostNo,portNo):
       tmpParamStr1=tmpParamStr1[0:-1]
       tmpParamStr1=tmpParamStr1.replace("[","")
       tmpParamStr1=tmpParamStr1.replace("]","")
-      expContentList1.append([hostNo,portNo,msfModule,tmpParamStr1])
+ 
    if len(auxContentList)>initLenCount1:
     auxContentList.append('exploit\n')
    if len(expContentList)>initLenCount2:
@@ -496,7 +500,7 @@ def testURI(scheme,hostNo,portNo):
    finalDefaultAuxList.append('set RPORT '+str(portNo))
    finalDefaultAuxList.append('exploit')  
 
-   auxContentList1.append([hostNo,portNo,msfModule,""])
+   auxContentList1.append([hostNo,portNo,msfModule])
 
  if enableRoot==True and len(defaultExploitPathList)>1:
   for msfModule in defaultExploitPathList:
@@ -505,7 +509,7 @@ def testURI(scheme,hostNo,portNo):
    finalDefaultExploitList.append('set RHOSTS '+str(hostNo))
    finalDefaultExploitList.append('set RPORT '+str(portNo))
    
-   expContentList1.append([hostNo,portNo,msfModule,"[]"])
+   expContentList1.append([hostNo,portNo,msfModule])
 
    finalDefaultExploitList.append('exploit')  
 
@@ -581,10 +585,10 @@ def testURI(scheme,hostNo,portNo):
       tmpParamStr1+=","
       expContentList.append('set '+z)
    if "auxiliary" in msfModule:
-    auxContentList1.append([(netloc).split(":")[0],(netloc).split(":")[1],msfModule,tmpParamStr1])
+    auxContentList1.append([(netloc).split(":")[0],(netloc).split(":")[1],msfModule])
     auxContentList.append('exploit')
    if "exploit" in msfModule:
-    expContentList1.append([(netloc).split(":")[0],(netloc).split(":")[1],msfModule,tmpParamStr1])
+    expContentList1.append([(netloc).split(":")[0],(netloc).split(":")[1],msfModule])
     expContentList.append('exploit') 
  else:
   for x in tempList:
@@ -618,10 +622,10 @@ def testURI(scheme,hostNo,portNo):
         expContentList.append('set '+y)
   
      if "auxiliary" in msfModule:
-      auxContentList1.append([(o.netloc).split(":")[0],(o.netloc).split(":")[1],msfModule,paramNames])
+      auxContentList1.append([(o.netloc).split(":")[0],(o.netloc).split(":")[1],msfModule])
       auxContentList.append('exploit')
      if "exploit" in msfModule:
-      expContentList1.append([(o.netloc).split(":")[0],(o.netloc).split(":")[1],msfModule,paramNames])
+      expContentList1.append([(o.netloc).split(":")[0],(o.netloc).split(":")[1],msfModule])
       expContentList.append('exploit')
 def parseNmap(filename):
  ipList=[]
