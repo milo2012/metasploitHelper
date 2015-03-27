@@ -57,10 +57,38 @@ python metasploitHelper.py -i nmap.xml -findPort
 ##Example  
 ```   
 root@kali:/git/metasploitHelper# python metasploitHelper.py -i nmapt_target1.xml 
-- Brute Forcing URLs...
-Found: http://149.174.110.102:80/SiteScope/                                    200      
 
-Metasploit resource script: runDefaultPathAux.rc written.
-Metasploit resource script: runDefaultPathExp.rc written.
-Metasploit resource script: runMsf.rc written.
+- Initial Testing with Random URLs...
+
+- Brute Forcing URLs...
+Found: http://192.168.112.167:80/index.php                                    200       
+
+- Initial Testing with Random URLs...
+
+- Brute Forcing URLs...
+Found: http://192.168.112.167:8180/index.jsp                                  200       
+Found: http://192.168.112.167:8180/manager/html                               401       
+Found: http://192.168.112.167:8180/admin/index.jsp                            200       
+
+Metasploit resource script: runAux.rc written.
+Metasploit resource script: runExp.rc written.
+Report written to report.txt.
+root@kali:/git/metasploitHelper# python metasploitHelper.py -i nmapt_target.xml
+
+- Initial Testing with Random URLs...
+
+- Brute Forcing URLs...
+Found: http://192.168.112.167:80/index.php                                    200       
+
+- Initial Testing with Random URLs...
+
+- Brute Forcing URLs...
+Found: http://192.168.112.167:8180/index.jsp                                  200       
+Found: http://192.168.112.167:8180/manager/html                               401       
+Found: http://192.168.112.167:8180/admin/index.jsp                            200       
+
+Metasploit resource script: runAux.rc written.
+Metasploit resource script: runExp.rc written.
+Report written to report.txt.
+
 ```  
