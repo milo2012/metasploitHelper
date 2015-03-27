@@ -748,7 +748,7 @@ if __name__== '__main__':
 
     if len(auxContentList)>1: 
         auxContentList.append("exit -y")
-        f = open("runMsfAux.rc", 'w')
+        f = open("runAux.rc", 'w')
         for x in auxContentList:
             f.write(x+"\n")
         numList1=[]
@@ -769,10 +769,10 @@ if __name__== '__main__':
 					f1.write("\n"+y[2])
 					#print y[2]
         f.close()
-        print "Metasploit resource script: runMsfAux.rc written."
+        print "Metasploit resource script: runAux.rc written."
     if len(expContentList)>1:
         expContentList.append("exit -y")
-        f = open("runMsfExp.rc", 'w')
+        f = open("runExp.rc", 'w')
         for x in expContentList:
             f.write(x+"\n")
         numList1=[]
@@ -794,7 +794,7 @@ if __name__== '__main__':
 					#print y[2]
 	
         f.close()
-        print "Metasploit resource script: runMsfExp.rc written."
+        print "Metasploit resource script: runExp.rc written."
  
     if len(auxContentList1)>0 and len(expContentList1)>0:
         print "Report written to report.txt."
