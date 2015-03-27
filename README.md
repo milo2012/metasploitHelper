@@ -19,15 +19,20 @@ metasploitHelper
   
 ##Usage  
 ```
-usage: metasploitHelper.py [-h] [-i NMAPFILE] [-nocache] [-findWeb]
-                           [-findPort]  
-optional arguments:  
-  -h, --help   show this help message and exit  
-  -i NMAPFILE  [use Nmap .xml file]  
-  -nocache     [search Metasploit folder instead of using default-path.csv and  
-               port2Msf.csv (default=off]  
-  -findWeb     [find only HTTP/HTTPs exploits (default=on)]  
-  -findPort    [find only port-based matched exploits (default=on)]  
+usage: metasploitHelper.py [-h] [-i NMAPFILE] [-v] [-nocache] [-findWeb]
+                           [-findPort] [-detect] [-enableRoot]
+
+optional arguments:
+  -h, --help   show this help message and exit
+  -i NMAPFILE  [use Nmap .xml file]
+  -v           [verbose (default=false)]
+  -nocache     [search Metasploit folder instead of using default-path.csv and
+               port2Msf.csv (default=off]
+  -findWeb     [find only HTTP/HTTPs exploits (default=on)]
+  -findPort    [find only port-based matched exploits (default=on)]
+  -detect      [find Metasploit http module matched based on both URI and page
+               title (default=off)]
+  -enableRoot  [include Metasploit modules for root URI / (default=off)]
 ```  
      
 ##Sample Usage Examples
