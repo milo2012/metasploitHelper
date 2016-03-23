@@ -662,6 +662,7 @@ def parseNmap(filename):
     hostNo = x[0]
     portNo = x[1]
     if testFakeURI(scheme,hostNo,portNo)==False:
+     print "- Testing: "+hostNo+":"+str(portNo)
      testURI(scheme,hostNo,portNo)
     else:
      print "- Web server return status code 200 for all URLs. Please use the -detect argument for advanced detection"
