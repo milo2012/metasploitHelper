@@ -106,3 +106,32 @@ $ load msgrpc Pass=xxxxx
 #on the second terminal window
 python msfHelper.py 192.168.1.6 -i -m -P xxxxx
  
+```    
+- As Nmap sometimes is unable to fingerprint the target port accurately, you might want to use the --info option to retrieve information from speedguide (google cache) as to what applications typically use the port
+```  
+python msfHelper.py 192.168.1.6 -i --info
+
+```    
+- Do not run metasploit modules. Only run exploit-db detection
+```  
+python msfHelper.py 192.168.1.6 -e exploitdb
+ 
+
+```    
+- Run "port" based detection
+```  
+python msfHelper.py 192.168.1.6 -i -e ports
+ 
+
+```    
+- Run "services" based detection
+```  
+python msfHelper.py 192.168.1.6 -i -e services
+
+
+```    
+- Run "web" based detection
+```  
+python msfHelper.py 192.168.1.6 -i -e web
+ 
+
