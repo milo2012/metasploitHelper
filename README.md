@@ -1,4 +1,4 @@
-metasploitHelper  
+metasploitHelper (msfHelper)
 ================  
 ##Introduction
 
