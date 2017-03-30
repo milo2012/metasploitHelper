@@ -2036,6 +2036,8 @@ if not os.path.exists("/usr/share/metasploit-framework"):
 
 #testMsfConnection()
 localIP=get_ip_address()
+if args.info:
+ portInfo=True
 if args.i:
  intelligentMode=True
 if args.exec_method:
@@ -2100,7 +2102,8 @@ for target in args.target:
     if [x[1],x[2]] not in tmpList1:
      tmpList1.append([x[1],x[2]]) 
    if len(tmpList1)>0:
-    displayPortInfo(tmpList1)
+    if portInfo==True:
+     displayPortInfo(tmpList1)
    else:
     print setColor('[*] Error encountered!', bold, color="red")
     print "[!] No open ports found.  Please check your target IPs"
@@ -2115,7 +2118,8 @@ for target in args.target:
     if [x[1],x[2]] not in tmpList1:
      tmpList1.append([x[1],x[2]]) 
    if len(tmpList1)>0:
-    displayPortInfo(tmpList1)
+    if portInfo==True:
+     displayPortInfo(tmpList1)
    else:
     print setColor('[*] Error encountered!', bold, color="red")
     print "[!] No open ports found.  Please check your target IPs"
