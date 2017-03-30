@@ -19,20 +19,47 @@ metasploitHelper
   
 ##Usage  
 ```
-usage: metasploitHelper.py [-h] [-i NMAPFILE] [-v] [-nocache] [-findWeb]
-                           [-findPort] [-detect] [-enableRoot]
+root@kali:/code# python msfHelper18.py  -h
+usage: PROG [-h] [-P MYPASSWORD] [-p PORTSINPUT] [-i] [-m] [-a] [-n THREADS]
+            [-u] [-q] [--info] [-v] [-s]
+            [-e {services,web,all,ports,exploitdb}]
+            [target [target ...]]
+
+                __ _   _      _                 
+ _ __ ___  ___ / _| | | | ___| |_ __   ___ _ __ 
+| '_ ` _ \/ __| |_| |_| |/ _ \ | '_ \ / _ \ '__|
+| | | | | \__ \  _|  _  |  __/ | |_) |  __/ |   
+|_| |_| |_|___/_| |_| |_|\___|_| .__/ \___|_|   
+                               |_|              
+
++-- https://github.com/milo2012/metasploitHelper
+
+positional arguments:
+  target                The target IP(s), range(s), CIDR(s), hostname(s),
+                        FQDN(s) or file(s) containg a list of targets
 
 optional arguments:
-  -h, --help   show this help message and exit
-  -i NMAPFILE  [use Nmap .xml file]
-  -v           [verbose (default=false)]
-  -nocache     [search Metasploit folder instead of using default-path.csv and
-               port2Msf.csv (default=off]
-  -findWeb     [find only HTTP/HTTPs exploits (default=on)]
-  -findPort    [find only port-based matched exploits (default=on)]
-  -detect      [find Metasploit http module matched based on both URI and page
-               title (default=off)]
-  -enableRoot  [include Metasploit modules for root URI / (default=off)]
+  -h, --help            show this help message and exit
+  -P MYPASSWORD         Password to connect to msfrpc
+  -p PORTSINPUT         Only scan specific TCP ports
+  -i                    Intelligent mode (Match the Nmap service banner with
+                        the Metasploit modules
+  -m, --manual          Manually start up Msfconsole and 'load msgrpc
+                        Pass=xxxx'
+  -a, --scanall         Scan all 65535 TCP ports
+  -n THREADS            Set how many concurrent threads to use (default: 5)
+  -u, --update          Update Metasploit and metasploitHelper DB
+  -q, --quick           Performs a quick scan - Do not use modules where
+                        TARGETURI is set to /
+  --info                Lookup information about ports online
+  -v, --verbose         Verbose mode
+  -s, --showonly        Show matching Metasploit modules but don't run
+
+Whether to run Metasploit 'services', 'ports', 'web' modules or 'exploitdb':
+  Options for executing commands
+
+  -e {services,web,all,ports,exploitdb}, --exec-method {services,web,all,ports,exploitdb}
+
 ```  
      
 ##Sample Usage Examples
@@ -56,39 +83,3 @@ python metasploitHelper.py -i nmap.xml -findPort
   
 ##Example  
 ```   
-root@kali:/git/metasploitHelper# python metasploitHelper.py -i nmapt_target1.xml 
-
-- Initial Testing with Random URLs...
-
-- Brute Forcing URLs...
-Found: http://192.168.112.167:80/index.php                                    200       
-
-- Initial Testing with Random URLs...
-
-- Brute Forcing URLs...
-Found: http://192.168.112.167:8180/index.jsp                                  200       
-Found: http://192.168.112.167:8180/manager/html                               401       
-Found: http://192.168.112.167:8180/admin/index.jsp                            200       
-
-Metasploit resource script: runAux.rc written.
-Metasploit resource script: runExp.rc written.
-Report written to report.txt.
-root@kali:/git/metasploitHelper# python metasploitHelper.py -i nmapt_target.xml
-
-- Initial Testing with Random URLs...
-
-- Brute Forcing URLs...
-Found: http://192.168.112.167:80/index.php                                    200       
-
-- Initial Testing with Random URLs...
-
-- Brute Forcing URLs...
-Found: http://192.168.112.167:8180/index.jsp                                  200       
-Found: http://192.168.112.167:8180/manager/html                               401       
-Found: http://192.168.112.167:8180/admin/index.jsp                            200       
-
-Metasploit resource script: runAux.rc written.
-Metasploit resource script: runExp.rc written.
-Report written to report.txt.
-
-```  
