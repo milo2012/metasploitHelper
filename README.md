@@ -63,23 +63,14 @@ Whether to run Metasploit 'services', 'ports', 'web' modules or 'exploitdb':
 ```  
      
 ##Sample Usage Examples
-- Generate a metasploit resource script containing the list of exploits matching the port number and HTTP/HTTPs URI path.
+- Use the intelligent mode and scan/test the target IP
 ```  
-python metasploitHelper.py -i nmap.xml  
+python msfHelper.py 192.168.1.6 -i
 ```    
-- List only metasploit modules matching target URI in HTTP/HTTPs servers
+- Specify the ports to be tested
 ```  
-python metasploitHelper.py -i nmap.xml -findweb  
+python msfHelper.py 192.168.1.6 -i -p 21,5432  
 ```    
-- List only metasploit modules matching the port number   
+- Run metasploit modules that matches the port number   
 ```  
-python metasploitHelper.py -i nmap.xml -findPort   
-```  
-      
-##Description of Files  
-- uriList.txt - This file contains the list of URIs gathered from Metasploit modules  
-- port2Msf.csv - This file contains the ports to metasploit module mapping (along with any additional variables that are required to be supplied)  
-- default-path.csv - This file contains the uri to metasploit module mapping   
-  
-##Example  
-```   
+python msfHelper.py 192.168.1.6 -i -e ports
