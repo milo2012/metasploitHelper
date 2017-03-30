@@ -12,9 +12,15 @@ metasploitHelper
   
 ##Requirements
 ```
-- Python 2.7
-- pip install python-libnmap  
-- pip install requests --upgrade  
+Kali Linux 2016.2 VM
+
+$ apt-get install git-core -y 
+$ git clone https://github.com/SpiderLabs/msfrpc
+$ cd msfrpc && cd python-msfrpc && python setup.py install
+$ pip install tabulate termcolor python-libnmap msgpack-python tabulate beautifulsoup4 termcolor requests
+$ git clone https://github.com/milo2012/metasploitHelper
+$ python msfHelper.py x.x.x.x -i 
+
 ```  
   
 ##Usage  
