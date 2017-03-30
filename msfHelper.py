@@ -77,7 +77,7 @@ showOnly=False
 portInfo=False
 quickMode=False
 msfIP="127.0.0.1"
-msfPort=55553
+msfPort=55552
 execMethod="all"
 nmapFilename=""
 
@@ -1577,7 +1577,7 @@ def runAuxModule1(input):
     #if (nowTime-startTime)>15:
     #if (nowTime-startTime)>80:
     nowTime = time.time()
-    if (nowTime-startTime)>30:
+    if (nowTime-startTime)>15:
      taskComplete=True
    if quickMode==False:
     #client2.call('console.session_kill',[console_id])
