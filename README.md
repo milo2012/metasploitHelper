@@ -2,14 +2,16 @@ metasploitHelper
 ================  
 ##Introduction
 
-- TLDR. Metasploit contains port-based modules as well as URI-based modules (web servers). This tool bridges Nmap XML file with Metasploit and generates a resource script containing matching Metasploit modules. that you can run against the target servers.
+metasploitHelper (msfHelper) has been rewritten from scratch. 
 
-##Longer Introduction
-- The script checks for metasploit modules matching the port number listed in the nmap XML file.  
-- The script also brute force  URIs listed in urlList.txt against the web services and when found, it will perform a lookup against Metasploit.
-- The script then generates a metasploit resource script for the matching modules so that you can run the metasploit modules easily against the target hosts via the command "msfconsole -r msfRun.rc"  
-- Denial of service (DoS) modules in Metasploit are excluded.
+You can point msfHelper at an IP address/Nmap xml file/File containing list of Ip addresses. 
+
+It will attempt to find compatible and possible Metasploit modules based on 1) nmap service banner and 2) service name and run them against the targets.
+
+It is also possible to use the -m option in msfHelper along with msfconsole (load msgrpc Pass=xxx) if you would like to interact with the targets that msfHelper had compromised.
   
+msfHelper by default only test ports which were found in metasploit modules.  If you would like to scan all ports, please use the -a option.
+    
 ##Requirements
 ```
 Kali Linux 2016.2 VM
@@ -72,11 +74,24 @@ Whether to run Metasploit 'services', 'ports', 'web' modules or 'exploitdb':
 - Use the intelligent mode and scan/test the target IP
 ```  
 python msfHelper.py 192.168.1.6 -i
+
 ```    
 - Specify the ports to be tested
 ```  
 python msfHelper.py 192.168.1.6 -i -p 21,5432  
+
 ```    
 - Run metasploit modules that matches the port number   
 ```  
 python msfHelper.py 192.168.1.6 -i -e ports
+
+```    
+- Scan and test all ports on target host  
+```  
+python msfHelper.py 192.168.1.6 -i -a
+ 
+```    
+- Enable verbose mode (see results from Metasploit modules  
+```  
+python msfHelper.py 192.168.1.6 -i -v
+ 
