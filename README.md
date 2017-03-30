@@ -95,3 +95,14 @@ python msfHelper.py 192.168.1.6 -i -a
 ```  
 python msfHelper.py 192.168.1.6 -i -v
  
+ 
+```    
+- Run msfHelper and interact with the shells
+```  
+#on the first terminal window
+$ msfconsole
+$ load msgrpc Pass=xxxxx
+
+#on the second terminal window
+python msfHelper.py 192.168.1.6 -i -m -P xxxxx
+ 
