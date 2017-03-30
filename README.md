@@ -1,7 +1,9 @@
 metasploitHelper (msfHelper)
 ================  
-##Introduction
+##Slides for Black Hat Asia 2017
+https://goo.gl/pSUgnc
 
+##Introduction
 metasploitHelper (msfHelper) has been rewritten from scratch. 
 
 You can point msfHelper at an IP address/Nmap xml file/File containing list of Ip addresses. 
