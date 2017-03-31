@@ -10,7 +10,9 @@ metasploitHelper (msfHelper) communicates with Metasploit via msrpc.  It uses bo
 
 You can point msfHelper at an IP address/Nmap xml file/File containing list of Ip addresses. 
 
-it performs a nmap scan of the target host(sh and then attempt to find compatible and possible Metasploit modules based on 1) nmap service banner and 2) service name and run them against the targets.
+First, it performs a nmap scan of the target host(sh and then attempt to find compatible and possible Metasploit modules based on 1) nmap service banner and 2) service name and run them against the targets.  
+
+Please see the slides above for more information regarding the tool as well as the video demo.
 
 It is also possible to use the -m option in msfHelper along with msfconsole (load msgrpc Pass=xxx) if you would like to interact with the targets that msfHelper had compromised.
   
