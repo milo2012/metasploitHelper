@@ -1737,7 +1737,7 @@ def runMsfExploitsAndDisplayreport(tmpPathResultList):
            if x not in tmpList1:
             tmpList1.append(x)
          if len(tmpList1)>0:
-          print str(cPort)+"\t"+str(lPort)+"\t"+str(sPort)
+          #print str(cPort)+"\t"+str(lPort)+"\t"+str(sPort)
           if "LOGIN SUCCESSFUL" in str(tmpList1):
            exploitOK=True
           #foundSession=False
