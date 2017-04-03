@@ -1103,7 +1103,7 @@ def runServiceBasedModules():
              for y in osList:
               osType=y[1]
               if osType in x[3]:
-               if [x[0]+":"+x[1],x[2]+"/"+x[3],x[4]] not in tmpList:
+               if [x[0]+":"+x[1],x[2]+"/"+x[3],x[4]]] not in tmpList:
      	        tmpList.append([x[0]+":"+x[1],x[2]+"/"+x[3],x[4]])
            if len(tmpList)>0:
             print tabulate(tmpList)
@@ -1467,14 +1467,16 @@ def runPortBasedModules():
             moduleName=x[3]
             moduleParameters=x[4]
             if "linux" not in moduleName.lower() and "unix" not in moduleName.lower() and "windows" not in moduleName.lower() and "osx" not in moduleName.lower() and "solaris" not in moduleName.lower():
-             tmpManualExpList.append([hostNo+":"+portNo,moduleType,moduleName,moduleParameters])
+	     if [hostNo+":"+portNo,moduleType,moduleName,moduleParameters] not in tmpManualExpList:
+              tmpManualExpList.append([hostNo+":"+portNo,moduleType,moduleName,moduleParameters])
             else:
              if len(osList)>0:
               for y in osList:
                if y[0] in hostNo:
                 osType=y[1]
                 if osType in moduleName:
-                 tmpManualExpList.append([hostNo+":"+portNo,moduleType,moduleName,moduleParameters])
+                 if [hostNo+":"+portNo,moduleType,moduleName,moduleParameters] not in tmpManualExpList:
+                  tmpManualExpList.append([hostNo+":"+portNo,moduleType,moduleName,moduleParameters])
            if len(tmpManualExpList)>0:
       	    print tabulate(tmpManualExpList, headers=["Host","Type","Module","Parameters"])
            else:
