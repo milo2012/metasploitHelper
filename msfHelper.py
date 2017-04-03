@@ -972,9 +972,17 @@ def runServiceBasedModules():
          p.terminate()
 	 tmpList1=[]
          count=0
-
+	 tmpKeywordList=[]
 	 if len(tmpResultList)>0:
  	  for z in tmpResultList:
+	   title=z[0]
+	   moduleList=z[1]
+	   if z not in tmpKeywordList:
+	    tmpKeywordList.append(z)
+
+	 if len(tmpResultList)>0:
+ 	  #for z in tmpResultList:
+ 	  for z in tmpKeywordList:
 	   title=z[0]
 	   moduleList=z[1]
            if title!="http" and title!="ssl/http" and len(title)>2:
