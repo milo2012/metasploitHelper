@@ -1702,7 +1702,7 @@ def runMultipleAuxExploits(tmpList):
         else:
          print tabulate(tmpList, tablefmt="plain")+" "+setColor('[Check Msfconsole]', bold, color="red")
         if verbose==True:
-         for y in tmpList1:
+         for y in tmpList2:
           print y
          print "\n"
 
@@ -1763,8 +1763,8 @@ def runMsfExploitsAndDisplayreport(tmpPathResultList):
           if [tmpList[0][0],tmpList[0][1]] not in workingExploitList:
   	   workingExploitList.append([tmpList[0][0],tmpList[0][1]])
        	  if verbose==True:
-           if len(tmpList1)>0:
-            for y in tmpList1:
+           if len(tmpList2)>0:
+            for y in tmpList2:
              print y
             print "\n"
      	 else:
@@ -1773,8 +1773,8 @@ def runMsfExploitsAndDisplayreport(tmpPathResultList):
            else:
             print tabulate(tmpList, tablefmt="plain")+" "+setColor('[Check Msfconsole]', bold, color="red")
        	   if verbose==True:
-            if len(tmpList1)>0:
-             for y in tmpList1:
+            if len(tmpList2)>0:
+             for y in tmpList2:
               print y
              print "\n"
 
