@@ -1103,7 +1103,7 @@ def runServiceBasedModules():
              for y in osList:
               osType=y[1]
               if osType in x[3]:
-               if [x[0]+":"+x[1],x[2]+"/"+x[3],x[4]]] not in tmpList:
+               if [x[0]+":"+x[1],x[2]+"/"+x[3],x[4]] not in tmpList:
      	        tmpList.append([x[0]+":"+x[1],x[2]+"/"+x[3],x[4]])
            if len(tmpList)>0:
             print tabulate(tmpList)
