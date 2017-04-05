@@ -182,8 +182,10 @@ def parseNmap(filename):
    os = osmatch.name
    accuracy = osmatch.accuracy
    if "linux" in os.lower() or "unix" in os.lower():
-    tmpOSList.append([ip,"linux"])
-    tmpOSList.append([ip,"unix"])
+    if [ip,"linux"] not in tmpOSList:
+     tmpOSList.append([ip,"linux"])
+    if [ip,"unix"] not in tmpOSList:
+     tmpOSList.append([ip,"unix"])
    if "windows" in os.lower():
     tmpOSList.append([ip,"windows"])
    if "apple" in os.lower() or "apple os x" in os.lower():
@@ -963,9 +965,9 @@ def runServiceBasedModules():
 	 tmpResultList=[]
          tmpUniqueSvcNameList=[]
          for x in uniqueSvcNameList:
-          tmpUniqueSvcNameList.append(x[2])
+	  if x[2] not in tmpUniqueSvcNameList:
+           tmpUniqueSvcNameList.append(x[2])
          tmpResultList=p.map(searchModule,tmpUniqueSvcNameList)
-
          tmpResultList1=[]
          p.close()
          p.join()
@@ -1073,7 +1075,8 @@ def runServiceBasedModules():
 	   moduleName=x[3]
 	   if filterModuleName(moduleName)==True:
             if str(portNo)!="80":
-             tmpList1.append([hostNo+":"+portNo,moduleCategory+"/"+moduleName,startCount])
+             if [hostNo+":"+portNo,moduleCategory+"/"+moduleName,startCount] not in tmpList1:
+              tmpList1.append([hostNo+":"+portNo,moduleCategory+"/"+moduleName,startCount])
              if startCount<maxCount:
               startCount+=1
              else:
@@ -1088,7 +1091,8 @@ def runServiceBasedModules():
  	    moduleName=x[3]
  	    if filterModuleName(moduleName)==True:
              if str(portNo)!="80":
-              tmpList1.append([hostNo+":"+portNo,moduleCategory+"/"+moduleName,startCount])
+              if [hostNo+":"+portNo,moduleCategory+"/"+moduleName,startCount] not in tmpList1:
+               tmpList1.append([hostNo+":"+portNo,moduleCategory+"/"+moduleName,startCount])
               if startCount<maxCount:
                startCount+=1
               else:
@@ -1630,7 +1634,6 @@ def runMultipleAuxExploits(tmpList):
 	 startCount=0
         else:
          startCount+=1
-
      tmpResultList = p.map(runAuxModule1,itertools.izip(tmpChunkList))
      tmpResultList1=[]
      p.close()
