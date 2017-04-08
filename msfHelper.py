@@ -182,8 +182,10 @@ def parseNmap(filename):
    os = osmatch.name
    accuracy = osmatch.accuracy
    if "linux" in os.lower() or "unix" in os.lower():
-    tmpOSList.append([ip,"linux"])
-    tmpOSList.append([ip,"unix"])
+    if [ip,"linux"] not in tmpOSList:
+     tmpOSList.append([ip,"linux"])
+    if [ip,"unix"] not in tmpOSList:
+     tmpOSList.append([ip,"unix"])
    if "windows" in os.lower():
     tmpOSList.append([ip,"windows"])
    if "apple" in os.lower() or "apple os x" in os.lower():
@@ -963,18 +965,26 @@ def runServiceBasedModules():
 	 tmpResultList=[]
          tmpUniqueSvcNameList=[]
          for x in uniqueSvcNameList:
-          tmpUniqueSvcNameList.append(x[2])
+	  if x[2] not in tmpUniqueSvcNameList:
+           tmpUniqueSvcNameList.append(x[2])
          tmpResultList=p.map(searchModule,tmpUniqueSvcNameList)
-
          tmpResultList1=[]
          p.close()
          p.join()
          p.terminate()
 	 tmpList1=[]
          count=0
-
+	 tmpKeywordList=[]
 	 if len(tmpResultList)>0:
  	  for z in tmpResultList:
+	   title=z[0]
+	   moduleList=z[1]
+	   if z not in tmpKeywordList:
+	    tmpKeywordList.append(z)
+
+	 if len(tmpResultList)>0:
+ 	  #for z in tmpResultList:
+ 	  for z in tmpKeywordList:
 	   title=z[0]
 	   moduleList=z[1]
            if title!="http" and title!="ssl/http" and len(title)>2:
@@ -1065,7 +1075,8 @@ def runServiceBasedModules():
 	   moduleName=x[3]
 	   if filterModuleName(moduleName)==True:
             if str(portNo)!="80":
-             tmpList1.append([hostNo+":"+portNo,moduleCategory+"/"+moduleName,startCount])
+             if [hostNo+":"+portNo,moduleCategory+"/"+moduleName,startCount] not in tmpList1:
+              tmpList1.append([hostNo+":"+portNo,moduleCategory+"/"+moduleName,startCount])
              if startCount<maxCount:
               startCount+=1
              else:
@@ -1080,7 +1091,8 @@ def runServiceBasedModules():
  	    moduleName=x[3]
  	    if filterModuleName(moduleName)==True:
              if str(portNo)!="80":
-              tmpList1.append([hostNo+":"+portNo,moduleCategory+"/"+moduleName,startCount])
+              if [hostNo+":"+portNo,moduleCategory+"/"+moduleName,startCount] not in tmpList1:
+               tmpList1.append([hostNo+":"+portNo,moduleCategory+"/"+moduleName,startCount])
               if startCount<maxCount:
                startCount+=1
               else:
@@ -1467,14 +1479,16 @@ def runPortBasedModules():
             moduleName=x[3]
             moduleParameters=x[4]
             if "linux" not in moduleName.lower() and "unix" not in moduleName.lower() and "windows" not in moduleName.lower() and "osx" not in moduleName.lower() and "solaris" not in moduleName.lower():
-             tmpManualExpList.append([hostNo+":"+portNo,moduleType,moduleName,moduleParameters])
+	     if [hostNo+":"+portNo,moduleType,moduleName,moduleParameters] not in tmpManualExpList:
+              tmpManualExpList.append([hostNo+":"+portNo,moduleType,moduleName,moduleParameters])
             else:
              if len(osList)>0:
               for y in osList:
                if y[0] in hostNo:
                 osType=y[1]
                 if osType in moduleName:
-                 tmpManualExpList.append([hostNo+":"+portNo,moduleType,moduleName,moduleParameters])
+                 if [hostNo+":"+portNo,moduleType,moduleName,moduleParameters] not in tmpManualExpList:
+                  tmpManualExpList.append([hostNo+":"+portNo,moduleType,moduleName,moduleParameters])
            if len(tmpManualExpList)>0:
       	    print tabulate(tmpManualExpList, headers=["Host","Type","Module","Parameters"])
            else:
@@ -1620,7 +1634,6 @@ def runMultipleAuxExploits(tmpList):
 	 startCount=0
         else:
          startCount+=1
-
      tmpResultList = p.map(runAuxModule1,itertools.izip(tmpChunkList))
      tmpResultList1=[]
      p.close()
@@ -1700,7 +1713,7 @@ def runMultipleAuxExploits(tmpList):
         else:
          print tabulate(tmpList, tablefmt="plain")+" "+setColor('[Check Msfconsole]', bold, color="red")
         if verbose==True:
-         for y in tmpList1:
+         for y in tmpList2:
           print y
          print "\n"
 
@@ -1737,7 +1750,7 @@ def runMsfExploitsAndDisplayreport(tmpPathResultList):
            if x not in tmpList1:
             tmpList1.append(x)
          if len(tmpList1)>0:
-          print str(cPort)+"\t"+str(lPort)+"\t"+str(sPort)
+          #print str(cPort)+"\t"+str(lPort)+"\t"+str(sPort)
           if "LOGIN SUCCESSFUL" in str(tmpList1):
            exploitOK=True
           #foundSession=False
@@ -1761,8 +1774,8 @@ def runMsfExploitsAndDisplayreport(tmpPathResultList):
           if [tmpList[0][0],tmpList[0][1]] not in workingExploitList:
   	   workingExploitList.append([tmpList[0][0],tmpList[0][1]])
        	  if verbose==True:
-           if len(tmpList1)>0:
-            for y in tmpList1:
+           if len(tmpList2)>0:
+            for y in tmpList2:
              print y
             print "\n"
      	 else:
@@ -1771,8 +1784,8 @@ def runMsfExploitsAndDisplayreport(tmpPathResultList):
            else:
             print tabulate(tmpList, tablefmt="plain")+" "+setColor('[Check Msfconsole]', bold, color="red")
        	   if verbose==True:
-            if len(tmpList1)>0:
-             for y in tmpList1:
+            if len(tmpList2)>0:
+             for y in tmpList2:
               print y
              print "\n"
 
