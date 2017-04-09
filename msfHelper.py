@@ -198,12 +198,11 @@ def parseNmap(filename):
        uniqueSvcBannerList.append([ip,services.port,serviceBanner])
     except IndexError as e:
      pass
+    tmpportsList.append([str(ip),str(services.port),services.protocol,services.service])
     if services.service!="http":
-     tmpportsList.append([str(ip),str(services.port),services.protocol,services.service])
      if services.service not in uniqueSvcNameList and "?" not in str(services.service):
       uniqueSvcNameList.append([ip,services.port,services.service])
     else:
-     tmpportsList.append([str(ip),str(services.port),services.protocol,services.service])
      if services.tunnel=="ssl":
       tmphttpsList.append([str(ip),str(services.port),services.protocol,services.service])
      else:
