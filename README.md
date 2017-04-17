@@ -77,23 +77,24 @@ Whether to run Metasploit 'services', 'ports', 'web' modules or 'exploitdb':
 ```  
 
 ## Sample Usage Examples
-- Use the intelligent mode and scan/test the target IP :
+
+**Use the intelligent mode and scan/test the target IP :**
+
 `python msfHelper.py 192.168.1.6 -i`
 
-- Specify the ports to be tested :
+**Specify the ports to be tested :**
 `python msfHelper.py 192.168.1.6 -i -p 21,5432`
 
-- Run metasploit modules that matches the port number :
+**Run metasploit modules that matches the port number :**
 `python msfHelper.py 192.168.1.6 -i -e ports`
 
-- Scan and test all ports on target host :
+**Scan and test all ports on target host :**
 `python msfHelper.py 192.168.1.6 -i -a`
 
-- Enable verbose mode (see results from Metasploit modules :
-  `python msfHelper.py 192.168.1.6 -i -v`
+**Enable verbose mode (see results from Metasploit modules :**
+`python msfHelper.py 192.168.1.6 -i -v`
 
-- Run msfHelper and interact with the shells :
-
+**Run msfHelper and interact with the shells :**
 ```
 #on the first terminal window
 $ msfconsole
@@ -103,17 +104,17 @@ $ load msgrpc Pass=xxxxx
 python msfHelper.py 192.168.1.6 -i -m -P xxxxx
 ```
 
-- As Nmap sometimes is unable to fingerprint the target port accurately, you might want to use the --info option to retrieve information from speedguide (google cache) as to what applications typically use the port :
+**As Nmap sometimes is unable to fingerprint the target port accurately, you might want to use the --info option to retrieve information from speedguide (google cache) as to what applications typically use the port :**
 `python msfHelper.py 192.168.1.6 -i --info`
 
-- Do not run metasploit modules. Only run exploit-db detection :
+**Do not run metasploit modules. Only run exploit-db detection :**
 `python msfHelper.py 192.168.1.6 -e exploitdb`
 
-- Run "port" based detection :
+**Run "port" based detection :**
 `python msfHelper.py 192.168.1.6 -i -e ports`    
 
-- Run "services" based detection :
+**Run "services" based detection :**
 `python msfHelper.py 192.168.1.6 -i -e services`
 
-- Run "web" based detection :
+**Run "web" based detection :**
 `python msfHelper.py 192.168.1.6 -i -e web`
