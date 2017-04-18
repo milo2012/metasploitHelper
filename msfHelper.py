@@ -211,10 +211,8 @@ def parseNmap(filename):
 
 def checkInternetAccess():
   try:
-    REMOTE_SERVER = "www.google.com"
-    host = socket.gethostbyname(REMOTE_SERVER)
-    s = socket.create_connection((host, 80), 2)
-    return True
+    t = requests.get('http://detectportal.firefox.com/success.txt')
+    return t.text.strip('\n') == 'success'
   except:
      pass
   return False
