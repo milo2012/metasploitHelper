@@ -62,6 +62,7 @@ import socket
 import fcntl
 import struct
 
+greatthanPorts=""
 mypassword=""
 portsInput=""
 intelligentMode=False
@@ -1901,7 +1902,8 @@ def readDB():
   moduleParameters=row[3]
   moduleDescription=row[4]
   if portNo not in allPortList:
-   allPortList.append(portNo)
+   if int(portNo)>int(greatthanPorts):
+    allPortList.append(portNo)
   if [portNo,moduleType,moduleName,moduleParameters,moduleDescription] not in allPortModuleList:
    allPortModuleList.append([portNo,moduleType,moduleName,moduleParameters,moduleDescription])
  conn = sqlite3.connect(os.getcwd()+"/msfHelper.db")
@@ -1918,6 +1920,7 @@ def readDB():
    allPathList.append(uriPath)
   if [uriPath,moduleType,moduleName,moduleParameters,moduleDescription] not in allPathModuleList:
    allPathModuleList.append([uriPath,moduleType,moduleName,moduleParameters,moduleDescription])
+ #sys.exit()
 
 def readExploitDB():
  tmpResultlist=[]
@@ -2028,6 +2031,7 @@ parser.add_argument("-a", "--scanall", action='store_true', help="Scan all 65535
 parser.add_argument("-n", type=str, dest="threads", default=3, help="Set how many concurrent threads to use (default: 5)")
 parser.add_argument("-u", "--update", action='store_true', help="Update Metasploit and metasploitHelper DB")
 parser.add_argument("-q", "--quick", action='store_true', help="Performs a quick scan - Do not use modules where TARGETURI is set to /")
+parser.add_argument("-gt", type=str, dest="greaterthan", help="Only scan TCP ports greater than x number")
 parser.add_argument("--info", action='store_true', help="Lookup information about ports online")
 parser.add_argument("-v", "--verbose", action='store_true', help="Verbose mode")
 parser.add_argument("-s", "--showonly", action='store_true', help="Show matching Metasploit modules but don't run")
@@ -2037,6 +2041,8 @@ if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
 args = parser.parse_args()
+if args.greaterthan:
+	greatthanPorts=args.greaterthan
 if not os.path.exists("/usr/share/metasploit-framework"):
  print "[!] Metasploit Framework cannot be found at the location /usr/share/metasploit-framework"
  sys.exit()
