@@ -62,7 +62,7 @@ import socket
 import fcntl
 import struct
 
-greatthanPorts=""
+greatthanPorts=0
 mypassword=""
 portsInput=""
 intelligentMode=False
@@ -2042,7 +2042,7 @@ if len(sys.argv) == 1:
         sys.exit(1)
 args = parser.parse_args()
 if args.greaterthan:
-	greatthanPorts=args.greaterthan
+	greatthanPorts=int(args.greaterthan)
 if not os.path.exists("/usr/share/metasploit-framework"):
  print "[!] Metasploit Framework cannot be found at the location /usr/share/metasploit-framework"
  sys.exit()
