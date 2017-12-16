@@ -149,4 +149,4 @@
 /zimbraAdmin
 /zm/
 /zpanel
-cmd.php
+/cmd.php
