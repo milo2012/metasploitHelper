@@ -170,7 +170,7 @@ def parseNmap(filename):
  tmphttpsList=[]
  tmpportsList=[]
  tmpOSList=[]
-
+ 
  with open (filename, 'rt') as file:
   tree=ElementTree.parse(file)
  rep = NmapParser.parse_fromfile(filename)
@@ -667,20 +667,6 @@ def lookupPortDB(inputPortNo,portProtocol):
  return tmpResultList
 
 
-def runExploit(rhost,category,moduleName):
-  client = MsfRpcClient(mypassword)
-  exploit=client.modules.use(category,moduleName)
-  try:
-    exploit['RHOST'] = rhost
-  except KeyError:
-    exploit['RHOSTS'] = rhost
-  try:
-    if not options.d:
-     results=exploit.execute()
-     return results['job_id']
-  except Exception as e:
-    pass
-
 def test_port(ip, port):
     try:
         s = socket.socket()
@@ -728,7 +714,7 @@ def updateDB(tmpModuleList):
    moduleDescription=moduleDescription.replace("\n"," ")
    if uriPath not in tmpPathList:
     tmpPathList.append(uriPath)
-    if uriPath!=None and len(uriPath)>1:
+    if uriPath!=None and len(uriPath)>1 and uriPath.startswith("/"):
      f1.write(uriPath+"\n")
    f.write(str(portNo)+","+moduleType+","+moduleName+","+moduleParameters+"\n")
    try:
@@ -1257,8 +1243,23 @@ def runPortBasedModules():
                  if "linux" not in moduleName.lower() and "unix" not in moduleName.lower() and "windows" not in moduleName.lower() and "osx" not in moduleName.lower() and "solaris" not in moduleName.lower():
                   if [hostNo+":"+portNo,moduleCategory,moduleName] not in tmpList:
                    tmpList.append([hostNo+":"+portNo,moduleCategory,moduleName])
-                   if [hostNo+":"+portNo,moduleCategory,moduleName,moduleParameters,moduleDescription] not in autoExpListExp:
-                    autoExpListExp.append([hostNo+":"+portNo,moduleCategory,moduleName,moduleParameters,moduleDescription])
+		   tmpFoundOSName=''
+		   for y in osList:
+		    tmpHostNo=y[0]
+		    tmpOSName=(y[1]).lower()
+		    if hostNo==tmpHostNo:
+			tmpFoundOSName=tmpOSName
+		    if len(tmpFoundOSName)>0:
+		     if "windows" in (moduleName).lower() or "linux" in (moduleName).lower():
+ 	              if tmpFoundOSName in (moduleName).lower():
+                       if [hostNo+":"+portNo,moduleCategory,moduleName,moduleParameters,moduleDescription] not in autoExpListExp:
+                        autoExpListExp.append([hostNo+":"+portNo,moduleCategory,moduleName,moduleParameters,moduleDescription])
+		     else:
+                      if [hostNo+":"+portNo,moduleCategory,moduleName,moduleParameters,moduleDescription] not in autoExpListExp:
+                       autoExpListExp.append([hostNo+":"+portNo,moduleCategory,moduleName,moduleParameters,moduleDescription])
+	            else:
+                     if [hostNo+":"+portNo,moduleCategory,moduleName,moduleParameters,moduleDescription] not in autoExpListExp:
+                      autoExpListExp.append([hostNo+":"+portNo,moduleCategory,moduleName,moduleParameters,moduleDescription])
                  else:
                   if len(osList)>0:
                    for y in osList:
@@ -1320,9 +1321,22 @@ def runPortBasedModules():
                        if [hostNo+":"+portNo,moduleCategory,moduleName,moduleParameters,moduleDescription] not in autoExpListExp:
                         autoExpListExp.append([hostNo+":"+portNo,moduleCategory,moduleName,moduleParameters,moduleDescription])
              else:
-              tmpList.append([hostNo+":"+portNo,moduleCategory,moduleName])
-              if [hostNo+":"+portNo,moduleCategory,moduleName,moduleParameters,moduleDescription] not in autoExpListExp:
-               autoExpListExp.append([hostNo+":"+portNo,moduleCategory,moduleName,moduleParameters,moduleDescription])
+              if len(osList)>0:
+               for y in osList:
+                if y[0] in hostNo:
+                 osType=y[1]
+		 if "linux" in moduleName or "windows" in moduleName or "solaris" in moduleName or "freebsd" in moduleName or "osx" in moduleName or "netware" in moduleName:
+      	          if osType in moduleName:
+                   tmpList.append([hostNo+":"+portNo,moduleCategory,moduleName])
+                   if [hostNo+":"+portNo,moduleCategory,moduleName,moduleParameters,moduleDescription] not in autoExpListExp:
+                    autoExpListExp.append([hostNo+":"+portNo,moduleCategory,moduleName,moduleParameters,moduleDescription])
+		 else:
+                  tmpList.append([hostNo+":"+portNo,moduleCategory,moduleName])
+                  if [hostNo+":"+portNo,moduleCategory,moduleName,moduleParameters,moduleDescription] not in autoExpListExp:
+                   autoExpListExp.append([hostNo+":"+portNo,moduleCategory,moduleName,moduleParameters,moduleDescription])
+              #tmpList.append([hostNo+":"+portNo,moduleCategory,moduleName])
+              #if [hostNo+":"+portNo,moduleCategory,moduleName,moduleParameters,moduleDescription] not in autoExpListExp:
+              # autoExpListExp.append([hostNo+":"+portNo,moduleCategory,moduleName,moduleParameters,moduleDescription])
 
 	 #Testing auxiliary modules
 	 if len(autoExpListAux)>0:
@@ -1537,9 +1551,6 @@ def runAuxModule1(input):
    console_id = res2['id']
    payloadStr=''
    payloadList=[]
-   #moduleOptions=client2.call('module.options',["exploit",moduleName])
-   #for key, value in moduleOptions.iteritems()
-   # print key+"\t"+str(value)
 
    if "auxiliary" not in moduleName:
     tmpPayloadList=client2.call('module.compatible_payloads',[moduleName])
@@ -1573,6 +1584,7 @@ def runAuxModule1(input):
             exploit -jz
             """
     cmdStr=cmdStr+' '+commands
+
    client2.call('console.write',[console_id,cmdStr])
    startTime = time.time()
    taskComplete=False
@@ -1583,17 +1595,14 @@ def runAuxModule1(input):
     if res2['busy'] == True:
      if quickMode==True:
       taskComplete=True
-    #if (nowTime-startTime)>15:
-    #if (nowTime-startTime)>80:
     nowTime = time.time()
-    if (nowTime-startTime)>15:
+    #if (nowTime-startTime)>15:
+    if (nowTime-startTime)>20:
      taskComplete=True
    if quickMode==False:
-    #client2.call('console.session_kill',[console_id])
     client2.call('console.destroy',[console_id])
    complete=True
   except Exception as e:
-   #print "Retrying: "+moduleName
    #print "error999: "+str(e)
    pass
   return [hostNo+":"+portNo,moduleName,results,[randomCPort,randomLPort,randomSrvPort]]
@@ -1629,6 +1638,7 @@ def runMultipleAuxExploits(tmpList):
 	 startCount=0
         else:
          startCount+=1
+
      tmpResultList = p.map(runAuxModule1,itertools.izip(tmpChunkList))
      tmpResultList1=[]
      p.close()
@@ -1641,8 +1651,8 @@ def runMultipleAuxExploits(tmpList):
       tmpList1=[]
       tmpList2=[]
       hostNo=z[0]
-      moduleName=z[1]
-      tmpList.append([hostNo,moduleName])
+      tmpmoduleName=z[1]
+      tmpList.append([hostNo,tmpmoduleName])
 
       moduleResults=z[2]
       cPort=z[3][0]
@@ -1657,8 +1667,9 @@ def runMultipleAuxExploits(tmpList):
       for x in moduleResultsList:
        x=escape_ansi(x)
        if "[*]" in x or "[-]" in x or "[+]" in x:
-        if x not in tmpList1:
-         tmpList1.append(x)
+	if "Failed to load module" not in x and "A maximum of one thread" not in x and "Thread count has been adjusted" not in x:
+         if x not in tmpList1:
+          tmpList1.append(x)
        count+=1
       if len(tmpList1)>0:
        if "LOGIN SUCCESSFUL" in str(tmpList1):
@@ -1678,7 +1689,7 @@ def runMultipleAuxExploits(tmpList):
           tmpList2.append(y)
 
        if exploitOK==True:
-        if "auxiliary" in moduleName:
+        if "auxiliary" in tmpmoduleName:
           if exploitOK==True:
            print tabulate(tmpList, tablefmt="plain")+" "+setColor('[OK]', bold, color="blue")
            if [tmpList[0][0],tmpList[0][1]] not in workingExploitList:
@@ -1696,7 +1707,7 @@ def runMultipleAuxExploits(tmpList):
 
        else:
         if quickMode==False:
-         if "auxiliary" in moduleName:
+         if "auxiliary" in tmpmoduleName:
           if exploitOK==True:
            print tabulate(tmpList, tablefmt="plain")+" "+setColor('[OK]', bold, color="blue")
            if [tmpList[0][0],tmpList[0][1]] not in workingExploitList:
@@ -1944,6 +1955,7 @@ def runNmap(targetIP):
  #if len(allPortList):
  # print "[!] Please run msfHelper.py -u beforec continuing"
  # sys.exit()
+
  if portsInput!="":
   portStr=portsInput
  else:
@@ -2140,6 +2152,7 @@ for target in args.target:
  else:
   nmapFilename=runNmap(target)
   portsList,httpsList,httpList,osList=parseNmap(nmapFilename+".xml")
+
   tmpList=[]
   tmpList1=[]
   for x in portsList:
