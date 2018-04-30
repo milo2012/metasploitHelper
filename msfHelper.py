@@ -713,12 +713,12 @@ def searchAndExtractPaths():
 						if y.endswith(")"):
 							y=y[0:len(y)-1]
 						tmpList1.append(y)
-				tmpFilename="/"+"/".join(tmpList1)
-				tmpFilename=tmpFilename.replace("//","/")
-				if tmpFilename.endswith("/"):
-					tmpFilename=tmpFilename[0:len(tmpFilename)-1]
-					if tmpFilename not in tmpResultList:
-						tmpResultList.append(tmpFilename)
+				tmpPath="/"+"/".join(tmpList1)
+				tmpPath=tmpPath.replace("//","/")
+				if tmpPath.endswith("/"):
+					tmpPath=tmpPath[0:len(tmpPath)-1]
+					if [filename,tmpPath] not in tmpResultList:
+						tmpResultList.append([filename,tmpPath])
 	return tmpResultList
 
 def updateDB(tmpModuleList):
@@ -765,12 +765,27 @@ def updateDB(tmpModuleList):
     except sqlite3.IntegrityError:
      continue
    print "[*] Adding: "+moduleName
- conn.close()
  tmpPathList=searchAndExtractPaths()
  for x in tmpPathList:
-  f1.write(x+"\n")
+  x[0]=x[0].replace(msfPath,"")
+  x[0]=x[0].replace("/modules/","")
+  tmpPath=x[1]
+  x1=x[0].split("/")  
+  tmpModuleType=x1[0]
+  tmpModuleName=x[0].replace(x1[0],"")
+  tmpModuleName=tmpModuleName[1:len(tmpModuleName)-3]
+  tmpModuleDescription=""
+  if len(tmpPath)>0:
+    try:
+     print "[*] Adding: "+tmpModuleName
+     conn.execute("INSERT INTO pathList (uriPath,moduleType,moduleName,moduleParameters,moduleDescription) VALUES  (?,?,?,?,?)" , (tmpPath,tmpModuleType,tmpModuleName,"",tmpModuleDescription,));
+     conn.commit()
+    except sqlite3.IntegrityError:
+     continue
+ f1.write(x[1]+"\n")
  f.close()
  f1.close()
+ conn.close()
 
 def diff(list1, list2):
     c = set(list1).union(set(list2))
