@@ -689,6 +689,37 @@ def scanSubnet(ipRange):
  for n in range(0,256):
     ip = ip_prefix + "." + str(n)
     start_thread(ip, port)
+    
+def searchAndExtractPaths():
+	tmpResultList=[]
+	tmpFileList=[]
+	for root, directories, filenames in os.walk(msfPath):
+		 for filename in filenames: 
+				 tmpFileList.append(os.path.join(root,filename))
+	for filename in tmpFileList:
+		text_file = open(filename, "r")
+		lines = text_file.readlines()
+		for x in lines:
+			if "'uri'    => normalize_uri(uri," in x:
+				x=x.strip()
+				x=(x.split("normalize_uri(uri,")[1]).strip()
+				tmpList=x.split(",")			
+				tmpList1=[]
+				for y in tmpList:
+					if "payload_name" not in y:
+						y=y.replace('"','')
+						y=y.replace("'",'')
+						y=y.strip()
+						if y.endswith(")"):
+							y=y[0:len(y)-1]
+						tmpList1.append(y)
+				tmpFilename="/"+"/".join(tmpList1)
+				tmpFilename=tmpFilename.replace("//","/")
+				if tmpFilename.endswith("/"):
+					tmpFilename=tmpFilename[0:len(tmpFilename)-1]
+					if tmpFilename not in tmpResultList:
+						tmpResultList.append(tmpFilename)
+	return tmpResultList
 
 def updateDB(tmpModuleList):
  print "[*] Updating msfHelper.db"
@@ -699,6 +730,7 @@ def updateDB(tmpModuleList):
  p.close()
  p.terminate()
 
+ tmpOutputPathList=[]
  f1 = open('pathList.txt','w')
  f = open('portList.csv','w')
  conn = sqlite3.connect(os.getcwd()+"/msfHelper.db")
@@ -715,7 +747,11 @@ def updateDB(tmpModuleList):
    if uriPath not in tmpPathList:
     tmpPathList.append(uriPath)
     if uriPath!=None and len(uriPath)>1 and uriPath.startswith("/"):
-     f1.write(uriPath+"\n")
+     if uriPath.endswith("/"):
+        uriPath=uriPath[0:len(uriPath)-1]
+     if uriPath not in tmpOutputPathList:      
+      f1.write(uriPath+"\n")
+      tmpOutputPathList.append(uriPath)
    f.write(str(portNo)+","+moduleType+","+moduleName+","+moduleParameters+"\n")
    try:
     conn.execute("INSERT INTO portList (portNo,moduleType,moduleName,moduleParameters,moduleDescription) VALUES  (?,?,?,?,?)" , (portNo,moduleType,moduleName,moduleParameters,moduleDescription,));
@@ -730,6 +766,9 @@ def updateDB(tmpModuleList):
      continue
    print "[*] Adding: "+moduleName
  conn.close()
+ tmpPathList=searchAndExtractPaths()
+ for x in tmpPathList:
+  f1.write(x+"\n")
  f.close()
  f1.close()
 
