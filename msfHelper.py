@@ -465,6 +465,7 @@ def retrieveModuleDetails(input):
    moduleDescription=''
    moduleOptions=''
    complete=False
+   print "[*] Fetching module details: "+category+"/"+module
    while complete==False:
     try:
      import msfrpc
@@ -474,11 +475,12 @@ def retrieveModuleDetails(input):
      opts['port']=msfPort
      opts['uri']='/api/'
      opts['ssl']=False
-
      client = msfrpc.Msfrpc(opts)
      client.login('msf', mypassword)
      moduleDescription=(client.call('module.info',[category,module])['description']).strip()
-
+    except Exception as e:
+     continue
+    try:
      import msfrpc
      opts={}
      opts['host']='127.0.0.1'
@@ -492,9 +494,7 @@ def retrieveModuleDetails(input):
      moduleOptions=client.call('module.options',[category,module])
      complete=True
     except Exception as e:
-     print "[!] Encountered Error: Retrying in 5 seconds\n"
-     time.sleep(2)
-
+     continue
    moduleName=module
    if filterModuleName(moduleName)==True:
     if 'TARGETURI' in str(moduleOptions).upper():
@@ -700,6 +700,20 @@ def searchAndExtractPaths():
 		text_file = open(filename, "r")
 		lines = text_file.readlines()
 		for x in lines:
+			if "'uri'    => '" in x:
+				x=x.strip()
+				x=(x.split("'uri'    => '")[1]).strip()
+				x=x.replace('"','')
+				x=x.replace("'",'')
+				x=x.strip()
+				if x.endswith(","):
+					x=x[0:len(x)-1]
+				tmpFilename=x
+				tmpPath=tmpFilename
+				if '")' in tmpPath:
+					tmpPath=tmpPath.split('")')[0]
+				if [filename,tmpPath] not in tmpResultList:
+					tmpResultList.append([filename,tmpPath])
 			if "'uri'    => normalize_uri(uri," in x:
 				x=x.strip()
 				x=(x.split("normalize_uri(uri,")[1]).strip()
@@ -713,12 +727,38 @@ def searchAndExtractPaths():
 						if y.endswith(")"):
 							y=y[0:len(y)-1]
 						tmpList1.append(y)
-				tmpPath="/"+"/".join(tmpList1)
-				tmpPath=tmpPath.replace("//","/")
-				if tmpPath.endswith("/"):
-					tmpPath=tmpPath[0:len(tmpPath)-1]
-					if [filename,tmpPath] not in tmpResultList:
-						tmpResultList.append([filename,tmpPath])
+				tmpFilename="/"+"/".join(tmpList1)
+				tmpFilename=tmpFilename.replace("//","/")
+				if tmpFilename.endswith("/"):
+					tmpFilename=tmpFilename[0:len(tmpFilename)-1]
+				tmpPath=tmpFilename
+				if '")' in tmpPath:
+					tmpPath=tmpPath.split('")')[0]
+				if [filename,tmpPath] not in tmpResultList:
+					tmpResultList.append([filename,tmpPath])
+			elif "'uri'    => normalize_uri(" in x:
+				x=x.strip()
+				x=x.strip()
+				x=(x.split("'uri'    => normalize_uri(")[1]).strip()
+				tmpList=x.split(",")			
+				tmpList1=[]
+				for y in tmpList:
+					y=y.strip()
+					if (y.startswith('"') or y.startswith("'")) and not "#" in y:
+						y=y[1:len(y)-1]
+						tmpList1.append(y)
+				tmpFilename="/".join(tmpList1)
+				if tmpFilename.endswith("'"):
+					tmpFilename=tmpFilename[0:len(tmpFilename)-1]
+				if tmpFilename.endswith('"'):
+					tmpFilename=tmpFilename[0:len(tmpFilename)-1]
+				if not tmpFilename.startswith("/"):
+					tmpFilename="/"+tmpFilename
+				tmpPath=tmpFilename.replace("//","/")
+				if '")' in tmpPath:
+					tmpPath=tmpPath.split('")')[0]
+				if [filename,tmpPath] not in tmpResultList:
+					tmpResultList.append([filename,tmpPath])
 	return tmpResultList
 
 def updateDB(tmpModuleList):
@@ -726,7 +766,9 @@ def updateDB(tmpModuleList):
  #Update Database
  tmpPathList=[]
  p = multiprocessing.Pool(numOfThreads)
- tmpResultList = p.map(retrieveModuleDetails,itertools.izip(tmpModuleList))
+ print "[*] Stage 1"
+ tmpResultList=[]
+ #tmpResultList = p.map(retrieveModuleDetails,itertools.izip(tmpModuleList))
  p.close()
  p.terminate()
 
@@ -765,6 +807,7 @@ def updateDB(tmpModuleList):
     except sqlite3.IntegrityError:
      continue
    print "[*] Adding: "+moduleName
+ print "[*] Stage 2"
  tmpPathList=searchAndExtractPaths()
  for x in tmpPathList:
   x[0]=x[0].replace(msfPath,"")
@@ -779,10 +822,11 @@ def updateDB(tmpModuleList):
     try:
      print "[*] Adding: "+tmpModuleName
      conn.execute("INSERT INTO pathList (uriPath,moduleType,moduleName,moduleParameters,moduleDescription) VALUES  (?,?,?,?,?)" , (tmpPath,tmpModuleType,tmpModuleName,"",tmpModuleDescription,));
+     if len(x[1])>1: 
+      f1.write(x[1]+"\n")
      conn.commit()
     except sqlite3.IntegrityError:
      continue
- f1.write(x[1]+"\n")
  f.close()
  f1.close()
  conn.close()
