@@ -465,8 +465,8 @@ def retrieveModuleDetails(input):
    moduleDescription=''
    moduleOptions=''
    complete=False
-   print "[*] Fetching module details: "+category+"/"+module
    while complete==False:
+    print "[*] Fetching module details: "+category+"/"+module
     try:
      import msfrpc
      msfrpc = reload(msfrpc)
@@ -478,9 +478,6 @@ def retrieveModuleDetails(input):
      client = msfrpc.Msfrpc(opts)
      client.login('msf', mypassword)
      moduleDescription=(client.call('module.info',[category,module])['description']).strip()
-    except Exception as e:
-     continue
-    try:
      import msfrpc
      opts={}
      opts['host']='127.0.0.1'
@@ -767,8 +764,8 @@ def updateDB(tmpModuleList):
  tmpPathList=[]
  p = multiprocessing.Pool(numOfThreads)
  print "[*] Stage 1"
- tmpResultList=[]
- #tmpResultList = p.map(retrieveModuleDetails,itertools.izip(tmpModuleList))
+ #tmpResultList=[]
+ tmpResultList = p.map(retrieveModuleDetails,itertools.izip(tmpModuleList))
  p.close()
  p.terminate()
 
@@ -777,6 +774,7 @@ def updateDB(tmpModuleList):
  f = open('portList.csv','w')
  conn = sqlite3.connect(os.getcwd()+"/msfHelper.db")
  conn.text_factory = str
+ print "[*] Writing to msfHelper.db"
  for x in tmpResultList:
   if x!=None:
    portNo=x[0]
@@ -795,6 +793,7 @@ def updateDB(tmpModuleList):
       f1.write(uriPath+"\n")
       tmpOutputPathList.append(uriPath)
    f.write(str(portNo)+","+moduleType+","+moduleName+","+moduleParameters+"\n")
+   print "x: "+moduleType+" "+moduleName
    try:
     conn.execute("INSERT INTO portList (portNo,moduleType,moduleName,moduleParameters,moduleDescription) VALUES  (?,?,?,?,?)" , (portNo,moduleType,moduleName,moduleParameters,moduleDescription,));
     conn.commit()
