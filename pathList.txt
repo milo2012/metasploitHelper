@@ -149,7 +149,6 @@
 /hybridauth
 /iControl/iControlPortal.cgi
 /images
-/images/..
 /images/../jsp/ProcessFileUpload.jsp
 /imc
 /img/favicon.png?v=6.0.1-1213
