@@ -16,7 +16,7 @@ except:
  print "Please install msfrpc from https://github.com/SpiderLabs/msfrpc/tree/master/python-msfrpc"
  print "\n"
  print "cd /tmp && git clone https://github.com/SpiderLabs/msfrpc"
- print "cd msfrpc && cd python-msfrpc && python setup.py install"
+ print "cd msfrpc && cd cd python-msfrpc && python setup.py install"
  print "pip install msgpack-python"
  print "\n"
  sys.exit()
@@ -465,7 +465,9 @@ def retrieveModuleDetails(input):
    moduleDescription=''
    moduleOptions=''
    complete=False
-   while complete==False:
+   maxTries = 3
+   currentTries=0
+   while complete==False and currentTries<maxTries:    
     print "[*] Fetching module details: "+category+"/"+module
     try:
      import msfrpc
@@ -477,7 +479,8 @@ def retrieveModuleDetails(input):
      opts['ssl']=False
      client = msfrpc.Msfrpc(opts)
      client.login('msf', mypassword)
-     moduleDescription=(client.call('module.info',[category,module])['description']).strip()
+     moduleDescription=(client.call('module.info',[category,module])['description']).strip()    
+
      import msfrpc
      opts={}
      opts['host']='127.0.0.1'
@@ -491,6 +494,7 @@ def retrieveModuleDetails(input):
      moduleOptions=client.call('module.options',[category,module])
      complete=True
     except Exception as e:
+     currentTries+=1
      continue
    moduleName=module
    if filterModuleName(moduleName)==True:
