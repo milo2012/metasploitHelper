@@ -16,7 +16,7 @@ except:
  print "Please install msfrpc from https://github.com/SpiderLabs/msfrpc/tree/master/python-msfrpc"
  print "\n"
  print "cd /tmp && git clone https://github.com/SpiderLabs/msfrpc"
- print "cd msfrpc && cd cd python-msfrpc && python setup.py install"
+ print "cd msfrpc && cd python-msfrpc && python setup.py install"
  print "pip install msgpack-python"
  print "\n"
  sys.exit()
