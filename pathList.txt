@@ -295,7 +295,6 @@
 /includes/jquery.uploadify/upload.php?folder=#{upload_dir}
 /SGPAdmin/fileRequest
 /images/../jsp/ProcessFileUpload.jsp
-/images/..
 /appliance/applianceMainPage
 /appliance
 /errorInSignUp.htm
