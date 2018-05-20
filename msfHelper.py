@@ -468,7 +468,6 @@ def retrieveModuleDetails(input):
    maxTries = 3
    currentTries=0
    while complete==False and currentTries<maxTries:    
-    print "[*] Fetching module details: "+category+"/"+module
     try:
      import msfrpc
      msfrpc = reload(msfrpc)
@@ -498,6 +497,7 @@ def retrieveModuleDetails(input):
      continue
    moduleName=module
    if filterModuleName(moduleName)==True:
+    print "[*] Fetching module details: "+category+"/"+module
     if 'TARGETURI' in str(moduleOptions).upper():
      for key, value in moduleOptions.iteritems():
       if key=='TARGETURI':
@@ -767,7 +767,6 @@ def updateDB(tmpModuleList):
  #Update Database
  tmpPathList=[]
  p = multiprocessing.Pool(numOfThreads)
- print "[*] Stage 1"
  #tmpResultList=[]
  tmpResultList = p.map(retrieveModuleDetails,itertools.izip(tmpModuleList))
  p.close()
@@ -805,12 +804,11 @@ def updateDB(tmpModuleList):
     continue
    if len(uriPath)>0:
     try:
+     print "[*] Adding: "+moduleName
      conn.execute("INSERT INTO pathList (uriPath,moduleType,moduleName,moduleParameters,moduleDescription) VALUES  (?,?,?,?,?)" , (uriPath,moduleType,moduleName,moduleParameters,moduleDescription,));
      conn.commit()
     except sqlite3.IntegrityError:
      continue
-   print "[*] Adding: "+moduleName
- print "[*] Stage 2"
  tmpPathList=searchAndExtractPaths()
  for x in tmpPathList:
   x[0]=x[0].replace(msfPath,"")
