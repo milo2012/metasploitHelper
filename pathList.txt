@@ -252,6 +252,7 @@
 /spywall/login.php
 /spywall/releasenotes.php
 /spywall/login.php
+/spywall/releasenotes.php?relfile=../../../../../usr/local/apache2/logs/access_log
 /redirect.cgi
 /login.imss
 /initCert.imss
@@ -287,6 +288,8 @@
 /servlet/Main
 /j_security_check
 /proxy/ssllogin
+/portal
+/ayefeaturesconvert.js
 /global_group_login.php
 /userpictures
 /admin/libraries/ajaxfilemanager/ajax_create_folder.php
@@ -300,6 +303,7 @@
 /servlet/com.me.opmanager.extranet.remote.communication.fw.fe.FileCollector
 /admin/Login.do
 /olt/Login.do
+/olt/Login.do/../../olt/UploadFileUpload.do
 /install.php
 /index.php
 /index.php
