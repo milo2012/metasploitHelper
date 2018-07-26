@@ -67,7 +67,7 @@ mypassword=""
 portsInput=""
 intelligentMode=False
 scanAll=False
-numOfThreads=2
+numOfThreads=10
 chunkSize=50
 manualStart=False
 verbose=False
@@ -290,6 +290,8 @@ def testURL(url1):
 		#print url1
 		r = requests.get(url1, headers=headers, verify=False, timeout=5,allow_redirects=False)
 		url1=url1.strip()
+		if verbose==True:
+ 		    print "[+] Checking: "+url1+" -  "+str(r.status_code)
 		#print url1+"\t"+str(r.status_code)
 		#html = BeautifulSoup(r.text,'html.parser')
 		if r.status_code==200 or r.status_code==401:
@@ -909,7 +911,7 @@ def runExploitDBModules():
 def runWebBasedModules():
 	if execMethod=="all" or execMethod=="web":
 	 vulnURLList=[]
-	 message="\n**** Finding MSF Modules - Bruteforcing URI Paths ****"
+	 message="\n[Bruteforcing URI Paths]"
 	 print(setColor(message, bold, color="red"))
          if len(httpList)>0:
           tmpHttpList=[]
@@ -2011,7 +2013,7 @@ def runMain():
 	runWebBasedModules()
 	#runExploitDBModules()
 
- 	message="\n**** List of Working Metasploit Modules ****"
+ 	message="\n[List of Matching Metasploit Modules]"
 	print(setColor(message, bold, color="red"))
 	if len(workingExploitList)>0:
  	 print tabulate(workingExploitList, headers=["Host","Module"])
