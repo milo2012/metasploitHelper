@@ -150,6 +150,7 @@
 /xoda
 /zimbraAdmin
 /zm
+/cmsms
 /cms400min
 /cgi-bin/function.php?argument=
 /autopass
