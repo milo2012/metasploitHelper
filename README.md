@@ -17,7 +17,32 @@ Please see the slides above for more information regarding the tool as well as t
 It is also possible to use the `-m` option in `msfHelper` along with msfconsole (load msgrpc Pass=xxx) if you would like to interact with the targets that msfHelper had compromised.
 
 msfHelper by default only test ports which were found in metasploit modules.  If you would like to scan all ports, please use the `-a` option.
+  
+## Docker
 
+- Building from Dockerfile
+
+```
+docker build -t metasploithelper .
+docker run --rm -it milo2012/metasploithelper
+python msfHelper.py -a testphp.vulnweb.com
+```
+
+- Pull latest Docker image
+
+```
+docker pull milo2012/metasploithelper
+docker run --rm -it milo2012/metasploithelper
+python msfHelper.py -a testphp.vulnweb.com
+```
+
+- To see help menu
+
+```  
+docker pull milo2012/metasploithelper
+docker run --rm -it milo2012/metasploithelper
+python msfHelper.py -h
+```
 ## Requirements
 
 On *Kali Linux 2016.2 VM*
