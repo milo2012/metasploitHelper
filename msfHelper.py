@@ -290,8 +290,8 @@ def testURL(url1):
 		#print url1
 		r = requests.get(url1, headers=headers, verify=False, timeout=5,allow_redirects=False)
 		url1=url1.strip()
-		if verbose==True:
- 		    print "[+] Checking: "+url1+" -  "+str(r.status_code)
+		#if verbose==True:
+ 		print "[+] Checking: "+url1+" -  "+str(r.status_code)
 		#print url1+"\t"+str(r.status_code)
 		#html = BeautifulSoup(r.text,'html.parser')
 		if r.status_code==200 or r.status_code==401:
@@ -965,7 +965,6 @@ def runWebBasedModules():
 	 if len(tmpPathResultList)>0:
 	  #Run all modules against web servers which uripath matches against the list
  	  print "\n**** Test Results from Metasploit Modules ****"
-          print "Please wait ..."
 	  #message="\n[*] Launching compatible Metasploit modules"
 	  #print(setColor(message, bold, color="red"))
 	  tmpPathResultList1=[]
