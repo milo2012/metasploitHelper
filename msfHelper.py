@@ -67,7 +67,7 @@ mypassword=""
 portsInput=""
 intelligentMode=False
 scanAll=False
-numOfThreads=10
+numOfThreads=20
 chunkSize=50
 manualStart=False
 verbose=False
@@ -81,6 +81,8 @@ msfIP="127.0.0.1"
 msfPort=55552
 execMethod="all"
 nmapFilename=""
+msfCategory=""
+alrTestedModuleList=[]
 
 #Dependencies
 #git clone https://github.com/SpiderLabs/msfrpc
@@ -912,7 +914,8 @@ def runWebBasedModules():
 	if execMethod=="all" or execMethod=="web":
 	 vulnURLList=[]
 	 message="\n[Bruteforcing URI Paths]"
-	 print(setColor(message, bold, color="red"))
+         print message
+	 #print(setColor(message, bold, color="red"))
          if len(httpList)>0:
           tmpHttpList=[]
 	  for x in httpList:
@@ -1018,7 +1021,7 @@ def runWebBasedModules():
 	   #message="\n[*] Running other Metasploit modules whose parameter  TARGETURI is set to /"
            print(setColor(message, bold, color="red"))
  	   print "**** Test Results from Metasploit Modules ****"
-           print "Please wait ..."
+           #print "Please wait ..."
 	   runMsfExploitsAndDisplayreport(tmpPathResultList1)
 
 	  tmpPathResultList3=[]
@@ -1149,7 +1152,7 @@ def runServiceBasedModules():
 
  	 if len(autoExpListExp)>0 or len(autoExpListAux)>0:
           print "\n**** Test Results from Metasploit Modules ****"
-          print "Please wait ..."
+          #print "Please wait ..."
  	 if len(autoExpListExp)>0 and showOnly==False:
 	  for x in autoExpListExp:
 	   hostNo=x[0]
@@ -1187,7 +1190,7 @@ def runServiceBasedModules():
 	if execMethod=="all" or execMethod=="services":
  	 if len(manualExpList):
 	  tmpList=[]
-	  print "\n**** List of Modules to Run Manually ****"
+	  #print "\n**** List of Modules to Run Manually ****"
           if intelligentMode==True:
  	   for x in manualExpList:
             if "windows" not in x[3] and "linux" not in x[3] and "unix" not in x[3] and "osx" not in x[3] and "solaris" not in x[3]:
@@ -1202,6 +1205,7 @@ def runServiceBasedModules():
                if [x[0]+":"+x[1],x[2]+"/"+x[3],x[4]] not in tmpList:
      	        tmpList.append([x[0]+":"+x[1],x[2]+"/"+x[3],x[4]])
            if len(tmpList)>0:
+ 	    print "\n**** List of Modules to Run Manually ****"
             print tabulate(tmpList)
            else:
             print "No results found"
@@ -1328,7 +1332,8 @@ def runPortBasedModules():
  	  print "No Metasploit modules found matching criteria"
 
 	 message = "\n**** Finding MSF Modules based on Port No ****"
-	 print(setColor(message, bold, color="red"))
+	 print message
+	 #print(setColor(message, bold, color="red"))
 
 	 #Displaying the list of modules to be run against the target automatically
          tmpList=[]
@@ -1577,7 +1582,6 @@ def runPortBasedModules():
  	   if filterModuleName(moduleName)==True:
             if str(portNo)!="80":
   	     tmpList1.append([hostNo+":"+str(portNo),moduleCategory+"/"+moduleName,startCount])
-             #tmpChunkList.append([hostNo,moduleName,startCount])
              if startCount==maxCount-1:
               startCount=0
              else:
@@ -1586,8 +1590,8 @@ def runPortBasedModules():
 
          if len(manualExpList)>0:
 	  message="\n**** List of Modules to Run Manually ****"
-  	  #message="\nOther possible Metasploit modules.  Please run the modules manually due to additional inputs required"
-	  print(setColor(message, bold, color="red"))
+	  print message
+	  #print(setColor(message, bold, color="red"))
 	  if intelligentMode==True:
            tmpManualExpList=[]
            for x in manualExpList:
@@ -1654,8 +1658,6 @@ def runAuxModule1(input):
    opts['ssl']=False
    client2 = msfrpc.Msfrpc(opts)
    client2.login('msf', mypassword)
-   #res1 = client2.call("console.list")
-   #print res1
    res2 = client2.call('console.create')
    console_id = res2['id']
    payloadStr=''
@@ -1663,12 +1665,18 @@ def runAuxModule1(input):
 
    if "auxiliary" not in moduleName:
     tmpPayloadList=client2.call('module.compatible_payloads',[moduleName])
+
     watchList=[]
     watchList.append("linux/x86/meterpreter/reverse_tcp")
     watchList.append("php/meterpreter_reverse_tcp")
     watchList.append("python/meterpreter_reverse_https")
     watchList.append("java/meterpreter/reverse_https")
     watchList.append("windows/meterpreter/reverse_https")
+    tmpPayloadFoundStatus=False
+    for x in watchList:
+     if x in tmpPayloadList:   
+      tmpPayloadFoundStatus=True 
+
     payloadList=[]
     for y in tmpPayloadList['payloads']:
      payloadStr=''
@@ -1701,27 +1709,27 @@ def runAuxModule1(input):
    startTime = time.time()
    taskComplete=False
    while taskComplete==False:
+    time.sleep(30)
     res2 = client2.call('console.read',[console_id])
     if len(res2['data']) > 1:
      results+=res2['data']
     if res2['busy'] == True:
      if quickMode==True:
       taskComplete=True
-    nowTime = time.time()
-    #if (nowTime-startTime)>15:
-    if (nowTime-startTime)>20:
+    else:
      taskComplete=True
-   #print "fff"
-   #try:
-   # if quickMode==False:
-   #  client2.call('console.destroy',[console_id])
-   #except:
-   # continue
+
+    nowTime = time.time()
+    if (nowTime-startTime)>15:
+     results+=res2['data']
+     # print "taskcomplete"
+     taskComplete=True
+ 
+   if quickMode==False:
+     client2.call('console.destroy',[console_id])
    complete=True
   except Exception as e:
-   #print "error999: "+str(e)
    pass
-  #print "xxx"
   if verbose==True:
    tmpResults=results.split("\n")
    for x in tmpResults:
@@ -1742,24 +1750,35 @@ def runMultipleAuxExploits(tmpList):
       hostNo=y[0]
       moduleName=y[1]
       if "linux" not in moduleName.lower() and "unix" not in moduleName.lower() and "windows" not in moduleName.lower() and "osx" not in moduleName.lower() and "solaris" not in moduleName.lower():
-       tmpChunkList.append(y)
+       if [moduleName,hostNo] not in alrTestedModuleList:
+        if len(msfCategory)>0 and msfCategory in moduleName:
+         tmpChunkList.append(y)
+         alrTestedModuleList.append([moduleName,hostNo])
       else:
        if len(osList)>0:
         for x in osList:
          if x[0] in hostNo:
           osType=x[1]
    	  if osType in moduleName:
-           tmpChunkList.append([hostNo,moduleName,startCount])
-	   if startCount==maxCount-1:
-	    startCount=0
-           else:
-            startCount+=1
+
+ 	   if [moduleName,hostNo] not in alrTestedModuleList:
+            if len(msfCategory)>0 and msfCategory in moduleName:
+             tmpChunkList.append([hostNo,moduleName,startCount])
+             alrTestedModuleList.append([moduleName,hostNo])
+     	     if startCount==maxCount-1:
+	      startCount=0
+             else:
+              startCount+=1
        else:
-        tmpChunkList.append([hostNo,moduleName,startCount])
-	if startCount==maxCount-1:
-	 startCount=0
-        else:
-         startCount+=1
+        if [moduleName,hostNo] not in alrTestedModuleList:
+         if len(msfCategory)>0 and msfCategory in moduleName:
+          tmpChunkList.append([hostNo,moduleName,startCount])
+          alrTestedModuleList.append([moduleName,hostNo])
+     	  if startCount==maxCount-1:
+	   startCount=0
+          else:
+           startCount+=1
+
 
      tmpResultList = p.map(runAuxModule1,itertools.izip(tmpChunkList))
      tmpResultList1=[]
@@ -1768,6 +1787,7 @@ def runMultipleAuxExploits(tmpList):
      p.terminate()
      count=0
      totalCount=len(chunkList)
+     print "\n"
      for z in tmpResultList:
       tmpList=[]
       tmpList1=[]
@@ -1795,11 +1815,12 @@ def runMultipleAuxExploits(tmpList):
           tmpList1.append(x)
        count+=1
       if len(tmpList1)>0:
+       if "A is input..." in str(tmpList1):
+        exploitOK=True
        if "LOGIN SUCCESSFUL" in str(tmpList1):
         exploitOK=True
        for y in tmpList1:
         if "Command shell session" in y or "Meterpreter session" in y:
-         #print "here: "+str(cPort)+"\t"+str(sPort)+"\t"+str(lPort)
          if ":"+str(cPort) in str(y):
   	  exploitOK=True
          if ":"+str(sPort) in str(y):
@@ -1811,16 +1832,17 @@ def runMultipleAuxExploits(tmpList):
         else:
           tmpList2.append(y)
 
+
        if exploitOK==True:
         if "auxiliary" in tmpmoduleName:
           if exploitOK==True:
-           print tabulate(tmpList, tablefmt="plain")+" "+setColor('[OK]', bold, color="blue")
+           print tabulate(tmpList, tablefmt="plain")+" "+setColor('[WORKING]', bold, color="blue")
            if [tmpList[0][0],tmpList[0][1]] not in workingExploitList:
       	    workingExploitList.append([tmpList[0][0],tmpList[0][1]])
           else:
            print tabulate(tmpList, tablefmt="plain")+" "+setColor('', bold, color="blue")
         else:
-         print tabulate(tmpList, tablefmt="plain")+" "+setColor('[OK]', bold, color="blue")
+         print tabulate(tmpList, tablefmt="plain")+" "+setColor('[WORKING]', bold, color="blue")
          if [tmpList[0][0],tmpList[0][1]] not in workingExploitList:
  	  workingExploitList.append([tmpList[0][0],tmpList[0][1]])
         if verbose==True:
@@ -1832,7 +1854,7 @@ def runMultipleAuxExploits(tmpList):
         if quickMode==False:
          if "auxiliary" in tmpmoduleName:
           if exploitOK==True:
-           print tabulate(tmpList, tablefmt="plain")+" "+setColor('[OK]', bold, color="blue")
+           print tabulate(tmpList, tablefmt="plain")+" "+setColor('[WORKING]', bold, color="blue")
            if [tmpList[0][0],tmpList[0][1]] not in workingExploitList:
     	    workingExploitList.append([tmpList[0][0],tmpList[0][1]])
           else:
@@ -1846,6 +1868,7 @@ def runMultipleAuxExploits(tmpList):
           print y
          print "\n"
 
+     print "\n"
 
 def runMsfExploitsAndDisplayreport(tmpPathResultList):
      	p = multiprocessing.Pool(numOfThreads)
@@ -1900,7 +1923,7 @@ def runMsfExploitsAndDisplayreport(tmpPathResultList):
             tmpList2.append(y)
 
          if exploitOK==True:
-          print tabulate(tmpList, tablefmt="plain")+" "+setColor('[OK]', bold, color="blue")
+          print tabulate(tmpList, tablefmt="plain")+" "+setColor('[WORKING]', bold, color="blue")
           if [tmpList[0][0],tmpList[0][1]] not in workingExploitList:
   	   workingExploitList.append([tmpList[0][0],tmpList[0][1]])
        	  if verbose==True:
@@ -2013,7 +2036,7 @@ def runMain():
 	#runExploitDBModules()
 
  	message="\n[List of Matching Metasploit Modules]"
-	print(setColor(message, bold, color="red"))
+        print message
 	if len(workingExploitList)>0:
  	 print tabulate(workingExploitList, headers=["Host","Module"])
         else:
@@ -2173,6 +2196,7 @@ parser.add_argument("-gt", type=str, dest="greaterthan", help="Only scan TCP por
 parser.add_argument("--info", action='store_true', help="Lookup information about ports online")
 parser.add_argument("-v", "--verbose", action='store_true', help="Verbose mode")
 parser.add_argument("-s", "--showonly", action='store_true', help="Show matching Metasploit modules but don't run")
+parser.add_argument("-t", type=str, dest="category", help="Choose between 'exploit' or 'auxillary'")
 cgroup = parser.add_argument_group("Whether to run Metasploit 'services', 'ports', 'web' modules or 'exploitdb'", "Options for executing commands")
 cgroup.add_argument("-e", "--exec-method", choices={"all", "services", "ports", "web", "exploitdb"}, default="all", help="")
 if len(sys.argv) == 1:
@@ -2187,6 +2211,8 @@ if not os.path.exists("/usr/share/metasploit-framework"):
 
 #testMsfConnection()
 localIP=get_ip_address()
+if args.category:
+ msfCategory=args.category
 if args.info:
  portInfo=True
 if args.i:
