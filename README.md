@@ -19,7 +19,7 @@ It is also possible to use the `-m` option in `msfHelper` along with msfconsole 
 msfHelper by default only test ports which were found in metasploit modules.  If you would like to scan all ports, please use the `-a` option.
   
 ## Demo  
-<a href="https://asciinema.org/a/9ZQ6OVWDpv0XMbpOWvvBhEB2A?autoplay=1" target="_blank"><img src="https://imgur.com/a/YY7wg0m" width="835"/></a>  
+<a href="https://asciinema.org/a/9ZQ6OVWDpv0XMbpOWvvBhEB2A?autoplay=1" target="_blank"><img src="https://preview.ibb.co/no2GTo/Screen_Shot_2018_07_29_at_10_02_53_PM.png"/></a>  
   
 ## Docker
 
