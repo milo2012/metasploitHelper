@@ -68,16 +68,16 @@ $ python msfHelper.py x.x.x.x -i
 ```
 root@kali:/code# python msfHelper18.py -h
 usage: PROG [-h] [-P MYPASSWORD] [-p PORTSINPUT] [-i] [-m] [-a] [-n THREADS]
-            [-u] [-q] [--info] [-v] [-s]
-            [-e {services,web,all,ports,exploitdb}]
+            [-u] [-q] [-gt GREATERTHAN] [--info] [-v] [-s] [-t CATEGORY]
+            [-e {services,web,exploitdb,ports,all}]
             [target [target ...]]
 
-                __ _   _      _                 
+                __ _   _      _
  _ __ ___  ___ / _| | | | ___| |_ __   ___ _ __
 | '_ ` _ \/ __| |_| |_| |/ _ \ | '_ \ / _ \ '__|
-| | | | | \__ \  _|  _  |  __/ | |_) |  __/ |   
-|_| |_| |_|___/_| |_| |_|\___|_| .__/ \___|_|   
-                               |_|              
+| | | | | \__ \  _|  _  |  __/ | |_) |  __/ |
+|_| |_| |_|___/_| |_| |_|\___|_| .__/ \___|_|
+                               |_|
 
 +-- https://github.com/milo2012/metasploitHelper
 
@@ -98,14 +98,16 @@ optional arguments:
   -u, --update          Update Metasploit and metasploitHelper DB
   -q, --quick           Performs a quick scan - Do not use modules where
                         TARGETURI is set to /
+  -gt GREATERTHAN       Only scan TCP ports greater than x number
   --info                Lookup information about ports online
   -v, --verbose         Verbose mode
   -s, --showonly        Show matching Metasploit modules but don't run
+  -t CATEGORY           Choose between 'exploit' or 'auxillary'
 
 Whether to run Metasploit 'services', 'ports', 'web' modules or 'exploitdb':
   Options for executing commands
 
-  -e {services,web,all,ports,exploitdb}, --exec-method {services,web,all,ports,exploitdb}
+  -e {services,web,exploitdb,ports,all}, --exec-method {services,web,exploitdb,ports,all}
 ```  
 
 ## Sample Usage Examples
