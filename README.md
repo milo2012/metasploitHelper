@@ -20,6 +20,9 @@ msfHelper by default only test ports which were found in metasploit modules.  If
   
 ## Demo  
 - The demo shows running msfHelper (exploit modules) against Metasploitable 2   
+```
+sudo python msfHelper.py -a 172.16.126.132 -t exploit
+```
 <a href="https://asciinema.org/a/9ZQ6OVWDpv0XMbpOWvvBhEB2A?autoplay=1" target="_blank"><img src="https://preview.ibb.co/no2GTo/Screen_Shot_2018_07_29_at_10_02_53_PM.png"/></a>  
   
 ## Docker
