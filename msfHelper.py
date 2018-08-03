@@ -111,6 +111,7 @@ workingExploitList=[]
 targetList=[]
 
 catchDupSessionList=[]
+tmpOutputPathList=[]
 
 tmpTargetURIList=[]
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -707,6 +708,16 @@ def searchAndExtractPaths():
 		text_file = open(filename, "r")
 		lines = text_file.readlines()
 		for x in lines:
+			if "'uri' => '/" in x:
+				x=x.strip()
+				x=(x.split("'uri' => '")[1]).strip()
+				x=x.split("'")[0]
+				tmpFilename=x
+				tmpPath=tmpFilename
+				if '")' in tmpPath:
+					tmpPath=tmpPath.split('")')[0]
+				if [filename,tmpPath] not in tmpResultList:
+					tmpResultList.append([filename,tmpPath])
 			if "'uri'    => '" in x:
 				x=x.strip()
 				x=(x.split("'uri'    => '")[1]).strip()
@@ -778,7 +789,7 @@ def updateDB(tmpModuleList):
  p.close()
  p.terminate()
 
- tmpOutputPathList=[]
+ #tmpOutputPathList=[]
  f1 = open('pathList.txt','w')
  f = open('portList.csv','w')
  conn = sqlite3.connect(os.getcwd()+"/msfHelper.db")
@@ -802,7 +813,7 @@ def updateDB(tmpModuleList):
       f1.write(uriPath+"\n")
       tmpOutputPathList.append(uriPath)
    f.write(str(portNo)+","+moduleType+","+moduleName+","+moduleParameters+"\n")
-   print "x: "+moduleType+" "+moduleName
+   print moduleType+" "+moduleName
    try:
     conn.execute("INSERT INTO portList (portNo,moduleType,moduleName,moduleParameters,moduleDescription) VALUES  (?,?,?,?,?)" , (portNo,moduleType,moduleName,moduleParameters,moduleDescription,));
     conn.commit()
@@ -830,7 +841,10 @@ def updateDB(tmpModuleList):
      print "[*] Adding: "+tmpModuleName
      conn.execute("INSERT INTO pathList (uriPath,moduleType,moduleName,moduleParameters,moduleDescription) VALUES  (?,?,?,?,?)" , (tmpPath,tmpModuleType,tmpModuleName,"",tmpModuleDescription,));
      if len(x[1])>1: 
-      f1.write(x[1]+"\n")
+      if x[1] not in tmpOutputPathList:      
+       f1.write(x[1]+"\n")
+       tmpOutputPathList.append(x[1])
+
      conn.commit()
     except sqlite3.IntegrityError:
      continue
