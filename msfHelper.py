@@ -10,6 +10,7 @@ import sqlite3
 import datetime
 from time import gmtime, strftime
 import os, optparse, sys, subprocess
+from shutil import copyfile
 try:
  import msfrpc
 except:
@@ -83,6 +84,7 @@ execMethod="all"
 nmapFilename=""
 msfCategory=""
 alrTestedModuleList=[]
+outputDirectory=""
 
 #Dependencies
 #git clone https://github.com/SpiderLabs/msfrpc
@@ -122,7 +124,7 @@ requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':RC4-SHA'
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 6.2; rv:30.0) Gecko/20150101 Firefox/32.0",
 			"Connection": "keep-alive"}
 
-msfPath="/usr/share/metasploit-framework"
+msfPath="/pentest/metasploit-framework"
 class colors:
   def __init__(self):
     self.green = "\033[92m"
@@ -615,6 +617,7 @@ def pullMSF():
     client.login('msf', mypassword)
     testConnection=True
    except Exception as e:
+    print e
     if 'Connection refused' in str(e):
      time.sleep(1)
     if 'Authentication failed' in str(e):
@@ -790,8 +793,15 @@ def updateDB(tmpModuleList):
  p.terminate()
 
  #tmpOutputPathList=[]
- f1 = open('pathList.txt','w')
- f = open('portList.csv','w')
+ if len(outputDirectory)>0:
+  f1 = open(outputDirectory+'pathList.txt','w')
+ else:
+  f1 = open('pathList.txt','w')
+ 	
+ if len(outputDirectory)>0:
+  f = open(outputDirectory+'portList.csv','w')
+ else:
+  f = open('portList.csv','w')
  conn = sqlite3.connect(os.getcwd()+"/msfHelper.db")
  conn.text_factory = str
  print "[*] Writing to msfHelper.db"
@@ -851,6 +861,7 @@ def updateDB(tmpModuleList):
  f.close()
  f1.close()
  conn.close()
+ copyfile(os.getcwd()+"/msfHelper.db", outputDirectory+"msfHelper.db")
 
 def diff(list1, list2):
     c = set(list1).union(set(list2))
@@ -2130,14 +2141,19 @@ def runNmap(targetIP):
  basename = "nmap_"
  suffix = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
  filename = "_".join([basename, suffix])
- nmapFilename=filename
- cmd=''
- if scanAll==True:
-  cmd = "nmap -O --max-retries 3 -T4 -n -Pn --open -sT -sV --top-ports 65535 "+targetIP+" -oA "+filename
+ nmapFilename=""
+ if len(outputDirectory)>0:
+  nmapFilename=outputDirectory+filename
  else:
-  cmd = "nmap -O --max-retries 3 -T4 -n -Pn --open -sT -sV -p "+portStr+" "+targetIP+" -oA "+filename
+  nmapFilename=filename
+ cmd=''
+ if len(portStr)<1:
+  #if scanAll==True:
+  cmd = "nmap -O --max-retries 3 -T4 -n -Pn --open -sT -sV --top-ports 65535 "+targetIP+" -oA "+nmapFilename
+ else:
+  cmd = "nmap -O --max-retries 3 -T4 -n -Pn --open -sT -sV -p "+portStr+" "+targetIP+" -oA "+nmapFilename
  os.system(cmd)
- return filename
+ return nmapFilename
 
 def runNmapList(inputFilename):
  print setColor("[*] Running Nmap against targets", bold, color="red")
@@ -2154,11 +2170,17 @@ def runNmapList(inputFilename):
  basename = "nmap_"
  suffix = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
  filename = "_".join([basename, suffix])
- cmd=''
- if scanAll==True:
-  cmd = "nmap -O --max-retries 3 -T4 -n -Pn --open -sT -sV --top-ports 65535 -iL "+inputFilename+" -oA "+filename
+ nmapFilename=""
+ if len(outputDirectory)>0:
+  nmapFilename=outputDirectory+filename
  else:
-  cmd = "nmap -O --max-retries 3 -T4 -n -Pn --open -sT -sV -p "+portStr+" -iL "+inputFilename+" -oA "+filename
+  nmapFilename=filename
+ cmd=''
+ if len(portStr)<1:
+  #if scanAll==True:
+  cmd = "nmap -O --max-retries 3 -T4 -n -Pn --open -sT -sV --top-ports 65535 -iL "+inputFilename+" -oA "+nmapFilename
+ else:
+  cmd = "nmap -O --max-retries 3 -T4 -n -Pn --open -sT -sV -p "+portStr+" -iL "+inputFilename+" -oA "+nmapFilename
  os.system(cmd)
  return filename
 
@@ -2200,6 +2222,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument("target", nargs='*', type=str, help="The target IP(s), range(s), CIDR(s), hostname(s), FQDN(s) or file(s) containg a list of targets")
 parser.add_argument("-P", type=str, dest="mypassword", help="Password to connect to msfrpc")
 parser.add_argument("-p", type=str, dest="portsInput", help="Only scan specific TCP ports")
+parser.add_argument("-o", type=str, dest="outputDirectory", help="Location to save portList.csv, pathList.csv, nmap scan results")
 parser.add_argument("-i", action='store_true', help="Intelligent mode (Match the Nmap service banner with the Metasploit modules")
 parser.add_argument("-m", "--manual", action='store_true', help="Manually start up Msfconsole and 'load msgrpc Pass=xxxx'")
 parser.add_argument("-a", "--scanall", action='store_true', help="Scan all 65535 TCP ports")
@@ -2219,10 +2242,15 @@ if len(sys.argv) == 1:
 args = parser.parse_args()
 if args.greaterthan:
 	greatthanPorts=int(args.greaterthan)
-if not os.path.exists("/usr/share/metasploit-framework"):
+if not os.path.exists("/pentest/metasploit-framework"):
  print "[!] Metasploit Framework cannot be found at the location /usr/share/metasploit-framework"
  sys.exit()
-
+if args.outputDirectory:
+ if not os.path.exists(args.outputDirectory):
+  os.mkdir(args.outputDirectory)
+ outputDirectory=args.outputDirectory
+ if not outputDirectory.endswith("/"):
+  outputDirectory+="/"
 #testMsfConnection()
 localIP=get_ip_address()
 if args.category:
@@ -2261,12 +2289,12 @@ if not os.path.exists(os.getcwd()+"/msfHelper.db"):
  createDB()
  blankDB=True
  print "[*] Running msfupdate"
- updateMSF()
+ #updateMSF()
 
 #tmpModuleList=pullMSF()
 if args.update:
   print "[*] Running msfupdate"
-  updateMSF()
+  #updateMSF()
   if blankDB!=True:
    tmpModuleList=pullMSF()
    updateDB(tmpModuleList)
@@ -2318,7 +2346,6 @@ for target in args.target:
  else:
   nmapFilename=runNmap(target)
   portsList,httpsList,httpList,osList=parseNmap(nmapFilename+".xml")
-
   tmpList=[]
   tmpList1=[]
   for x in portsList:
@@ -2330,7 +2357,6 @@ for target in args.target:
    print setColor('[*] Error encountered!', bold, color="red")
    print "[!] No open ports found.  Please check your target IPs"
    sys.exit()
-
 while isOpen(msfIP,msfPort)==False:
  time.sleep(1)
 if args.quick:
