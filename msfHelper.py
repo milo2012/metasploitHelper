@@ -124,7 +124,7 @@ requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':RC4-SHA'
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 6.2; rv:30.0) Gecko/20150101 Firefox/32.0",
 			"Connection": "keep-alive"}
 
-msfPath="/pentest/metasploit-framework"
+msfPath="/usr/share/metasploit-framework"
 class colors:
   def __init__(self):
     self.green = "\033[92m"
