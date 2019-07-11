@@ -8,8 +8,10 @@
 8080,auxiliary,gather/apache_rave_creds,
 5038,auxiliary,gather/asterisk_creds,
 80,auxiliary,gather/avtech744_dvr_accounts,
+80,auxiliary,gather/c2s_dvr_password_disclosure,
 80,auxiliary,gather/cerberus_helpdesk_hash_disclosure,
 264,auxiliary,gather/checkpoint_hostname,
+443,auxiliary,gather/cisco_rv320_config,
 1604,auxiliary,gather/citrix_published_applications,
 1604,auxiliary,gather/citrix_published_bruteforce,
 80,auxiliary,gather/coldfusion_pwd_props,
@@ -26,10 +28,12 @@
 5227,auxiliary,gather/hp_enum_perfd,
 443,auxiliary,gather/hp_snac_domain_creds,
 80,auxiliary,gather/huawei_wifi_info,
+80,auxiliary,gather/ibm_bigfix_sites_packages_enum,
 443,auxiliary,gather/ibm_sametime_enumerate_users,
 443,auxiliary,gather/ibm_sametime_room_brute,DICT|OWNER
 443,auxiliary,gather/ibm_sametime_version,
 443,auxiliary,gather/impersonate_ssl,
+80,auxiliary,gather/ipcamera_password_disclosure,
 1099,auxiliary,gather/java_rmi_registry,
 80,auxiliary,gather/jenkins_cred_recovery,
 80,auxiliary,gather/joomla_com_realestatemanager_sqli,
@@ -47,9 +51,14 @@
 80,auxiliary,gather/netgear_password_disclosure,
 111,auxiliary,gather/nis_bootparamd_domain,CLIENT
 111,auxiliary,gather/nis_ypserv_map,DOMAIN
+5180,auxiliary,gather/nuuo_cms_bruteforce,
+5180,auxiliary,gather/nuuo_cms_file_download,
+80,auxiliary,gather/oats_downloadservlet_traversal,OATSPASSWORD
+443,auxiliary,gather/office365userenum,USERS
 8980,auxiliary,gather/opennms_xxe,
 80,auxiliary,gather/pimcore_creds_sqli,APIKEY
 443,auxiliary,gather/qnap_backtrace_admin_hash,
+80,auxiliary,gather/rails_doubletap_file_read,
 6161,auxiliary,gather/snare_registry,HttpPassword
 8787,auxiliary,gather/solarwinds_orion_sqli,
 10333,auxiliary,gather/teamtalk_creds,
@@ -95,6 +104,7 @@
 21,auxiliary,scanner/ftp/pcman_ftp_traversal,
 21,auxiliary,scanner/ftp/titanftp_xcrc_traversal,
 70,auxiliary,scanner/gopher/gopher_gophermap,
+2152,auxiliary,scanner/gprs/gtp_echo,
 1720,auxiliary,scanner/h323/h323_version,
 80,auxiliary,scanner/http/a10networks_ax_directory_traversal,
 443,auxiliary,scanner/http/accellion_fta_statecode_file_read,
@@ -168,11 +178,13 @@
 80,auxiliary,scanner/http/epmp1000_reset_pass,
 80,auxiliary,scanner/http/epmp1000_web_login,
 80,auxiliary,scanner/http/error_sql_injection,
+59777,auxiliary,scanner/http/es_file_explorer_open_port,
 80,auxiliary,scanner/http/etherpad_duo_login,
 80,auxiliary,scanner/http/f5_bigip_virtual_server,
 80,auxiliary,scanner/http/f5_mgmt_scanner,
 80,auxiliary,scanner/http/file_same_name_dir,
 80,auxiliary,scanner/http/files_dir,
+80,auxiliary,scanner/http/fortinet_ssl_vpn,
 80,auxiliary,scanner/http/frontpage_credential_dump,
 80,auxiliary,scanner/http/gavazzi_em_login_loot,
 80,auxiliary,scanner/http/git_scanner,
@@ -243,6 +255,7 @@
 80,auxiliary,scanner/http/novell_mdm_creds,
 80,auxiliary,scanner/http/ntlm_info_enumeration,
 80,auxiliary,scanner/http/octopusdeploy_login,
+80,auxiliary,scanner/http/onion_omega2_login,
 8080,auxiliary,scanner/http/open_proxy,
 8888,auxiliary,scanner/http/openmind_messageos_login,
 80,auxiliary,scanner/http/options,
@@ -282,6 +295,7 @@
 80,auxiliary,scanner/http/soap_xml,
 4444,auxiliary,scanner/http/sockso_traversal,
 8000,auxiliary,scanner/http/splunk_web_login,
+8888,auxiliary,scanner/http/springcloud_traversal,
 80,auxiliary,scanner/http/squid_pivot_scanning,RANGE
 80,auxiliary,scanner/http/squiz_matrix_user_enum,
 443,auxiliary,scanner/http/ssl,
@@ -298,6 +312,7 @@
 80,auxiliary,scanner/http/title,
 8080,auxiliary,scanner/http/tomcat_enum,
 8080,auxiliary,scanner/http/tomcat_mgr_login,
+80,auxiliary,scanner/http/totaljs_traversal,
 80,auxiliary,scanner/http/tplink_traversal_noauth,
 80,auxiliary,scanner/http/trace,
 80,auxiliary,scanner/http/trace_axd,
@@ -426,6 +441,7 @@
 9100,auxiliary,scanner/printer/printer_upload_file,
 9100,auxiliary,scanner/printer/printer_version_info,
 27960,auxiliary,scanner/quake/server_info,
+3389,auxiliary,scanner/rdp/cve_2019_0708_bluekeep,
 3389,auxiliary,scanner/rdp/ms12_020_check,
 3389,auxiliary,scanner/rdp/rdp_scanner,
 6379,auxiliary,scanner/redis/file_upload,
@@ -450,6 +466,7 @@
 50013,auxiliary,scanner/sap/sap_mgmt_con_getprocesslist,
 50013,auxiliary,scanner/sap/sap_mgmt_con_getprocessparameter,
 50013,auxiliary,scanner/sap/sap_mgmt_con_instanceproperties,
+50013,auxiliary,scanner/sap/sap_mgmt_con_listconfigfiles,
 50013,auxiliary,scanner/sap/sap_mgmt_con_listlogfiles,
 50013,auxiliary,scanner/sap/sap_mgmt_con_startprofile,
 50013,auxiliary,scanner/sap/sap_mgmt_con_version,
@@ -481,6 +498,7 @@
 502,auxiliary,scanner/scada/modbusclient,DATA_ADDRESS
 502,auxiliary,scanner/scada/modbusdetect,
 4800,auxiliary,scanner/scada/moxa_discover,
+20256,auxiliary,scanner/scada/pcomclient,
 46824,auxiliary,scanner/scada/sielco_winlog_fileaccess,
 5060,auxiliary,scanner/sip/enumerator,
 5060,auxiliary,scanner/sip/enumerator_tcp,
@@ -540,6 +558,7 @@
 69,auxiliary,scanner/tftp/ipswitch_whatsupgold_tftp,
 69,auxiliary,scanner/tftp/netdecision_tftp,
 69,auxiliary,scanner/tftp/tftpbrute,
+10001,auxiliary,scanner/ubiquiti/ubiquiti_discover,
 1900,auxiliary,scanner/upnp/ssdp_amp,
 1900,auxiliary,scanner/upnp/ssdp_msearch,
 6082,auxiliary,scanner/varnish/varnish_cli_login,
@@ -589,20 +608,6 @@
 5060,auxiliary,voip/sip_invite_spoof,
 80,auxiliary,voip/telisca_ips_lock_control,PHONENAME
 25,auxiliary,vsploit/pii/email_pii,MAILTO|SUBJECT
-5180,auxiliary,gather/nuuo_cms_bruteforce,
-80,auxiliary,gather/ipcamera_password_disclosure,
-80,auxiliary,gather/rails_doubletap_file_read,
-80,auxiliary,gather/c2s_dvr_password_disclosure,
-80,auxiliary,gather/ibm_bigfix_sites_packages_enum,
-5180,auxiliary,gather/nuuo_cms_file_download,
-443,auxiliary,gather/cisco_rv320_config,
-50013,auxiliary,scanner/sap/sap_mgmt_con_listconfigfiles,
-80,auxiliary,scanner/http/totaljs_traversal,
-80,auxiliary,scanner/http/fortinet_ssl_vpn,
-59777,auxiliary,scanner/http/es_file_explorer_open_port,
-20256,auxiliary,scanner/scada/pcomclient,
-10001,auxiliary,scanner/ubiquiti/ubiquiti_discover,
-443,auxiliary,gather/office365userenum,USERS
 111,exploit,aix/rpc_cmsd_opcode21,
 111,exploit,aix/rpc_ttdbserverd_realpath,
 5555,exploit,android/adb/adb_server_exec,
@@ -636,6 +641,8 @@
 443,exploit,linux/http/cfme_manageiq_evm_upload_exec,
 80,exploit,linux/http/cisco_firepower_useradd,
 443,exploit,linux/http/cisco_prime_inf_rce,
+80,exploit,linux/http/cisco_rv130_rmi_rce,
+8007,exploit,linux/http/cisco_rv32x_rce,
 80,exploit,linux/http/crypttech_cryptolog_login_exec,
 8080,exploit,linux/http/dcos_marathon,
 80,exploit,linux/http/ddwrt_cgibin_exec,
@@ -673,12 +680,14 @@
 8081,exploit,linux/http/hp_van_sdn_cmd_inject,
 80,exploit,linux/http/huawei_hg532n_cmdinject,
 443,exploit,linux/http/ibm_qradar_unauth_rce,
+443,exploit,linux/http/imperva_securesphere_exec,
 444,exploit,linux/http/ipfire_bashbug_exec,
 444,exploit,linux/http/ipfire_oinkcode_exec,
 444,exploit,linux/http/ipfire_proxy_exec,
 80,exploit,linux/http/kaltura_unserialize_cookie_rce,ENTRYID
 80,exploit,linux/http/kaltura_unserialize_rce,
 7778,exploit,linux/http/kloxo_sqli,
+80,exploit,linux/http/librenms_addhost_cmd_inject,USERNAME|PASSWORD
 443,exploit,linux/http/lifesize_uvc_ping_rce,
 80,exploit,linux/http/linksys_apply_cgi,
 80,exploit,linux/http/linksys_e1500_apply_exec,
@@ -688,6 +697,7 @@
 80,exploit,linux/http/linksys_wrt54gl_apply_exec,
 80,exploit,linux/http/linksys_wvbr0_user_agent_exec_noauth,
 80,exploit,linux/http/logsign_exec,
+443,exploit,linux/http/mailcleaner_exec,USERNAME|PASSWORD
 80,exploit,linux/http/microfocus_secure_messaging_gateway,
 80,exploit,linux/http/multi_ncc_ping_exec,
 80,exploit,linux/http/mutiny_frontend_upload,
@@ -758,6 +768,7 @@
 80,exploit,linux/http/zabbix_sqli,
 444,exploit,linux/http/zen_load_balancer_exec,
 8080,exploit,linux/http/zenoss_showdaemonxmlconfig_exec,
+80,exploit,linux/http/zimbra_xxe_rce,
 40007,exploit,linux/ids/alienvault_centerd_soap_exec,
 9080,exploit,linux/ids/snortbopre,
 143,exploit,linux/imap/imap_uw_lsub,
@@ -809,6 +820,7 @@
 22,exploit,linux/ssh/vmware_vdp_known_privkey,
 23,exploit,linux/telnet/netgear_telnetenable,
 23,exploit,linux/telnet/telnet_encrypt_keyid,
+49152,exploit,linux/upnp/belkin_wemo_upnp_exec,
 1900,exploit,linux/upnp/dlink_upnp_msearch_exec,
 21,exploit,mainframe/ftp/ftp_jcl_creds,
 9200,exploit,multi/elasticsearch/script_mvel_rce,
@@ -831,8 +843,11 @@
 80,exploit,multi/http/caidao_php_backdoor_exec,
 80,exploit,multi/http/cisco_dcnm_upload,
 80,exploit,multi/http/clipbucket_fileupload_exec,
+80,exploit,multi/http/cmsms_showtime2_rce,USERNAME
 80,exploit,multi/http/cmsms_upload_rename_rce,USERNAME|PASSWORD
+80,exploit,multi/http/coldfusion_ckeditor_file_upload,
 80,exploit,multi/http/coldfusion_rds,
+80,exploit,multi/http/confluence_widget_connector,
 631,exploit,multi/http/cups_bash_env_exec,HttpPassword
 80,exploit,multi/http/cuteflow_upload_exec,
 80,exploit,multi/http/dexter_casinoloader_exec,
@@ -843,6 +858,7 @@
 80,exploit,multi/http/familycms_less_exec,
 80,exploit,multi/http/freenas_exec_raw,
 80,exploit,multi/http/gestioip_exec,
+80,exploit,multi/http/getsimplecms_unauth_code_exec,
 80,exploit,multi/http/git_client_command_exec,
 80,exploit,multi/http/git_submodule_command_exec,
 80,exploit,multi/http/git_submodule_url_exec,
@@ -852,6 +868,7 @@
 4848,exploit,multi/http/glassfish_deployer,PASSWORD
 80,exploit,multi/http/glossword_upload_exec,
 80,exploit,multi/http/glpi_install_rce,
+80,exploit,multi/http/horde_form_file_upload,USERNAME|PASSWORD
 80,exploit,multi/http/horde_href_backdoor,
 8080,exploit,multi/http/hp_sitescope_issuesiebelcmd,
 8080,exploit,multi/http/hp_sitescope_uploadfileshandler,
@@ -864,6 +881,7 @@
 8080,exploit,multi/http/jboss_invoke_deploy,
 8080,exploit,multi/http/jboss_maindeployer,SRVHOST
 8080,exploit,multi/http/jboss_seam_upload_exec,
+8080,exploit,multi/http/jenkins_metaprogramming,
 80,exploit,multi/http/jenkins_script_console,
 8080,exploit,multi/http/jenkins_xstream_deserialize,
 80,exploit,multi/http/jira_hipchat_template,
@@ -895,6 +913,7 @@
 7021,exploit,multi/http/netwin_surgeftp_exec,
 80,exploit,multi/http/nibbleblog_file_upload,USERNAME|PASSWORD
 80,exploit,multi/http/novell_servicedesk_rce,
+80,exploit,multi/http/nuuo_nvrmini_upgrade_rce,
 443,exploit,multi/http/op5_license,
 443,exploit,multi/http/op5_welcome,
 9090,exploit,multi/http/openfire_auth_bypass,
@@ -922,6 +941,7 @@
 80,exploit,multi/http/phpscheduleit_start_date,
 80,exploit,multi/http/phptax_exec,
 80,exploit,multi/http/phpwiki_ploticus_exec,
+80,exploit,multi/http/pimcore_unserialize_rce,USERNAME
 80,exploit,multi/http/playsms_filename_exec,
 80,exploit,multi/http/playsms_uploadcsv_exec,
 8080,exploit,multi/http/plone_popen2,
@@ -931,6 +951,7 @@
 80,exploit,multi/http/processmaker_plugin_upload,
 80,exploit,multi/http/qdpm_upload_exec,PASSWORD|USERNAME
 80,exploit,multi/http/rails_actionpack_inline_exec,
+80,exploit,multi/http/rails_double_tap,
 3000,exploit,multi/http/rails_dynamic_render_code_exec,
 80,exploit,multi/http/rails_json_yaml_code_exec,
 80,exploit,multi/http/rails_secret_deserialization,SECRET
@@ -938,6 +959,7 @@
 80,exploit,multi/http/rails_xml_yaml_code_exec,
 8888,exploit,multi/http/rocket_servergraph_file_requestor_rce,
 80,exploit,multi/http/sflog_upload_exec,
+80,exploit,multi/http/shopware_createinstancefromnamedarguments_rce,
 80,exploit,multi/http/simple_backdoors_exec,
 80,exploit,multi/http/sit_file_upload,USERNAME|PASSWORD
 80,exploit,multi/http/snortreport_exec,
@@ -986,6 +1008,7 @@
 80,exploit,multi/http/webpagetest_upload_exec,
 80,exploit,multi/http/werkzeug_debug_rce,
 80,exploit,multi/http/wikka_spam_exec,USERNAME|PASSWORD|PAGE
+80,exploit,multi/http/wp_crop_rce,USERNAME|PASSWORD
 80,exploit,multi/http/wp_ninja_forms_unauthenticated_file_upload,FORM_PATH
 80,exploit,multi/http/wp_responsive_thumbnail_slider_upload,WPPASSWORD
 80,exploit,multi/http/x7chat2_php_exec,PASSWORD|USERNAME
@@ -996,6 +1019,7 @@
 80,exploit,multi/http/zpanel_information_disclosure_rce,
 139,exploit,multi/ids/snort_dce_rpc,
 617,exploit,multi/misc/arkeia_agent_exec,
+3181,exploit,multi/misc/bmc_patrol_cmd_exec,
 4750,exploit,multi/misc/bmc_server_automation_rscd_nsh_rce,
 3333,exploit,multi/misc/claymore_dual_miner_remote_manager_rce,
 8500,exploit,multi/misc/consul_rexec_exec,
@@ -1016,6 +1040,10 @@
 6667,exploit,multi/misc/ra1nx_pubcall_exec,
 9090,exploit,multi/misc/teamcity_agent_xmlrpc_exec,
 6667,exploit,multi/misc/w3tw0rk_exec,
+7001,exploit,multi/misc/weblogic_deserialize_asyncresponseservice,
+7001,exploit,multi/misc/weblogic_deserialize_marshalledobject,
+7001,exploit,multi/misc/weblogic_deserialize_rawobject,
+7001,exploit,multi/misc/weblogic_deserialize_unicastref,
 921,exploit,multi/misc/wireshark_lwres_getaddrbyname,
 921,exploit,multi/misc/wireshark_lwres_getaddrbyname_loop,
 6667,exploit,multi/misc/xdh_x_exec,
@@ -1024,6 +1052,7 @@
 123,exploit,multi/ntp/ntp_overflow,
 80,exploit,multi/php/php_unserialize_zval_cookie,
 80,exploit,multi/php/wp_duplicator_code_inject,
+5432,exploit,multi/postgres/postgres_copy_from_program_cmd_exec,
 5432,exploit,multi/postgres/postgres_createlang,
 139,exploit,multi/samba/nttrans,
 139,exploit,multi/samba/usermap_script,
@@ -1107,7 +1136,9 @@
 80,exploit,unix/webapp/drupal_coder_exec,
 80,exploit,unix/webapp/drupal_drupalgeddon2,
 80,exploit,unix/webapp/drupal_restws_exec,
+80,exploit,unix/webapp/drupal_restws_unserialize,
 80,exploit,unix/webapp/egallery_upload_exec,
+80,exploit,unix/webapp/elfinder_php_connector_exiftran_cmd_injection,
 80,exploit,unix/webapp/flashchat_upload_exec,
 80,exploit,unix/webapp/foswiki_maketext,
 80,exploit,unix/webapp/freepbx_config_exec,
@@ -1186,6 +1217,7 @@
 80,exploit,unix/webapp/vicidial_manager_send_cmd_exec,
 80,exploit,unix/webapp/vicidial_user_authorization_unauth_cmd_exec,
 10000,exploit,unix/webapp/webmin_show_cgi_exec,USERNAME|PASSWORD
+80,exploit,unix/webapp/webmin_upload_exec,USERNAME|PASSWORD
 80,exploit,unix/webapp/webtester_exec,
 80,exploit,unix/webapp/wp_admin_shell_upload,USERNAME|PASSWORD
 80,exploit,unix/webapp/wp_advanced_custom_fields_exec,
@@ -1409,6 +1441,7 @@
 80,exploit,windows/http/novell_mdm_lfi,
 8300,exploit,windows/http/novell_messenger_acceptlang,
 8800,exploit,windows/http/nowsms,
+80,exploit,windows/http/oats_weblogic_console,OATSPASSWORD
 80,exploit,windows/http/octopusdeploy_deploy,
 8080,exploit,windows/http/oracle9i_xdb_pass,
 80,exploit,windows/http/oracle_beehive_evaluation,
@@ -1449,6 +1482,7 @@
 80,exploit,windows/http/xitami_if_mod_since,
 8080,exploit,windows/http/zenworks_assetmgmt_uploadservlet,
 80,exploit,windows/http/zenworks_uploadservlet,
+11006,exploit,windows/ibm/ibm_was_dmgr_java_deserialization_rce,
 80,exploit,windows/iis/iis_webdav_scstoragepathfromurl,
 80,exploit,windows/iis/iis_webdav_upload_asp,
 80,exploit,windows/iis/ms01_023_printer,
@@ -1580,6 +1614,8 @@
 3037,exploit,windows/novell/file_reporter_fsfui_upload,
 443,exploit,windows/novell/netiq_pum_eval,
 689,exploit,windows/novell/nmap_stor,
+5180,exploit,windows/nuuo/nuuo_cms_fu,
+5180,exploit,windows/nuuo/nuuo_cms_sqli,
 1158,exploit,windows/oracle/client_system_analyzer_upload,
 445,exploit,windows/oracle/extjob,
 10000,exploit,windows/oracle/osb_ndmp_auth,
@@ -1637,9 +1673,9 @@
 445,exploit,windows/smb/ms08_067_netapi,
 445,exploit,windows/smb/ms09_050_smb2_negotiate_func_index,
 445,exploit,windows/smb/ms10_061_spoolss,
-445,exploit,windows/smb/ms17_010_eternalblue,
+445,exploit,windows/smb/ms17_010_eternalblue,CheckScanner
 445,exploit,windows/smb/ms17_010_eternalblue_win8,
-445,exploit,windows/smb/ms17_010_psexec,
+445,exploit,windows/smb/ms17_010_psexec,CheckScanner
 445,exploit,windows/smb/netidentity_xtierrpcpipe,
 445,exploit,windows/smb/psexec,
 445,exploit,windows/smb/psexec_psh,
@@ -1669,25 +1705,3 @@
 62514,exploit,windows/vpn/safenet_ike_11,
 5985,exploit,windows/winrm/winrm_script_exec,USERNAME|PASSWORD
 42,exploit,windows/wins/ms04_045_wins,
-80,exploit,unix/webapp/webmin_upload_exec,USERNAME|PASSWORD
-80,exploit,unix/webapp/elfinder_php_connector_exiftran_cmd_injection,
-80,exploit,unix/webapp/drupal_restws_unserialize,
-80,exploit,linux/http/cisco_rv130_rmi_rce,
-80,exploit,linux/http/zimbra_xxe_rce,
-443,exploit,linux/http/mailcleaner_exec,USERNAME|PASSWORD
-443,exploit,linux/http/imperva_securesphere_exec,
-8007,exploit,linux/http/cisco_rv32x_rce,
-49152,exploit,linux/upnp/belkin_wemo_upnp_exec,
-80,exploit,multi/http/horde_form_file_upload,USERNAME|PASSWORD
-8080,exploit,multi/http/jenkins_metaprogramming,
-80,exploit,multi/http/coldfusion_ckeditor_file_upload,
-80,exploit,multi/http/cmsms_showtime2_rce,USERNAME
-80,exploit,multi/http/nuuo_nvrmini_upgrade_rce,
-80,exploit,multi/http/confluence_widget_connector,
-80,exploit,multi/http/wp_crop_rce,USERNAME|PASSWORD
-7001,exploit,multi/misc/weblogic_deserialize_marshalledobject,
-7001,exploit,multi/misc/weblogic_deserialize_unicastref,
-3181,exploit,multi/misc/bmc_patrol_cmd_exec,
-7001,exploit,multi/misc/weblogic_deserialize_rawobject,
-5180,exploit,windows/nuuo/nuuo_cms_sqli,
-5180,exploit,windows/nuuo/nuuo_cms_fu,

@@ -861,7 +861,8 @@ def updateDB(tmpModuleList):
  f.close()
  f1.close()
  conn.close()
- copyfile(os.getcwd()+"/msfHelper.db", outputDirectory+"msfHelper.db")
+ if len(outputDirectory)>0:
+  copyfile(os.getcwd()+"/msfHelper.db", outputDirectory+"msfHelper.db")
 
 def diff(list1, list2):
     c = set(list1).union(set(list2))
