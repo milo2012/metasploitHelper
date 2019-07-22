@@ -84,7 +84,9 @@ execMethod="all"
 nmapFilename=""
 msfCategory=""
 alrTestedModuleList=[]
-outputDirectory=""
+outputDirectory=os.getcwd()
+if not outputDirectory.endswith("/"):
+  outputDirectory+="/"
 
 #Dependencies
 #git clone https://github.com/SpiderLabs/msfrpc
@@ -468,6 +470,7 @@ def extractParam(uri,filename):
 
 def retrieveModuleDetails(input):
    global tmpTargetURIList
+   portNo=0
    category=input[0][0]
    module=input[0][1]
    uriPath=''
@@ -506,7 +509,7 @@ def retrieveModuleDetails(input):
      continue
    moduleName=module
    if filterModuleName(moduleName)==True:
-    print "[*] Fetching module details: "+category+"/"+module
+    print "[*] [Metasploit] Fetching module: "+category+"/"+module
     if 'TARGETURI' in str(moduleOptions).upper():
      for key, value in moduleOptions.iteritems():
       if key=='TARGETURI':
@@ -517,7 +520,7 @@ def retrieveModuleDetails(input):
          uriPath=''
          tmpTargetURIList.append([uriPath,category,moduleName])
     if filterModuleName(moduleName)==True:
-     portNo=None
+     #portNo=None
      targetSingle=True
      if 'RPORT' in str(moduleOptions):
       for key, value in moduleOptions.iteritems():
@@ -525,7 +528,8 @@ def retrieveModuleDetails(input):
         try:
          portNo=value['default']
         except KeyError:
-         portNo=None
+         portNo=0
+         #portNo=None
      else:
       if 'RPORTS' in str(moduleOptions):
        for key, value in moduleOptions.iteritems():
@@ -542,7 +546,8 @@ def retrieveModuleDetails(input):
      else:
       if 'RHOST' in str(moduleOptions):
        targetSingle=True
-     if portNo!=None:
+     #if portNo!=None:
+     if portNo!=0:
        tmpOptionList=[]
        moduleOptions=client.call('module.options',[category,moduleName])
        for key, value in moduleOptions.iteritems():
@@ -567,6 +572,7 @@ def retrieveModuleDetails(input):
         return [portNo,category,moduleName,optionStr,uriPath,moduleDescription]
        else:
         return [portNo,category,moduleName,'',uriPath,moduleDescription]
+   return [portNo,category,moduleName,'',uriPath,moduleDescription]
 
 def searchModule(x):
    foundList=[]
@@ -782,26 +788,93 @@ def searchAndExtractPaths():
 					tmpResultList.append([filename,tmpPath])
 	return tmpResultList
 
-def updateDB(tmpModuleList):
+def readFiles(): 
+ tmpPortList=[]
+ conn = sqlite3.connect(os.getcwd()+"/msfHelper.db")
+ conn.text_factory = str
+ cur=conn.execute("SELECT moduleType, moduleName from portList")
+ all_rows = cur.fetchall()
+ for row in all_rows:
+  moduleType=row[0]
+  moduleName=row[1]
+  if [moduleType,moduleName] not in tmpPortList:
+    tmpPortList.append([moduleType,moduleName])
+
+ conn = sqlite3.connect(os.getcwd()+"/msfHelper.db")
+ conn.text_factory = str
+ cur=conn.execute("SELECT moduleType, moduleName from pathList")
+ all_rows = cur.fetchall()
+ for row in all_rows:
+  moduleType=row[0]
+  moduleName=row[1]
+  if [moduleType,moduleName] not in tmpPortList:
+    tmpPortList.append([moduleType,moduleName])
+ return tmpPortList
+
+def readAllData(): 
+ tmpPortList=[]
+ tmpPathList=[]
+ conn = sqlite3.connect(os.getcwd()+"/msfHelper.db")
+ conn.text_factory = str
+ cur=conn.execute("SELECT portNo, moduleType, moduleName, moduleParameters from portList")
+ all_rows = cur.fetchall()
+ for row in all_rows:
+  portNo=row[0]
+  moduleType=row[1]
+  moduleName=row[2]
+  moduleParameters=row[3]
+  if [portNo,moduleType,moduleName,moduleParameters] not in tmpPortList:
+    tmpPortList.append([portNo,moduleType,moduleName,moduleParameters])
+ conn.close()
+
+ conn = sqlite3.connect(os.getcwd()+"/msfHelper.db")
+ conn.text_factory = str
+ cur=conn.execute("SELECT uriPath, moduleType, moduleName from pathList")
+ all_rows = cur.fetchall()
+ for row in all_rows:
+  uriPath=row[0]
+  moduleType=row[1]
+  moduleName=row[2]
+  if [uriPath,moduleType,moduleName] not in tmpPathList:
+    tmpPathList.append([uriPath,moduleType,moduleName])
+ conn.close()
+
+ return tmpPortList,tmpPathList
+
+def updateDB(tmpModuleList): 
+ tmpPortList=readFiles()
+ print "[*] Loaded "+str(len(tmpPortList))+" entries from msfHelper.db"
  print "[*] Updating msfHelper.db"
+ tmpModuleList1=[]
+ for x in tmpModuleList:
+  if x not in tmpPortList:
+    tmpModuleList1.append(x)
  #Update Database
  tmpPathList=[]
  p = multiprocessing.Pool(numOfThreads)
  #tmpResultList=[]
- tmpResultList = p.map(retrieveModuleDetails,itertools.izip(tmpModuleList))
+ tmpResultList = p.map(retrieveModuleDetails,itertools.izip(tmpModuleList1))
  p.close()
  p.terminate()
 
- #tmpOutputPathList=[]
- if len(outputDirectory)>0:
-  f1 = open(outputDirectory+'pathList.txt','w')
- else:
-  f1 = open('pathList.txt','w')
- 	
- if len(outputDirectory)>0:
-  f = open(outputDirectory+'portList.csv','w')
- else:
-  f = open('portList.csv','w')
+ f = open(outputDirectory+'portList.csv','w')
+ tmpPortList1,tmpPathList1=readAllData()
+ tmpPathList2=[]
+ tmpPathList3=[]
+ for x in tmpPortList1:
+  if x[0]!="0":
+   f.write(x[0]+","+x[1]+","+x[2]+","+x[3]+"\n")
+ f.close()
+ f1 = open(outputDirectory+'pathList.txt','w')   
+ for x in tmpPathList1:
+  if x not in tmpPathList2:
+   tmpPathList2.append(x)
+   if len(x[0])>1 and x[0] not in tmpPathList3:
+    f1.write(x[0]+"\n")
+    tmpPathList3.append(x[0])
+ f1.close()
+ tmpPathList3=[]
+
  conn = sqlite3.connect(os.getcwd()+"/msfHelper.db")
  conn.text_factory = str
  print "[*] Writing to msfHelper.db"
@@ -820,20 +893,23 @@ def updateDB(tmpModuleList):
      if uriPath.endswith("/"):
         uriPath=uriPath[0:len(uriPath)-1]
      if uriPath not in tmpOutputPathList:      
-      f1.write(uriPath+"\n")
       tmpOutputPathList.append(uriPath)
-   f.write(str(portNo)+","+moduleType+","+moduleName+","+moduleParameters+"\n")
-   print moduleType+" "+moduleName
+   #f.write(str(portNo)+","+moduleType+","+moduleName+","+moduleParameters+"\n")
+   #print moduleType+" "+moduleName
    try:
+    print "[*] [Database] Adding: "+moduleType+"/"+moduleName
     conn.execute("INSERT INTO portList (portNo,moduleType,moduleName,moduleParameters,moduleDescription) VALUES  (?,?,?,?,?)" , (portNo,moduleType,moduleName,moduleParameters,moduleDescription,));
     conn.commit()
-   except sqlite3.IntegrityError:
+   except sqlite3.IntegrityError as e:
+    print e
     continue
    if len(uriPath)>0:
     try:
-     print "[*] Adding: "+moduleName
-     conn.execute("INSERT INTO pathList (uriPath,moduleType,moduleName,moduleParameters,moduleDescription) VALUES  (?,?,?,?,?)" , (uriPath,moduleType,moduleName,moduleParameters,moduleDescription,));
-     conn.commit()
+     if [uriPath,moduleType,moduleName] not in tmpPathList2:
+       print "[*] [Database] Adding: "+moduleType+"/"+moduleName
+       conn.execute("INSERT INTO pathList (uriPath,moduleType,moduleName,moduleParameters,moduleDescription) VALUES  (?,?,?,?,?)" , (uriPath,moduleType,moduleName,moduleParameters,moduleDescription,));
+       conn.commit()
+       tmpPathList2.append([uriPath,moduleType,moduleName])
     except sqlite3.IntegrityError:
      continue
  tmpPathList=searchAndExtractPaths()
@@ -848,20 +924,24 @@ def updateDB(tmpModuleList):
   tmpModuleDescription=""
   if len(tmpPath)>0:
     try:
-     print "[*] Adding: "+tmpModuleName
-     conn.execute("INSERT INTO pathList (uriPath,moduleType,moduleName,moduleParameters,moduleDescription) VALUES  (?,?,?,?,?)" , (tmpPath,tmpModuleType,tmpModuleName,"",tmpModuleDescription,));
+     if [tmpPath,tmpModuleType,tmpModuleName] not in tmpPathList2:
+      print "[*] [Database] Adding: "+tmpModuleType+"/"+tmpModuleName+" ["+tmpPath+"]"
+      #conn.execute("INSERT INTO pathList (uriPath,moduleType,moduleName,moduleParameters,moduleDescription) VALUES  (?,?,?,?,?)" , (tmpPath,tmpModuleType,tmpModuleName,"",tmpModuleDescription,));
+      conn.execute("INSERT INTO pathList (uriPath,moduleType,moduleName,moduleParameters,moduleDescription) VALUES  (?,?,?,?,?)" , (tmpPath,tmpModuleType,tmpModuleName,"",tmpModuleDescription,));
+      tmpPathList2.append([tmpPath,tmpModuleType,tmpModuleName])
      if len(x[1])>1: 
       if x[1] not in tmpOutputPathList:      
-       f1.write(x[1]+"\n")
+       #f1.write(x[1]+"\n")
        tmpOutputPathList.append(x[1])
 
      conn.commit()
-    except sqlite3.IntegrityError:
+    except sqlite3.IntegrityError as e:
+     print e
      continue
- f.close()
- f1.close()
+ #f.close()
+ #f1.close()
  conn.close()
- if len(outputDirectory)>0:
+ if os.getcwd()+"/"!=outputDirectory:
   copyfile(os.getcwd()+"/msfHelper.db", outputDirectory+"msfHelper.db")
 
 def diff(list1, list2):
@@ -2243,8 +2323,8 @@ if len(sys.argv) == 1:
 args = parser.parse_args()
 if args.greaterthan:
 	greatthanPorts=int(args.greaterthan)
-if not os.path.exists("/usr/share/metasploit-framework"):
- print "[!] Metasploit Framework cannot be found at the location /usr/share/metasploit-framework"
+if not os.path.exists(msfPath):
+ print "[!] Metasploit Framework cannot be found at the location "+msfPath
  sys.exit()
 if args.outputDirectory:
  if not os.path.exists(args.outputDirectory):
@@ -2289,7 +2369,7 @@ if manualStart==False:
 if not os.path.exists(os.getcwd()+"/msfHelper.db"):
  createDB()
  blankDB=True
- print "[*] Running msfupdate"
+ #print "[*] Running msfupdate"
  #updateMSF()
 
 #tmpModuleList=pullMSF()

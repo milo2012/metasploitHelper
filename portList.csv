@@ -54,7 +54,6 @@
 5180,auxiliary,gather/nuuo_cms_bruteforce,
 5180,auxiliary,gather/nuuo_cms_file_download,
 80,auxiliary,gather/oats_downloadservlet_traversal,OATSPASSWORD
-443,auxiliary,gather/office365userenum,USERS
 8980,auxiliary,gather/opennms_xxe,
 80,auxiliary,gather/pimcore_creds_sqli,APIKEY
 443,auxiliary,gather/qnap_backtrace_admin_hash,
@@ -608,6 +607,7 @@
 5060,auxiliary,voip/sip_invite_spoof,
 80,auxiliary,voip/telisca_ips_lock_control,PHONENAME
 25,auxiliary,vsploit/pii/email_pii,MAILTO|SUBJECT
+443,auxiliary,gather/office365userenum,USERS
 111,exploit,aix/rpc_cmsd_opcode21,
 111,exploit,aix/rpc_ttdbserverd_realpath,
 5555,exploit,android/adb/adb_server_exec,
@@ -643,6 +643,7 @@
 443,exploit,linux/http/cisco_prime_inf_rce,
 80,exploit,linux/http/cisco_rv130_rmi_rce,
 8007,exploit,linux/http/cisco_rv32x_rce,
+80,exploit,linux/http/cpi_tararchive_upload,
 80,exploit,linux/http/crypttech_cryptolog_login_exec,
 8080,exploit,linux/http/dcos_marathon,
 80,exploit,linux/http/ddwrt_cgibin_exec,
@@ -704,6 +705,7 @@
 80,exploit,linux/http/mvpower_dvr_shell_exec,
 80,exploit,linux/http/nagios_xi_chained_rce,
 80,exploit,linux/http/nagios_xi_chained_rce_2_electric_boogaloo,
+80,exploit,linux/http/nagios_xi_magpie_debug,RSRVHOST
 80,exploit,linux/http/netgear_dgn1000_setup_unauth_exec,
 80,exploit,linux/http/netgear_dgn1000b_setup_exec,
 80,exploit,linux/http/netgear_dgn2200b_pppoe_exec,
@@ -763,6 +765,7 @@
 80,exploit,linux/http/wd_mycloud_multiupload_upload,
 80,exploit,linux/http/webcalendar_settings_exec,
 80,exploit,linux/http/webid_converter,
+80,exploit,linux/http/webmin_packageup_rce,USERNAME|PASSWORD
 80,exploit,linux/http/wipg1000_cmd_injection,
 80,exploit,linux/http/xplico_exec,
 80,exploit,linux/http/zabbix_sqli,
@@ -847,7 +850,7 @@
 80,exploit,multi/http/cmsms_upload_rename_rce,USERNAME|PASSWORD
 80,exploit,multi/http/coldfusion_ckeditor_file_upload,
 80,exploit,multi/http/coldfusion_rds,
-80,exploit,multi/http/confluence_widget_connector,
+80,exploit,multi/http/confluence_widget_connector,SRVHOST
 631,exploit,multi/http/cups_bash_env_exec,HttpPassword
 80,exploit,multi/http/cuteflow_upload_exec,
 80,exploit,multi/http/dexter_casinoloader_exec,
@@ -1092,6 +1095,7 @@
 80,exploit,unix/http/epmp1000_get_chart_cmd_shell,
 80,exploit,unix/http/epmp1000_ping_cmd_shell,
 80,exploit,unix/http/freepbx_callmenum,
+80,exploit,unix/http/laravel_token_unserialize_exec,
 80,exploit,unix/http/lifesize_room,
 80,exploit,unix/http/pfsense_clickjacking,
 443,exploit,unix/http/pfsense_graph_injection_exec,
@@ -1251,6 +1255,7 @@
 80,exploit,unix/webapp/wp_wptouch_file_upload,PASSWORD|USER
 80,exploit,unix/webapp/wp_wysija_newsletters_upload,
 80,exploit,unix/webapp/xoda_file_upload,
+80,exploit,unix/webapp/xymon_useradm_cmd_exec,PASSWORD|USERNAME
 80,exploit,unix/webapp/zeroshell_exec,
 7071,exploit,unix/webapp/zimbra_lfi,
 80,exploit,unix/webapp/zoneminder_packagecontrol_exec,
@@ -1290,7 +1295,6 @@
 6050,exploit,windows/brightstor/universal_agent,
 135,exploit,windows/dcerpc/ms03_026_dcom,
 2103,exploit,windows/dcerpc/ms05_017_msmq,HNAME
-0,exploit,windows/dcerpc/ms07_029_msdns_zonename,
 2103,exploit,windows/dcerpc/ms07_065_msmq,DNAME
 25,exploit,windows/email/ms07_017_ani_loadimage_chunksize,MAILTO|SUBJECT
 25,exploit,windows/email/ms10_045_outlook_ref_only,MAILTO|SUBJECT
@@ -1471,6 +1475,7 @@
 8000,exploit,windows/http/steamcast_useragent,
 8080,exploit,windows/http/sybase_easerver,
 80,exploit,windows/http/sysax_create_folder,SysaxUSER|SysaxPASS
+80,exploit,windows/http/tomcat_cgi_cmdlineargs,
 8090,exploit,windows/http/trackercam_phparg_overflow,
 80,exploit,windows/http/trackit_file_upload,
 8080,exploit,windows/http/trendmicro_officescan,
@@ -1639,7 +1644,6 @@
 38080,exploit,windows/scada/iconics_genbroker,
 12401,exploit,windows/scada/igss9_igssdataserver_listall,
 12401,exploit,windows/scada/igss9_igssdataserver_rename,
-0,exploit,windows/scada/igss9_misc,
 12397,exploit,windows/scada/igss_exec_17,
 4322,exploit,windows/scada/indusoft_webstudio_exec,
 23,exploit,windows/scada/procyon_core_server,
