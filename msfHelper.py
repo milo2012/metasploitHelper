@@ -132,7 +132,7 @@ headers = {"User-Agent": "Mozilla/5.0 (Windows NT 6.2; rv:30.0) Gecko/20150101 F
 			"Connection": "keep-alive"}
 
 msfPath="/usr/share/metasploit-framework"
-msfPath="/pentest/metasploit-framework"
+#msfPath="/pentest/metasploit-framework"
 
 excludePortList=[]
 #excludePortList.append(21)
