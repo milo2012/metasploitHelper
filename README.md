@@ -67,9 +67,9 @@ $ python msfHelper.py x.x.x.x -i
 
 ```
 root@kali:/code# python msfHelper18.py -h
-usage: PROG [-h] [-P MYPASSWORD] [-p PORTSINPUT] [-i] [-m] [-a] [-n THREADS]
-            [-u] [-q] [-gt GREATERTHAN] [--info] [-v] [-s] [-t CATEGORY]
-            [-e {services,web,exploitdb,ports,all}]
+usage: PROG [-h] [-P MYPASSWORD] [-p PORTSINPUT] [-o OUTPUTDIRECTORY] [-i]
+            [-m] [-a] [-n THREADS] [-u] [-q] [-gt GREATERTHAN] [--info] [-v]
+            [-s] [-t CATEGORY] [-e {services,web,all,ports}]
             [target [target ...]]
 
                 __ _   _      _
@@ -89,6 +89,8 @@ optional arguments:
   -h, --help            show this help message and exit
   -P MYPASSWORD         Password to connect to msfrpc
   -p PORTSINPUT         Only scan specific TCP ports
+  -o OUTPUTDIRECTORY    Location to save portList.csv, pathList.csv, nmap scan
+                        results
   -i                    Intelligent mode (Match the Nmap service banner with
                         the Metasploit modules
   -m, --manual          Manually start up Msfconsole and 'load msgrpc
@@ -102,12 +104,12 @@ optional arguments:
   --info                Lookup information about ports online
   -v, --verbose         Verbose mode
   -s, --showonly        Show matching Metasploit modules but don't run
-  -t CATEGORY           Choose between 'exploit' or 'auxillary'
+  -t CATEGORY           Choose between 'exploit' or 'auxiliary'
 
 Whether to run Metasploit 'services', 'ports', 'web' modules or 'exploitdb':
   Options for executing commands
 
-  -e {services,web,exploitdb,ports,all}, --exec-method {services,web,exploitdb,ports,all}
+  -e {services,web,all,ports}, --exec-method {services,web,all,ports}
 ```  
 
 ## Sample Usage Examples
@@ -122,9 +124,11 @@ python msfHelper.py 192.168.1.6 -i
 python msfHelper.py 192.168.1.6 -i -p 21,5432
 ```
 
-**Run metasploit modules that matches the port number :**
+**Run metasploit modules that matches the port number/services/uri paths:**
 ```
 python msfHelper.py 192.168.1.6 -i -e ports
+python msfHelper.py 192.168.1.6 -i -e services
+python msfHelper.py 192.168.1.6 -i -e web
 ```
 
 **Scan and test all ports on target host :**
@@ -132,7 +136,7 @@ python msfHelper.py 192.168.1.6 -i -e ports
 python msfHelper.py 192.168.1.6 -i -a
 ```
 
-**Enable verbose mode (see results from Metasploit modules :**
+**Enable verbose mode (see output from Metasploit :**
 ```
 python msfHelper.py 192.168.1.6 -i -v
 ```
@@ -147,27 +151,3 @@ $ load msgrpc Pass=xxxxx
 python msfHelper.py 192.168.1.6 -i -m -P xxxxx
 ```
 
-**As Nmap sometimes is unable to fingerprint the target port accurately, you might want to use the --info option to retrieve information from speedguide (google cache) as to what applications typically use the port :**
-```
-python msfHelper.py 192.168.1.6 -i --info
-```
-
-**Do not run metasploit modules. Only run exploit-db detection :**
-```
-python msfHelper.py 192.168.1.6 -e exploitdb
-```
-
-**Run "port" based detection :**
-```
-python msfHelper.py 192.168.1.6 -i -e ports
-```
-
-**Run "services" based detection :**
-```
-python msfHelper.py 192.168.1.6 -i -e services
-```
-
-**Run "web" based detection :**
-```
-python msfHelper.py 192.168.1.6 -i -e web
-```
