@@ -1709,3 +1709,7 @@
 62514,exploit,windows/vpn/safenet_ike_11,
 5985,exploit,windows/winrm/winrm_script_exec,USERNAME|PASSWORD
 42,exploit,windows/wins/ms04_045_wins,
+6379,exploit,linux/redis/redis_unauth_exec,
+80,exploit,multi/http/wp_db_backup_rce,USERNAME|PASSWORD
+80,exploit,unix/http/schneider_electric_net55xx_encoder,
+443,exploit,windows/misc/ahsay_backup_fileupload,
