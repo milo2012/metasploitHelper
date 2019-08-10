@@ -72,6 +72,7 @@ scanAll=False
 numOfThreads=20
 chunkSize=50
 manualStart=False
+debugMode=False
 verbose=False
 blankDB=False
 bold=True
@@ -132,7 +133,7 @@ headers = {"User-Agent": "Mozilla/5.0 (Windows NT 6.2; rv:30.0) Gecko/20150101 F
 			"Connection": "keep-alive"}
 
 msfPath="/usr/share/metasploit-framework"
-#msfPath="/pentest/metasploit-framework"
+msfPath="/pentest/metasploit-framework"
 
 excludePortList=[]
 #excludePortList.append(21)
@@ -688,7 +689,11 @@ def searchAndExtractPaths():
 				tmpPath=tmpFilename
 				if '")' in tmpPath:
 					tmpPath=tmpPath.split('")')[0]
+				if len(tmpPath)<3:	
+					tmpPath="/"
 				if [filename,tmpPath] not in tmpResultList:
+					if len(tmpPath)>0 and debugMode==True:
+						print "[debugA] "+tmpPath
 					tmpResultList.append([filename,tmpPath])
 			if "'uri'    => '" in x:
 				x=x.strip()
@@ -703,28 +708,43 @@ def searchAndExtractPaths():
 				if '")' in tmpPath:
 					tmpPath=tmpPath.split('")')[0]
 				if [filename,tmpPath] not in tmpResultList:
+					if len(tmpPath)>0 and debugMode==True:
+						print "[debugB] "+tmpPath
 					tmpResultList.append([filename,tmpPath])
-			if "'uri'    => normalize_uri(uri," in x:
+			if " => normalize_uri(" in x:
 				x=x.strip()
-				x=(x.split("normalize_uri(uri,")[1]).strip()
+				x=(x.split("normalize_uri(")[1]).strip()
 				tmpList=x.split(",")			
 				tmpList1=[]
 				for y in tmpList:
-					if "payload_name" not in y:
+					y=y.strip()
+					if " + " in y:
+						y=y.split(" + ")[0]
+					if "payload_name" not in y and y.startswith("'"):	
 						y=y.replace('"','')
 						y=y.replace("'",'')
 						y=y.strip()
 						if y.endswith(")"):
+							y=y[0:len(y)-1]
+						y=y.replace(') }','')
+						if y.endswith(')}'):
+							y=y[0:len(y)-2]
+						if y.endswith(')') and '(' not in y:
 							y=y[0:len(y)-1]
 						tmpList1.append(y)
 				tmpFilename="/"+"/".join(tmpList1)
 				tmpFilename=tmpFilename.replace("//","/")
 				if tmpFilename.endswith("/"):
 					tmpFilename=tmpFilename[0:len(tmpFilename)-1]
+        			tmpFilename=tmpFilename.replace("//","/")          
 				tmpPath=tmpFilename
 				if '")' in tmpPath:
 					tmpPath=tmpPath.split('")')[0]
+				if " " in tmpPath:
+					tmpPath=tmpPath.split(" ")[0]
 				if [filename,tmpPath] not in tmpResultList:
+					if len(tmpPath)>0 and debugMode==True:
+						print "[debugC] "+tmpPath
 					tmpResultList.append([filename,tmpPath])
 			elif "'uri'    => normalize_uri(" in x:
 				x=x.strip()
@@ -748,6 +768,8 @@ def searchAndExtractPaths():
 				if '")' in tmpPath:
 					tmpPath=tmpPath.split('")')[0]
 				if [filename,tmpPath] not in tmpResultList:
+					if len(tmpPath)>0 and debugMode==True:
+						print "[debugD] "+tmpPath
 					tmpResultList.append([filename,tmpPath])
 	return tmpResultList
 
@@ -866,6 +888,12 @@ def updateDB(tmpModuleList):
     continue
    if len(uriPath)>0:
     try:
+     if uriPath.startswith("https://"):
+	uriPath=""
+     if len(uriPath)>0 and not uriPath.startswith("/"):
+	uriPath="/"+uriPath
+     if len(uriPath)>1 and debugMode==True:
+       print "[debugE] "+tmpPath
      if [uriPath,moduleType,moduleName] not in tmpPathList2:
        print "[*] [Database] Adding: "+moduleType+"/"+moduleName
        conn.execute("INSERT INTO pathList (uriPath,moduleType,moduleName,moduleParameters,moduleDescription) VALUES  (?,?,?,?,?)" , (uriPath,moduleType,moduleName,moduleParameters,moduleDescription,));

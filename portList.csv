@@ -607,6 +607,7 @@
 5060,auxiliary,voip/sip_invite_spoof,
 80,auxiliary,voip/telisca_ips_lock_control,PHONENAME
 25,auxiliary,vsploit/pii/email_pii,MAILTO|SUBJECT
+1984,auxiliary,gather/xymon_info,
 443,auxiliary,gather/office365userenum,USERS
 111,exploit,aix/rpc_cmsd_opcode21,
 111,exploit,aix/rpc_ttdbserverd_realpath,
@@ -804,6 +805,7 @@
 110,exploit,linux/pop3/cyrus_pop3d_popsubfolders,
 5432,exploit,linux/postgres/postgres_payload,
 1723,exploit,linux/pptp/poptop_negative_read,
+6379,exploit,linux/redis/redis_unauth_exec,
 139,exploit,linux/samba/chain_reply,
 445,exploit,linux/samba/is_known_pipename,
 445,exploit,linux/samba/lsa_transnames_heap,
@@ -1012,6 +1014,7 @@
 80,exploit,multi/http/werkzeug_debug_rce,
 80,exploit,multi/http/wikka_spam_exec,USERNAME|PASSWORD|PAGE
 80,exploit,multi/http/wp_crop_rce,USERNAME|PASSWORD
+80,exploit,multi/http/wp_db_backup_rce,USERNAME|PASSWORD
 80,exploit,multi/http/wp_ninja_forms_unauthenticated_file_upload,FORM_PATH
 80,exploit,multi/http/wp_responsive_thumbnail_slider_upload,WPPASSWORD
 80,exploit,multi/http/x7chat2_php_exec,PASSWORD|USERNAME
@@ -1101,6 +1104,7 @@
 443,exploit,unix/http/pfsense_graph_injection_exec,
 443,exploit,unix/http/pfsense_group_member_exec,
 80,exploit,unix/http/quest_kace_systems_management_rce,
+80,exploit,unix/http/schneider_electric_net55xx_encoder,
 80,exploit,unix/http/tnftp_savefile,
 80,exploit,unix/http/twiki_debug_plugins,
 80,exploit,unix/http/vmturbo_vmtadmin_exec_noauth,
@@ -1532,6 +1536,7 @@
 515,exploit,windows/lpd/saplpd,
 13500,exploit,windows/lpd/wincomlpd_admin,
 705,exploit,windows/misc/agentxpp_receive_agentx,
+443,exploit,windows/misc/ahsay_backup_fileupload,
 402,exploit,windows/misc/altiris_ds_sqli,
 623,exploit,windows/misc/asus_dpcproxy_overflow,
 3217,exploit,windows/misc/avaya_winpmd_unihostrouter,
@@ -1709,7 +1714,4 @@
 62514,exploit,windows/vpn/safenet_ike_11,
 5985,exploit,windows/winrm/winrm_script_exec,USERNAME|PASSWORD
 42,exploit,windows/wins/ms04_045_wins,
-6379,exploit,linux/redis/redis_unauth_exec,
-80,exploit,multi/http/wp_db_backup_rce,USERNAME|PASSWORD
-80,exploit,unix/http/schneider_electric_net55xx_encoder,
-443,exploit,windows/misc/ahsay_backup_fileupload,
+9998,exploit,windows/http/apache_tika_jp2_jscript,
