@@ -842,22 +842,7 @@ def updateDB(tmpModuleList):
  p.close()
  p.terminate()
 
- f = open(outputDirectory+'portList.csv','w')
- tmpPortList1,tmpPathList1=readAllData()
  tmpPathList2=[]
- tmpPathList3=[]
- for x in tmpPortList1:
-  if x[0]!="0":
-   f.write(x[0]+","+x[1]+","+x[2]+","+x[3]+"\n")
- f.close()
- f1 = open(outputDirectory+'pathList.txt','w')   
- for x in tmpPathList1:
-  if x not in tmpPathList2:
-   tmpPathList2.append(x)
-   if len(x[0])>1 and x[0] not in tmpPathList3:
-    f1.write(x[0]+"\n")
-    tmpPathList3.append(x[0])
- f1.close()
  tmpPathList3=[]
 
  conn = sqlite3.connect(os.getcwd()+"/msfHelper.db")
@@ -901,6 +886,66 @@ def updateDB(tmpModuleList):
        tmpPathList2.append([uriPath,moduleType,moduleName])
     except sqlite3.IntegrityError:
      continue
+
+ f = open(outputDirectory+'portList.csv','w')
+ tmpPortList1,tmpPathList1=readAllData()
+
+ for x in tmpPortList1:
+  if x[0]!="0":
+   f.write(x[0]+","+x[1]+","+x[2]+","+x[3]+"\n")
+ f.close()
+ #tmpPathList=searchAndExtractPaths()
+ f1 = open(outputDirectory+'pathList.txt','w')   
+ for x in tmpPathList1:
+  if len(x[0])>1 and x[0] not in tmpPathList3:
+   f1.write(x[0]+"\n")
+   tmpPathList3.append(x[0])
+ f1.close()
+
+ '''
+ conn = sqlite3.connect(os.getcwd()+"/msfHelper.db")
+ conn.text_factory = str
+ if len(tmpResultList)>0:
+  print "[*] Writing to msfHelper.db"
+ for x in tmpResultList:
+  if x!=None:
+   portNo=x[0]
+   moduleType=x[1]
+   moduleName=x[2]
+   moduleParameters=x[3]
+   uriPath=x[4]
+   moduleDescription=x[5]
+   moduleDescription=moduleDescription.replace("\n"," ")
+   if uriPath not in tmpPathList:
+    tmpPathList.append(uriPath)
+    if uriPath!=None and len(uriPath)>1 and uriPath.startswith("/"):
+     if uriPath.endswith("/"):
+        uriPath=uriPath[0:len(uriPath)-1]
+     if uriPath not in tmpOutputPathList:      
+      tmpOutputPathList.append(uriPath)
+   try:
+    print "[*] [Database] Adding: "+moduleType+"/"+moduleName
+    conn.execute("INSERT INTO portList (portNo,moduleType,moduleName,moduleParameters,moduleDescription) VALUES  (?,?,?,?,?)" , (portNo,moduleType,moduleName,moduleParameters,moduleDescription,));
+    conn.commit()
+   except sqlite3.IntegrityError:
+    continue
+   if len(uriPath)>0:
+    try:
+     if uriPath.startswith("https://"):
+	uriPath=""
+     if len(uriPath)>0 and not uriPath.startswith("/"):
+	uriPath="/"+uriPath
+     if len(uriPath)>1 and debugMode==True:
+       print "[debugE] "+tmpPath
+     if [uriPath,moduleType,moduleName] not in tmpPathList2:
+       print "[*] [Database] Adding: "+moduleType+"/"+moduleName
+       conn.execute("INSERT INTO pathList (uriPath,moduleType,moduleName,moduleParameters,moduleDescription) VALUES  (?,?,?,?,?)" , (uriPath,moduleType,moduleName,moduleParameters,moduleDescription,));
+       conn.commit()
+       tmpPathList2.append([uriPath,moduleType,moduleName])
+    except sqlite3.IntegrityError:
+     continue
+ '''
+ f1 = open(outputDirectory+'pathList.txt','a+')   
  tmpPathList=searchAndExtractPaths()
  for x in tmpPathList:
   x[0]=x[0].replace(msfPath,"")
@@ -914,9 +959,12 @@ def updateDB(tmpModuleList):
   if len(tmpPath)>0:
     try:
      if [tmpPath,tmpModuleType,tmpModuleName] not in tmpPathList2:
-      print "[*] [Database] Adding: "+tmpModuleType+"/"+tmpModuleName+" ["+tmpPath+"]"
-      #conn.execute("INSERT INTO pathList (uriPath,moduleType,moduleName,moduleParameters,moduleDescription) VALUES  (?,?,?,?,?)" , (tmpPath,tmpModuleType,tmpModuleName,"",tmpModuleDescription,));
-      conn.execute("INSERT INTO pathList (uriPath,moduleType,moduleName,moduleParameters,moduleDescription) VALUES  (?,?,?,?,?)" , (tmpPath,tmpModuleType,tmpModuleName,"",tmpModuleDescription,));
+      if tmpPath not in tmpPathList3:
+       f1.write(tmpPath+"\n")
+       tmpPathList3.append(tmpPath)       
+      if [tmpPath,tmpModuleType,tmpModuleName,"",tmpModuleDescription] not in allPathModuleList:
+        conn.execute("INSERT INTO pathList (uriPath,moduleType,moduleName,moduleParameters,moduleDescription) VALUES  (?,?,?,?,?)" , (tmpPath,tmpModuleType,tmpModuleName,"",tmpModuleDescription,));
+        print "[*] [Database] Adding: "+tmpModuleType+"/"+tmpModuleName+" ["+tmpPath+"]"
       tmpPathList2.append([tmpPath,tmpModuleType,tmpModuleName])
      if len(x[1])>1: 
       if x[1] not in tmpOutputPathList:      
@@ -927,6 +975,8 @@ def updateDB(tmpModuleList):
     except sqlite3.IntegrityError as e:
      print e
      continue
+ f1.close()
+
  #f.close()
  #f1.close()
  conn.close()
@@ -1275,7 +1325,6 @@ def runServiceBasedModules():
                startCount+=1
               else:
                startCount=0
-	 print "xxx"
  	 if len(tmpList1)>0:
  	  runMultipleAuxExploits(tmpList1)
 
@@ -2229,6 +2278,8 @@ def runMain():
 	killMSF()
 
 def readDB():
+ global allPathModuleList
+ global allPathList
  conn = sqlite3.connect(os.getcwd()+"/msfHelper.db")
  conn.text_factory = str
  cur=conn.execute("SELECT portNo, moduleType, moduleName, moduleParameters, moduleDescription from portList")
@@ -2449,20 +2500,21 @@ if not os.path.exists(os.getcwd()+"/msfHelper.db"):
  #updateMSF()
 
 #tmpModuleList=pullMSF()
+readDB()
 if args.update:
   print "[*] Running msfupdate"
   #updateMSF()
-  if blankDB!=True:
-   tmpModuleList=pullMSF()
-   updateDB(tmpModuleList)
+  #if blankDB!=True:
+  tmpModuleList=pullMSF()
+  updateDB(tmpModuleList)
 
 if len(args.target)<1: 
    print "[!] Please set a target."
    sys.exit()
 
-if blankDB==True:
- tmpModuleList=pullMSF()
- updateDB(tmpModuleList)
+#if blankDB==True:
+# tmpModuleList=pullMSF()
+# updateDB(tmpModuleList)
 
 #Read sqlite3 file for data obtained from Metasploit
 print "[*] Reading from msfHelper.db"
