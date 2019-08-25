@@ -1715,3 +1715,4 @@
 5985,exploit,windows/winrm/winrm_script_exec,USERNAME|PASSWORD
 42,exploit,windows/wins/ms04_045_wins,
 9998,exploit,windows/http/apache_tika_jp2_jscript,
+10000,exploit,unix/webapp/webmin_backdoor,
