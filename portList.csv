@@ -1716,3 +1716,8 @@
 42,exploit,windows/wins/ms04_045_wins,
 9998,exploit,windows/http/apache_tika_jp2_jscript,
 10000,exploit,unix/webapp/webmin_backdoor,
+80,exploit,linux/http/cve_2019_1663_cisco_rmi_rce,
+443,exploit,linux/http/ubiquiti_airos_file_upload,
+443,exploit,linux/http/cisco_ucs_rce,
+22,exploit,linux/ssh/cisco_ucs_scpuser,
+443,exploit,multi/http/cisco_dcnm_upload_2019,
