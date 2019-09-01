@@ -732,8 +732,6 @@
 /options-general.php
 /brightmail/setting/ldap/LdapWizardFlow$exec.flo
 /brightmail/setting/ldap/LdapWizardFlow$edit.flo
-/*~1*
-/QYKWO*~1*
 /en-US/app/launcher/home
 /posts
 /demantra/common/loginCheck.jsp/../../ServerDetailsServlet
