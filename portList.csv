@@ -1721,3 +1721,4 @@
 443,exploit,linux/http/cisco_ucs_rce,
 22,exploit,linux/ssh/cisco_ucs_scpuser,
 443,exploit,multi/http/cisco_dcnm_upload_2019,
+161,exploit,linux/snmp/awind_snmp_exec,
