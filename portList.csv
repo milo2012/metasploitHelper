@@ -1752,3 +1752,13 @@
 80,exploit,windows/http/file_sharing_wizard_seh,
 3389,exploit,windows/rdp/cve_2019_0708_bluekeep_rce,CheckModule
 445,exploit,windows/smb/doublepulsar_rce,
+80,exploit,linux/http/eyesofnetwork_autodiscovery_rce,SERVER_ADDR
+25,exploit,linux/smtp/apache_james_exec,
+80,exploit,multi/http/php_fpm_rce,
+25,exploit,unix/smtp/opensmtpd_mail_from_rce,
+80,exploit,unix/webapp/opennetadmin_ping_cmd_injection,
+80,exploit,unix/webapp/wp_infinitewp_auth_bypass,
+80,exploit,windows/http/apache_activemq_traversal_upload,
+443,exploit,windows/http/exchange_ecp_viewstate,PASSWORD|USERNAME
+3389,exploit,windows/rdp/rdp_doublepulsar_rce,
+445,exploit,windows/smb/smb_doublepulsar_rce,

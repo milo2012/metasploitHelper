@@ -775,3 +775,12 @@
 /bl-content/tmp
 /admin/dashboard/index.php
 /vpn/../vpns/portal/scripts/newbm.pl
+/ona/login.php
+/plugin-editor.php
+/ecp/default.aspx
+/owa/auth.owa
+/eonapi/getApiKey
+/eonapi/createEonUser
+/eonapi/deleteEonUser
+/lilac/autodiscovery.php
+
